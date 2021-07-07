@@ -1,14 +1,14 @@
 package com.reactivegroup.capa.rpc;
 
+import com.reactivegroup.capa.domain.HttpExtension;
 import com.reactivegroup.capa.domain.InvokeMethodRequest;
+import com.reactivegroup.capa.domain.TypeRef;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
 /**
  * Generic Client Adapter to be used regardless of the GRPC or the HTTP Client implementation required.
- *
- * @see DaprClientBuilder for information on how to make instance for this interface.
  */
 public interface CapaRpcClient extends AutoCloseable {
 
@@ -19,7 +19,7 @@ public interface CapaRpcClient extends AutoCloseable {
      * @param methodName    The actual Method to be call in the application.
      * @param data          The data to be sent to invoke the service, use byte[] to skip serialization.
      * @param httpExtension Additional fields that are needed if the receiving app is listening on
-     *                      HTTP, {@link io.dapr.client.domain.HttpExtension#NONE} otherwise.
+     *                      HTTP, {@link HttpExtension#NONE} otherwise.
      * @param metadata      Metadata (in GRPC) or headers (in HTTP) to be sent in data.
      * @param type          The Type needed as return for the call.
      * @param <T>           The Type of the return, use byte[] to skip serialization.
