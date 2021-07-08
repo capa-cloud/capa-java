@@ -1,7 +1,7 @@
 package com.reactivegroup.capa.adaptor.rpc;
 
-import com.reactivegroup.capa.rpc.RpcMethodAdaptor;
-import com.reactivegroup.capa.rpc.RpcServiceAdaptor;
+import com.reactivegroup.capa.rpc.client.RpcMethodAdaptor;
+import com.reactivegroup.capa.rpc.client.RpcServiceAdaptor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

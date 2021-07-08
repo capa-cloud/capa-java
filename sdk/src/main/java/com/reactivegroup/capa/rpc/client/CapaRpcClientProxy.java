@@ -1,4 +1,4 @@
-package com.reactivegroup.capa.rpc;
+package com.reactivegroup.capa.rpc.client;
 
 import com.reactivegroup.capa.domain.HttpExtension;
 import com.reactivegroup.capa.domain.InvokeMethodRequest;
@@ -14,6 +14,8 @@ public class CapaRpcClientProxy implements CapaRpcClient {
 
     @Override
     public <T> Mono<T> invokeMethod(String appId, String methodName, Object data, HttpExtension httpExtension, Map<String, String> metadata, TypeRef<T> type) {
+        Objects.requireNonNull(rpcAdaptor);
+
         RpcServiceAdaptor serviceAdaptor = Objects.requireNonNull(rpcAdaptor.get(appId));
 
         Map<String, RpcMethodAdaptor> serviceMethodMap = Objects.requireNonNull(serviceAdaptor.getServiceMethodMap());

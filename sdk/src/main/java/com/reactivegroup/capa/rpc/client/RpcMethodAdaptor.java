@@ -1,4 +1,4 @@
-package com.reactivegroup.capa.rpc;
+package com.reactivegroup.capa.rpc.client;
 
 import reactor.core.publisher.Mono;
 
