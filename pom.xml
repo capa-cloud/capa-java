@@ -13,7 +13,6 @@
 
     <modules>
         <module>sdk</module>
-        <module>sdk-adaptor</module>
     </modules>
 
     <properties>
