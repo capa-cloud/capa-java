@@ -4,48 +4,84 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.reactivegroup</groupId>
+    <groupId>group.rxcloud</groupId>
     <artifactId>capa-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>capa-sdk-parent</name>
     <description>SDK for Capa.</description>
 
     <modules>
+        <module>examples</module>
+        <module>cloud-runtimes</module>
+        <module>sdk-spi</module>
         <module>sdk</module>
+        <module>sdk-component</module>
+        <module>sdk-infrastructure</module>
+        <module>sdk-spi-demo</module>
     </modules>
 
     <properties>
         <java.version>8</java.version>
         <file.encoding>UTF-8</file.encoding>
         <maven.version>3.8.1</maven.version>
+        <reactor-core.version>3.3.11.RELEASE</reactor-core.version>
+        <junit.version>4.13.1</junit.version>
+        <mockito-core.version>3.6.0</mockito-core.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- sdk module -->
             <dependency>
-                <groupId>com.reactivegroup</groupId>
-                <artifactId>sdk</artifactId>
+                <groupId>group.rxcloud</groupId>
+                <artifactId>cloud-runtimes</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.reactivegroup</groupId>
-                <artifactId>sdk-adaptor</artifactId>
+                <groupId>group.rxcloud</groupId>
+                <artifactId>capa-sdk-spi-demo</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>group.rxcloud</groupId>
+                <artifactId>capa-sdk-spi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>group.rxcloud</groupId>
+                <artifactId>capa-sdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>group.rxcloud</groupId>
+                <artifactId>capa-sdk-component</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>group.rxcloud</groupId>
+                <artifactId>capa-sdk-infrastructure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- reactor -->
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-core</artifactId>
+                <version>${reactor-core.version}</version>
             </dependency>
 
             <!-- unit test -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.13.1</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.6.0</version>
+                <version>${mockito-core.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
