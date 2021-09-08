@@ -18,6 +18,10 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * An exception is thrown by default, and some functions can be implemented on demand.
+ */
 public interface DefaultCloudRuntimesClient extends CloudRuntimesClient {
 
     @Override
