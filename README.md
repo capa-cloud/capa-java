@@ -4,9 +4,12 @@ Define a common set of APIs to make sure that code once and run anywhere!
 
 This is the Capa SDK for Java, including the following features:
 
-* Service Invocation(RPC)
-* ...
-
++ Service Invocation(RPC)
++ Configuration Centor(Configuration)
++ Application Metrics(Metrics)
++ Publish/Subscribe(Pub/Sub)
++ State Management(State)
++ 
 参考项目:
 
 * [dapr](https://github.com/dapr/dapr)
@@ -36,7 +39,9 @@ This is the Capa SDK for Java, including the following features:
 
 ## API Design
 
-API设计和社区保持同步，请参考Dapr/Layotto等开源项目的设计
+API设计和社区保持同步，请参考Dapr/Layotto等开源项目的设计。
+
+目前API定义在: [cloud-runtimes](https://github.com/reactivegroup/cloud-runtimes-jvm) 中
 
 #### [RPC API design]()
 
@@ -44,7 +49,7 @@ module划分主要为以下几个部分：
 * sdk
 * sdk-component
 * sdk-spi
-* sdk-spi-aws/...
+* sdk-spi-demo/...
 
 ![capa-design](./docs/capa-design/capa-layer.PNG)
 
