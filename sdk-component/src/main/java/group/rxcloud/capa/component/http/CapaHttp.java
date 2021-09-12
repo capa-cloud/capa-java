@@ -95,7 +95,7 @@ public abstract class CapaHttp implements AutoCloseable {
      *
      * @param <T>           The Type of the return.
      * @param httpMethod    HTTP httpMethod.
-     * @param pathSegments  Array of path segments (/a/b/c -> ["a", "b", "c"]).
+     * @param pathSegments  Array of path segments (/a/b/c → ["a", "b", "c"]).
      * @param urlParameters Parameters in the URL
      * @param requestData   payload to be posted.
      * @param headers       HTTP headers.

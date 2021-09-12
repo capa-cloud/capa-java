@@ -41,19 +41,19 @@ public class DemoRpcServiceOptions implements RpcServiceOptions {
      */
     public enum ServiceRpcInvokeMode {
         /**
-         * Ctrip -> Ctrip
+         * Ctrip → Ctrip
          */
         CTRIP_TO_CTRIP,
         /**
-         * Ctrip -> AWS
+         * Ctrip → AWS
          */
         CTRIP_TO_AWS,
         /**
-         * AWS -> Ctrip
+         * AWS → Ctrip
          */
         AWS_TO_CTRIP,
         /**
-         * AWS -> AWS
+         * AWS → AWS
          */
         AWS_TO_AWS,
         ;
