@@ -72,7 +72,7 @@ For a Maven project, add the following to your pom.xml file:
     <dependency>
       <groupId>group.rxcloud</groupId>
       <artifactId>capa-sdk</artifactId>
-      <version>1.0.0-RELEASE</version>
+      <version>1.0.1.RELEASE</version>
     </dependency>
     ...
   </dependencies>
@@ -91,7 +91,7 @@ For a Maven project, add the following to your pom.xml file:
     <dependency>
       <groupId>group.rxcloud</groupId>
       <artifactId>capa-sdk-spi-aws</artifactId>
-      <version>1.0.0-RELEASE</version>
+      <version>1.0.1.RELEASE</version>
     </dependency>
     ...
   </dependencies>
