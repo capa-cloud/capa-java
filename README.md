@@ -6,9 +6,9 @@ This is the Capa SDK for Java, including the following features:
 
 + Service Invocation(RPC)
 + Configuration Centor(Configuration)
-+ Application Metrics(Metrics)
 + Publish/Subscribe(Pub/Sub)
 + State Management(State)
++ Application Metrics(Metrics)
 + 
 参考项目:
 
@@ -43,7 +43,7 @@ API设计和社区保持同步，请参考Dapr/Layotto等开源项目的设计�
 
 目前API定义在: [cloud-runtimes](https://github.com/reactivegroup/cloud-runtimes-jvm) 中
 
-#### [RPC API design]()
+#### SDK层次设计
 
 module划分主要为以下几个部分：
 * sdk
@@ -56,6 +56,8 @@ module划分主要为以下几个部分：
 应用程序编程时只需要依赖sdk即可，并使用SDK模块中定义的统一编程API。
 
 在运行前，会将具体的SPI实现包引入进去，作为统一编程API的具体实现。
+
+#### 举例：[RPC API design]()
 
 ## Getting Started
 
@@ -80,7 +82,7 @@ For a Maven project, add the following to your pom.xml file:
 </project>
 ```
 
-
+Sample implementation library:
 
 ```xml
 <project>
@@ -90,7 +92,7 @@ For a Maven project, add the following to your pom.xml file:
      <!-- Capa's core SDK with all features. -->
     <dependency>
       <groupId>group.rxcloud</groupId>
-      <artifactId>capa-sdk-spi-aws</artifactId>
+      <artifactId>capa-sdk-spi-demo</artifactId>
       <version>1.0.1.RELEASE</version>
     </dependency>
     ...
@@ -103,8 +105,9 @@ For a Maven project, add the following to your pom.xml file:
 
 Try the following examples to learn more about Capa's Java SDK:
 
-* [RPC]()
-* ...
+* [capa-demo](https://github.com/reactivegroup/capa/tree/master/sdk-spi-demo)
+* [capa-aws](https://github.com/reactivegroup/capa-aws)
+* [capa-alibaba](https://github.com/reactivegroup/capa-alibaba)
 
 #### Reactor API
 

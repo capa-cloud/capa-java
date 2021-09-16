@@ -47,5 +47,10 @@ public interface CapaRpcClient extends DefaultCloudRuntimesClient {
     <T> Mono<T> invokeMethod(InvokeMethodRequest invokeMethodRequest, TypeRef<T> type);
 
     @Override
+    default Mono<Void> shutdown() {
+        return Mono.empty();
+    }
+
+    @Override
     void close();
 }

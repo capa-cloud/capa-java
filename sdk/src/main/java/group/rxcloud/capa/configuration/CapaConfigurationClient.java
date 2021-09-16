@@ -27,4 +27,12 @@ public interface CapaConfigurationClient extends DefaultCloudRuntimesClient {
 
     @Override
     <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type);
+
+    @Override
+    default Mono<Void> shutdown() {
+        return Mono.empty();
+    }
+
+    @Override
+    void close();
 }
