@@ -7,8 +7,7 @@ import group.rxcloud.capa.infrastructure.config.CapaProperties;
 import java.util.function.Supplier;
 
 /**
- * A builder for the {@link CapaRpcClient},
- * Currently only HTTP Client will be supported.
+ * A builder for the {@link CapaRpcClient}, Currently only HTTP Client will be supported.
  */
 public class CapaRpcClientBuilder {
 
@@ -65,13 +64,10 @@ public class CapaRpcClientBuilder {
         if (protocol == null) {
             throw new IllegalStateException("Protocol is required.");
         }
-
-        switch (protocol) {
-            case HTTP:
-                return buildCapaClientHttp();
-            default:
-                throw new IllegalStateException("Unsupported protocol: " + protocol.name());
+        if (protocol == CapaApiProtocol.HTTP) {
+            return buildCapaClientHttp();
         }
+        throw new IllegalStateException("Unsupported protocol: " + protocol.name());
     }
 
     /**

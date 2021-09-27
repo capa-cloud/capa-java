@@ -1,6 +1,7 @@
 package group.rxcloud.capa.infrastructure.exceptions;
 
 import reactor.core.Exceptions;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.Callable;
@@ -71,6 +72,22 @@ public class CapaExceptions {
             return Mono.error(e);
         }
         return Mono.empty();
+    }
+
+    /**
+     * Wraps an exception into CapaException (if not already CapaException).
+     *
+     * @param exception Exception to be wrapped.
+     * @param <T>       Flux's response type.
+     * @return Flux containing CapaException.
+     */
+    public static <T> Flux<T> wrapFlux(Exception exception) {
+        try {
+            wrap(exception);
+        } catch (Exception e) {
+            return Flux.error(e);
+        }
+        return Flux.empty();
     }
 
     /**

@@ -1,7 +1,6 @@
 package group.rxcloud.capa.rpc;
 
 import group.rxcloud.capa.component.http.CapaHttp;
-import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.exceptions.CapaExceptions;
 import group.rxcloud.cloudruntimes.domain.core.invocation.HttpExtension;
 import group.rxcloud.cloudruntimes.domain.core.invocation.InvokeMethodRequest;
@@ -63,8 +62,7 @@ public class CapaRpcClientHttp extends AbstractCapaRpcClient {
                 headers.putAll(metadata);
             }
 
-            Mono<HttpResponse<T>> httpResponseMono = Mono
-                    .subscriberContext()
+            return Mono.subscriberContext()
                     .flatMap(context ->
                             this.client.invokeApi(
                                     httpMethod,
@@ -73,8 +71,7 @@ public class CapaRpcClientHttp extends AbstractCapaRpcClient {
                                     request,
                                     headers,
                                     context,
-                                    type));
-            Mono<T> responseMono = httpResponseMono
+                                    type))
                     .flatMap(httpResponse -> {
                         T object = httpResponse.getBody();
                         if (object != null) {
@@ -82,7 +79,6 @@ public class CapaRpcClientHttp extends AbstractCapaRpcClient {
                         }
                         return Mono.empty();
                     });
-            return responseMono;
         } catch (Exception ex) {
             return CapaExceptions.wrapMono(ex);
         }

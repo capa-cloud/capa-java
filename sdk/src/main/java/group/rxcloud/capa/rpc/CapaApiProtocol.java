@@ -13,7 +13,8 @@ public enum CapaApiProtocol {
     /**
      * HTTP/1.1
      */
-    HTTP;
+    HTTP,
+    GRPC;
 
     /**
      * Parse protocol to {@link CapaApiProtocol}.

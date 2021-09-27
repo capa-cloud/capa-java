@@ -23,7 +23,6 @@ public abstract class AbstractCapaRpcClient implements CapaRpcClient {
                 .withHttpExtension(httpExtension)
                 .withMetadata(metadata)
                 .build();
-
         return this.invokeMethod(req, type);
     }
 
