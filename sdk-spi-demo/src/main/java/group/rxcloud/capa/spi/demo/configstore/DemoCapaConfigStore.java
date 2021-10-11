@@ -42,7 +42,7 @@ public class DemoCapaConfigStore extends CapaConfigStoreSpi {
     }
 
     @Override
-    protected <T> Mono<List<ConfigurationItem<T>>> doGet(String appId, String group, String label, String configName, List<String> values, Map<String, String> metadata, TypeRef<T> type) {
+    protected <T> Mono<List<ConfigurationItem<T>>> doGet(String appId, String group, String label, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
         ConfigurationItem<T> configurationItems = new ConfigurationItem<>();
         configurationItems.setKey("test");
         configurationItems.setContent(null);
@@ -56,7 +56,7 @@ public class DemoCapaConfigStore extends CapaConfigStoreSpi {
     }
 
     @Override
-    protected <T> Flux<SubscribeResp<T>> doSubscribe(String appId, String group, String label, String configName, List<String> values, Map<String, String> metadata, TypeRef<T> type) {
+    protected <T> Flux<SubscribeResp<T>> doSubscribe(String appId, String group, String label, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
         return Flux.interval(Duration.ofSeconds(3))
                 .map(aLong -> this.getSubscribeResp(appId, metadata, aLong));
     }

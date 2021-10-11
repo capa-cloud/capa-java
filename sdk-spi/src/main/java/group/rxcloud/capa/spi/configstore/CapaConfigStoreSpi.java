@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The SPI Capa ConfigStore client. Templates for different implementations.
@@ -37,38 +36,28 @@ public abstract class CapaConfigStoreSpi extends CapaConfigStore {
         final String group = getRequest.getGroup();
         final String label = getRequest.getLabel();
         final Map<String, String> metadata = getRequest.getMetadata();
-
-        // [config_name, value1, value2, ...]
+        // [value1, value2, ...]
         final List<String> keys = getRequest.getKeys();
-        Objects.requireNonNull(keys, "keys");
-        final String configName = keys.get(0);
-        final List<String> values = keys.subList(1, keys.size());
-        if (logger.isDebugEnabled()) {
-            logger.debug("[CapaConfigStoreSpi] get config[config_name={}, values={}]",
-                    configName, keys);
-        }
 
-        return doGet(appId, group, label, configName, values, metadata, type);
+        return doGet(appId, group, label, keys, metadata, type);
     }
 
     /**
      * Get configuration.
      *
-     * @param <T>        the response type parameter
-     * @param appId      the app id
-     * @param group      the group
-     * @param label      the label
-     * @param configName the config name
-     * @param values     the values
-     * @param metadata   the metadata
-     * @param type       the response type
+     * @param <T>      the response type parameter
+     * @param appId    the app id
+     * @param group    the group
+     * @param label    the label
+     * @param keys     the keys
+     * @param metadata the metadata
+     * @param type     the response type
      * @return the async mono response
      */
     protected abstract <T> Mono<List<ConfigurationItem<T>>> doGet(String appId,
                                                                   String group,
                                                                   String label,
-                                                                  String configName,
-                                                                  List<String> values,
+                                                                  List<String> keys,
                                                                   Map<String, String> metadata,
                                                                   TypeRef<T> type);
 
@@ -81,38 +70,28 @@ public abstract class CapaConfigStoreSpi extends CapaConfigStore {
         final String group = subscribeReq.getGroup();
         final String label = subscribeReq.getLabel();
         final Map<String, String> metadata = subscribeReq.getMetadata();
-
-        // [config_name, value1, value2, ...]
+        // [value1, value2, ...]
         final List<String> keys = subscribeReq.getKeys();
-        Objects.requireNonNull(keys, "keys");
-        final String configName = keys.get(0);
-        final List<String> values = keys.subList(1, keys.size());
-        if (logger.isDebugEnabled()) {
-            logger.debug("[CapaConfigStoreSpi] subscribe config[config_name={}, values={}]",
-                    configName, keys);
-        }
 
-        return doSubscribe(appId, group, label, configName, values, metadata, type);
+        return doSubscribe(appId, group, label, keys, metadata, type);
     }
 
     /**
      * Subscribe configuration.
      *
-     * @param <T>        the response type parameter
-     * @param appId      the app id
-     * @param group      the group
-     * @param label      the label
-     * @param configName the config name
-     * @param values     the values
-     * @param metadata   the metadata
-     * @param type       the response type
+     * @param <T>      the response type parameter
+     * @param appId    the app id
+     * @param group    the group
+     * @param label    the label
+     * @param keys     the keys
+     * @param metadata the metadata
+     * @param type     the response type
      * @return the async flux of response stream
      */
     protected abstract <T> Flux<SubscribeResp<T>> doSubscribe(String appId,
                                                               String group,
                                                               String label,
-                                                              String configName,
-                                                              List<String> values,
+                                                              List<String> keys,
                                                               Map<String, String> metadata,
                                                               TypeRef<T> type);
 
