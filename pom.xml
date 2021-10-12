@@ -50,6 +50,7 @@
         <module>sdk-component</module>
         <module>sdk-infrastructure</module>
         <module>sdk-spi-demo</module>
+        <module>sdk-springboot</module>
     </modules>
 
     <properties>
