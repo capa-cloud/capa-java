@@ -1,6 +1,6 @@
 ---
 name: Proposal
-about: Create a proposal for cloud-runtimes-jvm
+about: Create a proposal for Capa
 title: ''
 labels: kind/proposal
 assignees: ''

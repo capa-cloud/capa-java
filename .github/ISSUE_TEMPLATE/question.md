@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask a question about cloud-runtimes-jvm
+about: Ask a question about Capa
 title: ''
 labels: kind/question
 assignees: ''

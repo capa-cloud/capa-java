@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in cloud-runtimes-jvm
+about: Report a bug in Capa
 title: ''
 labels: kind/bug
 assignees: ''

@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Create a Feature Request for cloud-runtimes-jvm
+about: Create a Feature Request for Capa
 title: ''
 labels: kind/enhancement
 assignees: ''
