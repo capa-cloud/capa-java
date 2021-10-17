@@ -7,7 +7,7 @@
     <groupId>group.rxcloud</groupId>
     <artifactId>capa-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3.RELEASE</version>
+    <version>${revision}</version>
     <name>capa-sdk-parent</name>
     <description>SDK for Capa.</description>
     <url>https://github.com/reactivegroup</url>
@@ -60,6 +60,9 @@
         <reactor-core.version>3.3.11.RELEASE</reactor-core.version>
         <junit.version>4.13.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
+        <checkstyle.version>3.1.2</checkstyle.version>
+        <checkstyle.skip>false</checkstyle.skip>
+        <revision>1.0.4-SNAPSHOT</revision>
     </properties>
 
     <dependencyManagement>
@@ -135,6 +138,30 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-checkstyle</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/codestyle</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/codestyle</directory>
+                                    <includes>
+                                        <include>*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.2.1</version>
                 <executions>
@@ -142,6 +169,41 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.41</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>checkstyle-validation</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>codestyle/checkstyle.xml</configLocation>
+                            <suppressionsLocation>codestyle/checkstyle-suppressions.xml</suppressionsLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failOnViolation>true</failOnViolation>
+                            <skip>${checkstyle.skip}</skip>
+                            <excludes>
+                                **/generated/**/*,
+                                **/target/**/*,
+                                **/*.json
+                                **/*.sh
+                            </excludes>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
