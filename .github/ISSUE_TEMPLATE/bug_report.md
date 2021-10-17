@@ -10,7 +10,7 @@ assignees: ''
 
 ### Environment
 
-* cloud-runtimes-jvm version: xxx
+* Capa version: xxx
 * branch: xxx
 * Operating System version: xxx
 * Java version: xxx
