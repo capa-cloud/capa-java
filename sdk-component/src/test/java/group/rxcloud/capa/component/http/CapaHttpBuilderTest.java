@@ -9,14 +9,14 @@ public class CapaHttpBuilderTest {
 
     @Test
     public void testWithObjectSerializer_FailWhenCapaObjectSerializerIsNull() {
-        IllegalArgumentException illegalArgumentException = Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
             new CapaHttpBuilder().withObjectSerializer(null);
         });
     }
 
     @Test
     public void testWithObjectSerializer_FailWhenContentTypeIsNull() {
-        IllegalArgumentException illegalArgumentException = Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
             new CapaHttpBuilder().withObjectSerializer(new TestObjectSerializer());
         });
     }
