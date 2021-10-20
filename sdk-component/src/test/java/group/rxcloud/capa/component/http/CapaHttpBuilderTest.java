@@ -1,6 +1,8 @@
 package group.rxcloud.capa.component.http;
 
+import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
+import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,15 +29,23 @@ public class CapaHttpBuilderTest {
         Assert.assertNotNull(capaHttpBuilder);
     }
 
-    @Test   // TODO: 2021/10/18   need add test
+    @Test
     public void testBuild_Success() {
-
+        CapaHttpBuilder capaHttpBuilder = new CapaHttpBuilder();
+        capaHttpBuilder.build();
     }
 
-    @Test // TODO: 2021/10/18   need add test
-    public void testBuild_FailWhenException() {
+    /**
+     * serializer/deserializer for request/response objects used in tests only
+     */
+    private class TestObjectSerializer extends ObjectSerializer implements CapaObjectSerializer {
 
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getContentType() {
+            return "";
+        }
     }
-
-
 }

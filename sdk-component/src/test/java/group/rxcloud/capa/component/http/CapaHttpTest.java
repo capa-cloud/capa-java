@@ -17,13 +17,6 @@ import java.util.Map;
 public class CapaHttpTest {
 
     @Test
-    public void testCapaHttp_Success() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        TestCapaHttp capaHttp = new TestCapaHttp(builder.build(), new DefaultObjectSerializer());
-        Assert.assertNotNull(capaHttp);
-    }
-
-    @Test
     public void testInvokeApi_Success() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
