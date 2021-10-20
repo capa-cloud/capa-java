@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * The test capa http invoker.
+ * The capa http invoker used in tests only.
  */
 public class TestCapaHttp extends CapaHttp {
 

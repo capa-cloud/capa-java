@@ -11,8 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-
+/**
+ * The capa http invoker used in tests only.
+ */
 public class TestCapaHttp extends CapaHttp {
+
     public TestCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
         super(httpClient, objectSerializer);
     }
