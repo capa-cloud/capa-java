@@ -184,6 +184,9 @@ public class CapaRpcClientBuilderTest {
         });
     }
 
+    /**
+     * The capa http invoker used in tests only.
+     */
     private class ExceptionCapaHttp extends CapaHttp {
 
         public ExceptionCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
