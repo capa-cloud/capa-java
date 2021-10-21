@@ -1,5 +1,7 @@
-package group.rxcloud.capa.component.http;
+package group.rxcloud.capa.rpc;
 
+import group.rxcloud.capa.component.http.CapaHttp;
+import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
