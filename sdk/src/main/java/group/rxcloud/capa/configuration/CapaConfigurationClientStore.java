@@ -206,7 +206,7 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
         SubConfigurationResp<T> subConfigurationResp = new SubConfigurationResp<>();
         subConfigurationResp.setStoreName(subscribeResp.getStoreName());
         subConfigurationResp.setAppId(subscribeResp.getAppId());
-        if (subscribeResp.getItems() != null && subscribeResp.getItems().isEmpty()) {
+        if (subscribeResp.getItems() != null && !subscribeResp.getItems().isEmpty()) {
             List<ConfigurationItem<T>> itemList = subscribeResp.getItems().stream()
                     .map(this::getStoreResponse)
                     .collect(Collectors.toList());
