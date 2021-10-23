@@ -85,9 +85,10 @@ jobs:
         run: |
          cd ${{ github.workspace }}/capa
          mvn --batch-mode --no-snapshot-updates -e --no-transfer-progress --fail-fast clean test verify -Pjacoco -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 -Dmaven.wagon.http.retryHandler.count=5 -DskipTests=false -DskipIntegrationTests=false -Dcheckstyle.skip=true -Drat.skip=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
-      - name: "Update code coverage"
+      - name: "Upload to Codecov"
         uses: codecov/codecov-action@v1
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./**/target/site/jacoco/jacoco.xml
           name: codecov
 
