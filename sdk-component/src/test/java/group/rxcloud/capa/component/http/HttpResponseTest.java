@@ -16,8 +16,8 @@
  */
 package group.rxcloud.capa.component.http;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,15 +31,15 @@ public class HttpResponseTest {
 
         HttpResponse<String> httpResponse = new HttpResponse<String>("body", headers, 200);
 
-        Assert.assertEquals("body", httpResponse.getBody());
+        Assertions.assertEquals("body", httpResponse.getBody());
 
         Map<String, String> resultMap = headers;
         if (httpResponse.getHeaders() != null) {
             resultMap = httpResponse.getHeaders();
         }
-        Assert.assertEquals("application/json", resultMap.get("Content-Type"));
+        Assertions.assertEquals("application/json", resultMap.get("Content-Type"));
 
-        Assert.assertEquals(200, httpResponse.getStatusCode());
+        Assertions.assertEquals(200, httpResponse.getStatusCode());
     }
 
 

@@ -18,8 +18,8 @@ package group.rxcloud.capa.component.configstore;
 
 import com.google.common.collect.Lists;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
@@ -31,14 +31,14 @@ public class CapaConfigStoreBuilderTest {
 
     @Test
     public void testWithObjectSerializer_FailWhenCapaObjectSerializerIsNull() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new CapaConfigStoreBuilder(constructStoreConfig()).withObjectSerializer(null);
         });
     }
 
     @Test
     public void testWithObjectSerializer_FailWhenContentTypeIsNull() {
-        IllegalArgumentException illegalArgumentException = Assert.assertThrows(IllegalArgumentException.class, () -> {
+        IllegalArgumentException illegalArgumentException = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new CapaConfigStoreBuilder(constructStoreConfig()).withObjectSerializer(new TestObjectSerializer());
         });
     }
@@ -46,14 +46,14 @@ public class CapaConfigStoreBuilderTest {
     @Test
     public void testWithObjectSerializer_SuccessWhenDefaultObjectSerializerIsUsed() {
         CapaConfigStoreBuilder capaConfigStoreBuilder = new CapaConfigStoreBuilder(constructStoreConfig()).withObjectSerializer(new DefaultObjectSerializer());
-        Assert.assertNotNull(capaConfigStoreBuilder);
+        Assertions.assertNotNull(capaConfigStoreBuilder);
     }
 
     @Test
     public void testBuild_Success() {
         CapaConfigStoreBuilder capaConfigStoreBuilder = new CapaConfigStoreBuilder(constructStoreConfig());
         CapaConfigStore build = capaConfigStoreBuilder.build();
-        Assert.assertNotNull(build);
+        Assertions.assertNotNull(build);
     }
 
     private StoreConfig constructStoreConfig() {

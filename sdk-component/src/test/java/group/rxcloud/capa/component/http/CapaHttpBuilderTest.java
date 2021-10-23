@@ -19,22 +19,21 @@ package group.rxcloud.capa.component.http;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CapaHttpBuilderTest {
 
     @Test
     public void testWithObjectSerializer_FailWhenCapaObjectSerializerIsNull() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new CapaHttpBuilder().withObjectSerializer(null);
         });
     }
 
     @Test
     public void testWithObjectSerializer_FailWhenContentTypeIsNull() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new CapaHttpBuilder().withObjectSerializer(new TestObjectSerializer());
         });
     }
@@ -42,7 +41,7 @@ public class CapaHttpBuilderTest {
     @Test
     public void testWithObjectSerializer_SuccessWhenDefaultObjectSerializerIsUsed() {
         CapaHttpBuilder capaHttpBuilder = new CapaHttpBuilder().withObjectSerializer(new DefaultObjectSerializer());
-        Assert.assertNotNull(capaHttpBuilder);
+        Assertions.assertNotNull(capaHttpBuilder);
     }
 
     @Test

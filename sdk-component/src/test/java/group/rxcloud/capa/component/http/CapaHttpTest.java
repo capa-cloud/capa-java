@@ -19,8 +19,8 @@ package group.rxcloud.capa.component.http;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class CapaHttpTest {
         HttpResponse<String> block = responseMono.block();
         int statusCode = block.getStatusCode();
 
-        Assert.assertEquals(200, statusCode);
+        Assertions.assertEquals(200, statusCode);
     }
 
     @Test

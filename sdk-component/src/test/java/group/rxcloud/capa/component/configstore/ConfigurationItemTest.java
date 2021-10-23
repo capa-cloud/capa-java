@@ -1,4 +1,3 @@
-package group.rxcloud.capa.component.configstore;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -15,8 +14,10 @@ package group.rxcloud.capa.component.configstore;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.junit.Assert;
-import org.junit.Test;
+package group.rxcloud.capa.component.configstore;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,16 +42,16 @@ public class ConfigurationItemTest {
         configurationItem.setMetadata(metaDataMap);
         configurationItem.setTags(metaDataMap);
 
-        Assert.assertNotNull(configurationItem);
-        Assert.assertEquals("testKey", configurationItem.getKey());
-        Assert.assertEquals("testContent", configurationItem.getContent());
-        Assert.assertEquals("testGroup", configurationItem.getGroup());
-        Assert.assertEquals("testLabel", configurationItem.getLabel());
+        Assertions.assertNotNull(configurationItem);
+        Assertions.assertEquals("testKey", configurationItem.getKey());
+        Assertions.assertEquals("testContent", configurationItem.getContent());
+        Assertions.assertEquals("testGroup", configurationItem.getGroup());
+        Assertions.assertEquals("testLabel", configurationItem.getLabel());
 
-        Assert.assertEquals(2, configurationItem.getMetadata().size());
-        Assert.assertEquals("default", configurationItem.getMetadata().get("cluster"));
+        Assertions.assertEquals(2, configurationItem.getMetadata().size());
+        Assertions.assertEquals("default", configurationItem.getMetadata().get("cluster"));
 
-        Assert.assertEquals(2, configurationItem.getTags().size());
-        Assert.assertEquals("testNamespace", configurationItem.getTags().get("namespace"));
+        Assertions.assertEquals(2, configurationItem.getTags().size());
+        Assertions.assertEquals("testNamespace", configurationItem.getTags().get("namespace"));
     }
 }

@@ -17,8 +17,8 @@
 package group.rxcloud.capa.component.configstore;
 
 import com.google.common.collect.Lists;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,15 +42,15 @@ public class GetRequestTest {
         metaDataMap.put("namespace", "testNamespace");
         getRequest.setMetadata(metaDataMap);
 
-        Assert.assertNotNull(getRequest);
-        Assert.assertEquals("12345", getRequest.getAppId());
-        Assert.assertEquals("testGroup", getRequest.getGroup());
-        Assert.assertEquals("testLabel", getRequest.getLabel());
+        Assertions.assertNotNull(getRequest);
+        Assertions.assertEquals("12345", getRequest.getAppId());
+        Assertions.assertEquals("testGroup", getRequest.getGroup());
+        Assertions.assertEquals("testLabel", getRequest.getLabel());
 
-        Assert.assertEquals(2, getRequest.getKeys().size());
-        Assert.assertEquals("testKey1", getRequest.getKeys().get(0));
+        Assertions.assertEquals(2, getRequest.getKeys().size());
+        Assertions.assertEquals("testKey1", getRequest.getKeys().get(0));
 
-        Assert.assertEquals(2, getRequest.getMetadata().size());
-        Assert.assertEquals("testNamespace", getRequest.getMetadata().get("namespace"));
+        Assertions.assertEquals(2, getRequest.getMetadata().size());
+        Assertions.assertEquals("testNamespace", getRequest.getMetadata().get("namespace"));
     }
 }

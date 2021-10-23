@@ -1,4 +1,3 @@
-package group.rxcloud.capa.component.configstore;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -15,9 +14,11 @@ package group.rxcloud.capa.component.configstore;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.component.configstore;
+
 import com.google.common.collect.Lists;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
@@ -35,15 +36,15 @@ public class StoreConfigTest {
         storeConfig.setMetadata(Collections.emptyMap());
         storeConfig.setTimeOut("30000");
 
-        Assert.assertNotNull(storeConfig);
-        Assert.assertEquals("qconfig", storeConfig.getStoreName());
+        Assertions.assertNotNull(storeConfig);
+        Assertions.assertEquals("qconfig", storeConfig.getStoreName());
 
-        Assert.assertEquals(1, storeConfig.getAddress().size());
-        Assert.assertEquals("address", storeConfig.getAddress().get(0));
+        Assertions.assertEquals(1, storeConfig.getAddress().size());
+        Assertions.assertEquals("address", storeConfig.getAddress().get(0));
 
-        Assert.assertEquals(0, storeConfig.getMetadata().size());
+        Assertions.assertEquals(0, storeConfig.getMetadata().size());
 
-        Assert.assertEquals("30000", storeConfig.getTimeOut());
+        Assertions.assertEquals("30000", storeConfig.getTimeOut());
     }
 
 }

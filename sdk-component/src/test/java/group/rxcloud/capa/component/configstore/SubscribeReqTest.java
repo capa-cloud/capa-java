@@ -17,8 +17,8 @@
 package group.rxcloud.capa.component.configstore;
 
 import com.google.common.collect.Lists;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
@@ -36,14 +36,14 @@ public class SubscribeReqTest {
         req.setKeys(Lists.newArrayList("testKey1", "testKey2"));
         req.setMetadata(Collections.emptyMap());
 
-        Assert.assertNotNull(req);
-        Assert.assertEquals("12345", req.getAppId());
-        Assert.assertEquals("testGroup", req.getGroup());
-        Assert.assertEquals("testLabel", req.getLabel());
+        Assertions.assertNotNull(req);
+        Assertions.assertEquals("12345", req.getAppId());
+        Assertions.assertEquals("testGroup", req.getGroup());
+        Assertions.assertEquals("testLabel", req.getLabel());
 
-        Assert.assertEquals(2, req.getKeys().size());
-        Assert.assertEquals("testKey1", req.getKeys().get(0));
+        Assertions.assertEquals(2, req.getKeys().size());
+        Assertions.assertEquals("testKey1", req.getKeys().get(0));
 
-        Assert.assertEquals(0, req.getMetadata().size());
+        Assertions.assertEquals(0, req.getMetadata().size());
     }
 }
