@@ -74,15 +74,16 @@
         <maven.version>3.8.1</maven.version>
         <cloud-runtimes.version>1.0.1.RELEASE</cloud-runtimes.version>
         <reactor-core.version>3.3.11.RELEASE</reactor-core.version>
-        <junit.version>4.13.1</junit.version>
+        <junit.version>5.3.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
         <checkstyle.version>3.1.2</checkstyle.version>
-        <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
+        <apache.rat.version>0.13</apache.rat.version>
+        <maven.surefire.version>3.0.0-M1</maven.surefire.version>
         <maven.jacoco.version>0.8.6</maven.jacoco.version>
         <!-- Build args -->
-        <argline>-server -Xms256m -Xmx512m -Dfile.encoding=UTF-8
+        <arg.line>-server -Xms256m -Xmx512m -Dfile.encoding=UTF-8
             -Djava.net.preferIPv4Stack=true -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=128m
-        </argline>
+        </arg.line>
         <checkstyle.skip>true</checkstyle.skip>
         <rat.skip>true</rat.skip>
         <jacoco.skip>true</jacoco.skip>
@@ -134,8 +135,8 @@
 
             <!-- unit test -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -149,7 +150,7 @@
     </dependencyManagement>
 
     <profiles>
-        <!-- jacoco: mvn validate -Pjacoco  -->
+        <!-- jacoco: mvn verify -Pjacoco  -->
         <profile>
             <id>jacoco</id>
             <properties>
@@ -263,7 +264,7 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
-                <version>${apache-rat-plugin.version}</version>
+                <version>${apache.rat.version}</version>
                 <executions>
                     <execution>
                         <id>rat-validate</id>
@@ -315,35 +316,23 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${maven.jacoco.version}</version>
                 <executions>
+                    <!-- Prepares the property pointing to the JaCoCo runtime agent
+                    which is passed as VM argument when Maven the Surefire plugin is executed. -->
                     <execution>
-                        <id>jacoco-initialize</id>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <propertyName>jacocoArgLine</propertyName>
-                        </configuration>
                     </execution>
+                    <!-- Ensures that the code coverage report is created after
+                    all tests have been run. -->
                     <execution>
-                        <id>report-aggregate</id>
-                        <phase>verify</phase>
+                        <id>generate-report</id>
                         <goals>
-                            <goal>report-aggregate</goal>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <useSystemClassLoader>true</useSystemClassLoader>
-                    <forkMode>once</forkMode>
-                    <argLine>${argline} ${jacocoArgLine}</argLine>
-                    <systemProperties>
-                        <!-- common shared -->
-                    </systemProperties>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

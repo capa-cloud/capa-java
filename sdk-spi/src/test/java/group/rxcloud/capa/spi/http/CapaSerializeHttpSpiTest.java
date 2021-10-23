@@ -31,9 +31,9 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import reactor.util.context.Context;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class CapaSerializeHttpSpiTest {
 
     private CapaObjectSerializer defaultObjectSerializer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         okHttpClient = new OkHttpClient.Builder().build();
         defaultObjectSerializer = new DefaultObjectSerializer();
@@ -64,18 +64,18 @@ public class CapaSerializeHttpSpiTest {
         byte[] serializerRequest = capaSerializeHttpSpi.getRequestWithSerialize("Object");
         String request = defaultObjectSerializer.deserialize(serializerRequest, TypeRef.STRING);
 
-        Assert.assertEquals("Object", request);
+        Assertions.assertEquals("Object", request);
     }
 
     @Test
     public void testGetRequestWithSerialize_FailWhenThrowException() {
         capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestIOExceptionObjectSerializer());
-        Assert.assertThrows(CapaException.class, () -> {
+        Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getRequestWithSerialize("Object");
         });
 
         capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestRuntimeExceptionObjectSerializer());
-        Assert.assertThrows(CapaException.class, () -> {
+        Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getRequestWithSerialize("Object");
         });
     }
@@ -88,8 +88,8 @@ public class CapaSerializeHttpSpiTest {
         RequestBody requestBody = capaSerializeHttpSpi.getRequestBodyWithSerialize("Object", headers);
         String type = requestBody.contentType().type();
         String subtype = requestBody.contentType().subtype();
-        Assert.assertEquals("application", type);
-        Assert.assertEquals("json", subtype);
+        Assertions.assertEquals("application", type);
+        Assertions.assertEquals("json", subtype);
     }
 
     @Test
@@ -97,8 +97,8 @@ public class CapaSerializeHttpSpiTest {
         RequestBody requestBody = capaSerializeHttpSpi.getRequestBodyWithSerialize(null, null);
         String type = requestBody.contentType().type();
         String subtype = requestBody.contentType().subtype();
-        Assert.assertEquals("application", type);
-        Assert.assertEquals("json", subtype);
+        Assertions.assertEquals("application", type);
+        Assertions.assertEquals("json", subtype);
     }
 
     @Test
@@ -119,19 +119,19 @@ public class CapaSerializeHttpSpiTest {
                 httpResponse);
 
         int statusCode = deserializeHttpResponse.getStatusCode();
-        Assert.assertEquals(200, statusCode);
+        Assertions.assertEquals(200, statusCode);
     }
 
     @Test
     public void testGetResponseBodyWithDeserialize_FailWhenThrowException() {
         HttpResponse<byte[]> httpResponse = new HttpResponse<>(null, null, 200);
         capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestIOExceptionObjectSerializer());
-        Assert.assertThrows(CapaException.class, () -> {
+        Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getResponseBodyWithDeserialize(TypeRef.STRING, httpResponse);
         });
 
         capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestRuntimeExceptionObjectSerializer());
-        Assert.assertThrows(CapaException.class, () -> {
+        Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getResponseBodyWithDeserialize(TypeRef.STRING, httpResponse);
         });
     }
@@ -170,7 +170,7 @@ public class CapaSerializeHttpSpiTest {
     public void testGetRpcServiceOptions_Success() {
         RpcServiceOptions rpcServiceOptions = capaSerializeHttpSpi.getRpcServiceOptions("appId");
         String className = rpcServiceOptions.getClass().getName();
-        Assert.assertEquals("group.rxcloud.capa.spi.config.TestRpcServiceOptions", className);
+        Assertions.assertEquals("group.rxcloud.capa.spi.config.TestRpcServiceOptions", className);
     }
 
     @Test
@@ -199,7 +199,7 @@ public class CapaSerializeHttpSpiTest {
 
         HttpResponse<String> httpResponse = responseCompletableFuture.get();
         int statusCode = httpResponse.getStatusCode();
-        Assert.assertEquals(200, statusCode);
+        Assertions.assertEquals(200, statusCode);
     }
 
     /**

@@ -26,9 +26,9 @@ import group.rxcloud.cloudruntimes.domain.core.invocation.HttpExtension;
 import group.rxcloud.cloudruntimes.domain.core.invocation.InvokeMethodRequest;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
 
@@ -46,7 +46,7 @@ public class CapaRpcClientBuilderTest {
 
     private DefaultObjectSerializer defaultObjectSerializer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         okHttpClient = new OkHttpClient.Builder().build();
         defaultObjectSerializer = new DefaultObjectSerializer();
@@ -59,7 +59,7 @@ public class CapaRpcClientBuilderTest {
 
         Mono<String> stringMono = capaRpcClientHttp.invokeMethod(methodRequest, TypeRef.STRING);
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             stringMono.block();
         });
     }
@@ -70,7 +70,7 @@ public class CapaRpcClientBuilderTest {
 
         Mono<String> stringMono = capaRpcClientHttp.invokeMethod(methodRequest, TypeRef.STRING);
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             stringMono.block();
         });
     }
@@ -83,7 +83,7 @@ public class CapaRpcClientBuilderTest {
 
         Mono<String> stringMono = capaRpcClientHttp.invokeMethod(methodRequest, TypeRef.STRING);
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             stringMono.block();
         });
     }
@@ -101,7 +101,7 @@ public class CapaRpcClientBuilderTest {
         Mono<String> responseMono = capaRpcClientHttp.invokeMethod(methodRequest, TypeRef.STRING);
         String response = responseMono.block();
 
-        Assert.assertNull(response);
+        Assertions.assertNull(response);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class CapaRpcClientBuilderTest {
                 metadata,
                 String.class);
         String response = responseMono.block();
-        Assert.assertNull(response);
+        Assertions.assertNull(response);
 
         responseMono = capaRpcClientHttp.invokeMethod("appId",
                 "method",
@@ -124,7 +124,7 @@ public class CapaRpcClientBuilderTest {
                 HttpExtension.POST,
                 TypeRef.STRING);
         response = responseMono.block();
-        Assert.assertNull(response);
+        Assertions.assertNull(response);
 
         responseMono = capaRpcClientHttp.invokeMethod("appId",
                 "method",
@@ -132,7 +132,7 @@ public class CapaRpcClientBuilderTest {
                 HttpExtension.POST,
                 String.class);
         response = responseMono.block();
-        Assert.assertNull(response);
+        Assertions.assertNull(response);
 
         responseMono = capaRpcClientHttp.invokeMethod("appId",
                 "method",
@@ -140,7 +140,7 @@ public class CapaRpcClientBuilderTest {
                 metadata,
                 String.class);
         response = responseMono.block();
-        Assert.assertNull(response);
+        Assertions.assertNull(response);
 
         responseMono = capaRpcClientHttp.invokeMethod("appId",
                 "method",
@@ -148,7 +148,7 @@ public class CapaRpcClientBuilderTest {
                 metadata,
                 TypeRef.STRING);
         response = responseMono.block();
-        Assert.assertNull(response);
+        Assertions.assertNull(response);
 
         Mono<Void> voidResponseMono = capaRpcClientHttp.invokeMethod("appId",
                 "method",
@@ -175,7 +175,7 @@ public class CapaRpcClientBuilderTest {
                 HttpExtension.POST,
                 metadata);
         byte[] byteResponse = byteResponseMono.block();
-        Assert.assertNull(byteResponse);
+        Assertions.assertNull(byteResponse);
 
     }
 
@@ -195,7 +195,7 @@ public class CapaRpcClientBuilderTest {
 
         capaRpcClientHttp = new CapaRpcClientHttp(new ExceptionCapaHttp(okHttpClient, defaultObjectSerializer));
 
-        Assert.assertThrows(CapaException.class, () -> {
+        Assertions.assertThrows(CapaException.class, () -> {
             capaRpcClientHttp.close();
         });
     }

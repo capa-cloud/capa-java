@@ -26,8 +26,8 @@ import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationReques
 import group.rxcloud.cloudruntimes.domain.core.configuration.SaveConfigurationRequest;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationResp;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -47,26 +47,26 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testSaveConfiguration_FailWhenThrowUnsupportedOperationException() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assert.assertThrows(UnsupportedOperationException.class, () -> clientStore.saveConfiguration(new SaveConfigurationRequest()).block());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.saveConfiguration(new SaveConfigurationRequest()).block());
     }
 
     @Test
     public void testDeleteConfiguration_FailWhenThrowUnsupportedOperationException() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assert.assertThrows(UnsupportedOperationException.class, () -> clientStore.deleteConfiguration(new ConfigurationRequestItem()).block());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.deleteConfiguration(new ConfigurationRequestItem()).block());
 
     }
 
     @Test
     public void testShutDown_Success() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assert.assertEquals(Mono.empty().block(), clientStore.shutdown().block());
+        Assertions.assertEquals(Mono.empty().block(), clientStore.shutdown().block());
     }
 
     @Test
     public void testGetConfiguration_FailWhenStoreNameIsNull() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assert.assertThrows(IllegalArgumentException.class, () -> clientStore.getConfiguration(new ConfigurationRequestItem(), TypeRef.STRING).block());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> clientStore.getConfiguration(new ConfigurationRequestItem(), TypeRef.STRING).block());
     }
 
     @Test
@@ -74,14 +74,14 @@ public class CapaConfigurationClientStoreTest {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(constructConfigStoreListWithConfirgurationItemHasValue());
         Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration(constructConfigurationRequestItem(), TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = configuration.block();
-        Assert.assertNotNull(configurationItems);
-        Assert.assertEquals(1, configurationItems.size());
+        Assertions.assertNotNull(configurationItems);
+        Assertions.assertEquals(1, configurationItems.size());
 
         ConfigurationItem<String> firstItem = configurationItems.get(0);
-        Assert.assertEquals("testKey1", firstItem.getKey());
-        Assert.assertEquals("testContent", firstItem.getContent());
-        Assert.assertEquals("testGroup", firstItem.getGroup());
-        Assert.assertEquals("testLabel", firstItem.getLabel());
+        Assertions.assertEquals("testKey1", firstItem.getKey());
+        Assertions.assertEquals("testContent", firstItem.getContent());
+        Assertions.assertEquals("testGroup", firstItem.getGroup());
+        Assertions.assertEquals("testLabel", firstItem.getLabel());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class CapaConfigurationClientStoreTest {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(constructConfigStoreListWithConfigurationItemIsEmpty());
         Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration(constructConfigurationRequestItem(), TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = configuration.block();
-        Assert.assertNull(configurationItems);
+        Assertions.assertNull(configurationItems);
     }
 
     @Test
@@ -114,13 +114,13 @@ public class CapaConfigurationClientStoreTest {
         configurationRequestItem.setStoreName("qconfig");
         Flux<SubConfigurationResp<String>> subConfigurationRespFlux = clientStore.subscribeConfiguration(configurationRequestItem, TypeRef.STRING);
         SubConfigurationResp<String> stringSubConfigurationResp = subConfigurationRespFlux.blockFirst();
-        Assert.assertNotNull(stringSubConfigurationResp);
-        Assert.assertEquals(1, stringSubConfigurationResp.getItems().size());
+        Assertions.assertNotNull(stringSubConfigurationResp);
+        Assertions.assertEquals(1, stringSubConfigurationResp.getItems().size());
         ConfigurationItem<String> firstItem = stringSubConfigurationResp.getItems().get(0);
-        Assert.assertEquals("testKey1", firstItem.getKey());
-        Assert.assertEquals("testContent", firstItem.getContent());
-        Assert.assertEquals("testGroup", firstItem.getGroup());
-        Assert.assertEquals("testLabel", firstItem.getLabel());
+        Assertions.assertEquals("testKey1", firstItem.getKey());
+        Assertions.assertEquals("testContent", firstItem.getContent());
+        Assertions.assertEquals("testGroup", firstItem.getGroup());
+        Assertions.assertEquals("testLabel", firstItem.getLabel());
     }
 
     @Test
