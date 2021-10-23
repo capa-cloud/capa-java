@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -61,7 +77,15 @@
         <junit.version>4.13.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
         <checkstyle.version>3.1.2</checkstyle.version>
-        <checkstyle.skip>false</checkstyle.skip>
+        <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
+        <maven.jacoco.version>0.8.6</maven.jacoco.version>
+        <!-- Build args -->
+        <argline>-server -Xms256m -Xmx512m -Dfile.encoding=UTF-8
+            -Djava.net.preferIPv4Stack=true -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=128m
+        </argline>
+        <checkstyle.skip>true</checkstyle.skip>
+        <rat.skip>true</rat.skip>
+        <jacoco.skip>true</jacoco.skip>
         <revision>1.0.4-SNAPSHOT</revision>
     </properties>
 
@@ -124,6 +148,30 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <!-- jacoco: mvn validate -Pjacoco  -->
+        <profile>
+            <id>jacoco</id>
+            <properties>
+                <jacoco.skip>false</jacoco.skip>
+            </properties>
+        </profile>
+        <!-- check apache license: mvn validate -Prat  -->
+        <profile>
+            <id>rat</id>
+            <properties>
+                <rat.skip>false</rat.skip>
+            </properties>
+        </profile>
+        <!-- check code style: mvn validate -Pcheckstyle  -->
+        <profile>
+            <id>checkstyle</id>
+            <properties>
+                <checkstyle.skip>false</checkstyle.skip>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -139,6 +187,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
                 <executions>
                     <execution>
                         <id>copy-checkstyle</id>
@@ -207,6 +259,93 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>${apache-rat-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>rat-validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.versionsBackup</exclude>
+                        <exclude>**/.idea/</exclude>
+                        <exclude>**/*.iml</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.load</exclude>
+                        <exclude>**/*.flex</exclude>
+                        <exclude>**/*.fc</exclude>
+                        <exclude>**/*.properties</exclude>
+                        <exclude>**/*.sh</exclude>
+                        <exclude>**/*.bat</exclude>
+                        <exclude>**/*.md</exclude>
+                        <exclude>.git/</exclude>
+                        <exclude>.gitignore</exclude>
+                        <!-- ASF jenkins box puts the Maven repo in our root directory. -->
+                        <exclude>.repository/</exclude>
+                        <exclude>**/.settings/*</exclude>
+                        <exclude>**/.classpath</exclude>
+                        <exclude>**/.project</exclude>
+                        <exclude>**/target/**</exclude>
+                        <exclude>**/*.log</exclude>
+                        <exclude>CODE_OF_CONDUCT.md</exclude>
+                        <exclude>.codecov.yml</exclude>
+                        <exclude>.travis.yml</exclude>
+                        <exclude>PULL_REQUEST_TEMPLATE.md</exclude>
+                        <exclude>CONTRIBUTING.md</exclude>
+                        <exclude>README.md</exclude>
+                        <exclude>Jenkinsfile</exclude>
+                        <exclude>**/codestyle/*</exclude>
+                        <exclude>**/resources/META-INF/**</exclude>
+                        <exclude>.github/**</exclude>
+                        <exclude>codestyle/**</exclude>
+                        <exclude>docs/**</exclude>
+                        <exclude>spec/**</exclude>
+                        <exclude>**/generated/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>jacocoArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <forkMode>once</forkMode>
+                    <argLine>${argline} ${jacocoArgLine}</argLine>
+                    <systemProperties>
+                        <!-- common shared -->
+                    </systemProperties>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
