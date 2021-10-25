@@ -22,17 +22,12 @@ import group.rxcloud.capa.component.configstore.SubscribeReq;
 import group.rxcloud.capa.component.configstore.SubscribeResp;
 import group.rxcloud.capa.infrastructure.exceptions.CapaExceptions;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
-import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationRequestItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationResp;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,26 +63,30 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
     }
 
     @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
+    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
+        return getConfiguration(storeName, appId, keys, metadata, null, null, type);
+    }
+
+    @Override
+    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, TypeRef<T> type) {
+        return getConfiguration(storeName, appId, keys, metadata, group, null, type);
+    }
+
+    @Override
+    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, String label, TypeRef<T> type) {
         try {
-            final String storeName = configurationRequestItem.getStoreName();
             final CapaConfigStore store = this.getStore(storeName);
 
-            final String appId = configurationRequestItem.getAppId();
-            String group = configurationRequestItem.getGroup();
-            String label = configurationRequestItem.getLabel();
-            List<String> keys = configurationRequestItem.getKeys();
-            Map<String, String> metadata = configurationRequestItem.getMetadata();
             if (group == null || group.trim().isEmpty()) {
                 group = store.getDefaultGroup();
             }
             if (label == null || label.trim().isEmpty()) {
                 label = store.getDefaultLabel();
             }
-            if (keys == null) {
+            if (keys == null || keys.isEmpty()) {
                 keys = new ArrayList<>(2);
             }
-            if (metadata == null) {
+            if (metadata == null || metadata.isEmpty()) {
                 metadata = new HashMap<>(2, 1);
             }
 
@@ -111,8 +110,8 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
                             return Mono.empty();
                         }
                         return Flux.fromStream(configurationItems
-                                        .stream()
-                                        .map(this::getStoreResponse))
+                                .stream()
+                                .map(this::getStoreResponse))
                                 .collectList();
                     });
         } catch (Exception ex) {
@@ -120,38 +119,21 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
         }
     }
 
-    private GetRequest getStoreRequest(String appId, String group, String label, List<String> keys, Map<String, String> metadata) {
-        GetRequest getRequest = new GetRequest();
-        getRequest.setAppId(appId);
-        getRequest.setGroup(group);
-        getRequest.setLabel(label);
-        getRequest.setKeys(keys);
-        getRequest.setMetadata(metadata);
-        return getRequest;
-    }
-
-    private <T> ConfigurationItem<T> getStoreResponse(group.rxcloud.capa.component.configstore.ConfigurationItem<T> tConfigurationItem) {
-        ConfigurationItem<T> configurationItem = new ConfigurationItem<>();
-        configurationItem.setKey(tConfigurationItem.getKey());
-        configurationItem.setContent(tConfigurationItem.getContent());
-        configurationItem.setGroup(tConfigurationItem.getGroup());
-        configurationItem.setLabel(tConfigurationItem.getLabel());
-        configurationItem.setTags(tConfigurationItem.getTags());
-        configurationItem.setMetadata(tConfigurationItem.getMetadata());
-        return configurationItem;
+    @Override
+    public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
+        return subscribeConfiguration(storeName, appId, keys, metadata, null, null, type);
     }
 
     @Override
-    public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
+    public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, TypeRef<T> type) {
+        return subscribeConfiguration(storeName, appId, keys, metadata, group, null, type);
+    }
+
+    @Override
+    public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, String label, TypeRef<T> type) {
         try {
-            final String storeName = configurationRequestItem.getStoreName();
             final CapaConfigStore store = this.getStore(storeName);
 
-            final String appId = configurationRequestItem.getAppId();
-            String group = configurationRequestItem.getGroup();
-            String label = configurationRequestItem.getLabel();
-            List<String> keys = configurationRequestItem.getKeys();
-            Map<String, String> metadata = configurationRequestItem.getMetadata();
             if (group == null || group.trim().isEmpty()) {
                 group = store.getDefaultGroup();
             }
@@ -190,6 +172,28 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
         } catch (Exception ex) {
             return CapaExceptions.wrapFlux(ex);
         }
+    }
+
+
+    private GetRequest getStoreRequest(String appId, String group, String label, List<String> keys, Map<String, String> metadata) {
+        GetRequest getRequest = new GetRequest();
+        getRequest.setAppId(appId);
+        getRequest.setGroup(group);
+        getRequest.setLabel(label);
+        getRequest.setKeys(keys);
+        getRequest.setMetadata(metadata);
+        return getRequest;
+    }
+
+    private <T> ConfigurationItem<T> getStoreResponse(group.rxcloud.capa.component.configstore.ConfigurationItem<T> tConfigurationItem) {
+        ConfigurationItem<T> configurationItem = new ConfigurationItem<>();
+        configurationItem.setKey(tConfigurationItem.getKey());
+        configurationItem.setContent(tConfigurationItem.getContent());
+        configurationItem.setGroup(tConfigurationItem.getGroup());
+        configurationItem.setLabel(tConfigurationItem.getLabel());
+        configurationItem.setTags(tConfigurationItem.getTags());
+        configurationItem.setMetadata(tConfigurationItem.getMetadata());
+        return configurationItem;
     }
 
     private SubscribeReq getSubscribeRequest(String appId, String group, String label, List<String> keys, Map<String, String> metadata) {

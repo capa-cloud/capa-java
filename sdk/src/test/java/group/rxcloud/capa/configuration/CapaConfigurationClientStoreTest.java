@@ -21,6 +21,7 @@ import group.rxcloud.capa.component.configstore.CapaConfigStore;
 import group.rxcloud.capa.component.configstore.GetRequest;
 import group.rxcloud.capa.component.configstore.SubscribeReq;
 import group.rxcloud.capa.component.configstore.SubscribeResp;
+import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationRequestItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SaveConfigurationRequest;
@@ -66,13 +67,19 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testGetConfiguration_FailWhenStoreNameIsNull() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assertions.assertThrows(IllegalArgumentException.class, () -> clientStore.getConfiguration(new ConfigurationRequestItem(), TypeRef.STRING).block());
+        Assertions.assertThrows(CapaException.class, () -> clientStore.getConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), TypeRef.STRING).block());
+    }
+
+    @Test
+    public void testGetConfigurationLevel1_FailWhenStoreNameIsNull() {
+        CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
+        Assertions.assertThrows(CapaException.class, () -> clientStore.getConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), null, TypeRef.STRING).block());
     }
 
     @Test
     public void testGetConfiguration_SuccessWithConfigurationHasValue() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(constructConfigStoreListWithConfirgurationItemHasValue());
-        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration(constructConfigurationRequestItem(), TypeRef.STRING);
+        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration("qconfig", "123", Lists.newArrayList(), Collections.emptyMap(), null, null, TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = configuration.block();
         Assertions.assertNotNull(configurationItems);
         Assertions.assertEquals(1, configurationItems.size());
@@ -87,7 +94,7 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testGetConfiguration_SuccessWithConfigurationItemIsEmpty() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(constructConfigStoreListWithConfigurationItemIsEmpty());
-        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration(constructConfigurationRequestItem(), TypeRef.STRING);
+        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), "testGroup", "testLabel", TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = configuration.block();
         Assertions.assertNull(configurationItems);
     }
@@ -112,7 +119,7 @@ public class CapaConfigurationClientStoreTest {
 
         ConfigurationRequestItem configurationRequestItem = new ConfigurationRequestItem();
         configurationRequestItem.setStoreName("qconfig");
-        Flux<SubConfigurationResp<String>> subConfigurationRespFlux = clientStore.subscribeConfiguration(configurationRequestItem, TypeRef.STRING);
+        Flux<SubConfigurationResp<String>> subConfigurationRespFlux = clientStore.subscribeConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), TypeRef.STRING);
         SubConfigurationResp<String> stringSubConfigurationResp = subConfigurationRespFlux.blockFirst();
         Assertions.assertNotNull(stringSubConfigurationResp);
         Assertions.assertEquals(1, stringSubConfigurationResp.getItems().size());
@@ -156,11 +163,5 @@ public class CapaConfigurationClientStoreTest {
         Mono<List<group.rxcloud.capa.component.configstore.ConfigurationItem>> just = Mono.just(result);
         Mockito.when(mockConfigStore.get(any(GetRequest.class), any(TypeRef.class))).thenReturn(just);
         return Lists.newArrayList(mockConfigStore);
-    }
-
-    private ConfigurationRequestItem constructConfigurationRequestItem() {
-        ConfigurationRequestItem item = new ConfigurationRequestItem();
-        item.setStoreName("qconfig");
-        return item;
     }
 }
