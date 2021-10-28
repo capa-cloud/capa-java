@@ -24,11 +24,12 @@ import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.domain.core.invocation.Metadata;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.Call;
-import okhttp3.OkHttpClient;
 import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.MediaType;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * The type Capa serialize http spi.
+ * The Capa http spi with default serializer process.
  */
 public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
 
@@ -68,9 +69,17 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
         try {
             return objectSerializer.serialize(requestData);
         } catch (IOException e) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("[CapaSerializeHttpSpi] serialize rpc request[{}] io error",
+                        requestData, e);
+            }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
                     "Request Type: " + requestData.getClass().getName());
         } catch (Exception e) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("[CapaSerializeHttpSpi] serialize rpc request[{}] error",
+                        requestData, e);
+            }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
                     "Request Type: " + requestData.getClass().getName(), e);
         }
@@ -84,7 +93,6 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
      * @return the request body with byte[] serialize
      */
     protected RequestBody getRequestBodyWithSerialize(Object requestData, Map<String, String> headers) {
-        byte[] serializedRequestBody = getRequestWithSerialize(requestData);
         final String contentType = headers != null
                 ? headers.get(Metadata.CONTENT_TYPE)
                 : null;
@@ -97,9 +105,25 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
                     ? REQUEST_BODY_EMPTY_JSON
                     : RequestBody.Companion.create(new byte[0], mediaType);
         } else {
+            byte[] serializedRequestBody = getRequestWithSerialize(requestData);
             body = RequestBody.Companion.create(serializedRequestBody, mediaType);
         }
         return body;
+    }
+
+    /**
+     * Gets request headers with given params.
+     *
+     * @param headersParams user given params
+     * @return the request headers
+     */
+    protected Headers getRequestHeaderWithParams(Map<String, String> headersParams) {
+        okhttp3.Headers.Builder headersBuilder = new okhttp3.Headers.Builder();
+        if (headersParams == null || headersParams.size() == 0) {
+            return headersBuilder.build();
+        }
+        headersParams.forEach(headersBuilder::add);
+        return headersBuilder.build();
     }
 
     /**
@@ -130,21 +154,23 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
      * @return the response body with byte[] deserialize
      */
     protected <T> HttpResponse<T> getResponseBodyWithDeserialize(TypeRef<T> type, HttpResponse<byte[]> httpResponse) {
+        final int httpResponseStatusCode = httpResponse.getStatusCode();
+        final Map<String, String> httpResponseHeaders = httpResponse.getHeaders();
         final byte[] httpResponseBody = httpResponse.getBody();
         try {
             T responseObject = objectSerializer.deserialize(httpResponseBody, type);
-            return new HttpResponse<>(responseObject, httpResponse.getHeaders(), httpResponse.getStatusCode());
+            return new HttpResponse<>(responseObject, httpResponseHeaders, httpResponseStatusCode);
         } catch (IOException e) {
             if (logger.isWarnEnabled()) {
-                logger.warn("[CapaSerializeHttpSpi] deserialize rpc response[{}] type[{}] io error",
-                        httpResponseBody, type, e);
+                logger.warn("[CapaSerializeHttpSpi] deserialize rpc statusCode[{}] headers[{}] response[{}] type[{}] io error",
+                        httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type, e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_RESPONSE_DESERIALIZE_ERROR,
                     "Response Type: " + type, e);
         } catch (Exception e) {
             if (logger.isWarnEnabled()) {
-                logger.warn("[CapaSerializeHttpSpi] deserialize rpc response[{}] type[{}] error",
-                        httpResponseBody, type, e);
+                logger.warn("[CapaSerializeHttpSpi] deserialize rpc statusCode[{}] headers[{}] response[{}] type[{}] error",
+                        httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type, e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_RESPONSE_DESERIALIZE_ERROR,
                     "Response Type: " + type, e);
@@ -190,9 +216,15 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
                 return;
             }
 
-            Map<String, String> mapHeaders = new HashMap<>();
-            // response.headers()
-            //         .forEach(pair -> mapHeaders.put(pair.getFirst(), pair.getSecond()));
+            Map<String, String> mapHeaders;
+            Headers responseHeaders = response.headers();
+            if (responseHeaders == null || responseHeaders.size() == 0) {
+                mapHeaders = new HashMap<>(2, 1);
+            } else {
+                mapHeaders = new HashMap<>(responseHeaders.size() << 1);
+                responseHeaders.forEach(pair -> mapHeaders.put(pair.getFirst(), pair.getSecond()));
+            }
+
             HttpResponse<byte[]> httpResponse = new HttpResponse<>(bodyBytes, mapHeaders, response.code());
             future.complete(httpResponse);
         }

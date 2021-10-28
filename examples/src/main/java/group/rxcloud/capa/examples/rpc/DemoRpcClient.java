@@ -27,7 +27,7 @@ public class DemoRpcClient {
     /**
      * Identifier in Capa for the service this client will invoke.
      */
-    private static final String SERVICE_APP_ID = "test";
+    private static final String SERVICE_APP_ID = "12345.helloworld";
 
     public static void main(String[] args) {
         CapaRpcClient capaRpcClient = new CapaRpcClientBuilder().build();
