@@ -23,7 +23,7 @@
     <parent>
         <groupId>group.rxcloud</groupId>
         <artifactId>capa-parent</artifactId>
-        <version>${revision}</version>
+        <version>1.0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>capa-sdk</artifactId>
