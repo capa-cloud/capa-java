@@ -43,6 +43,9 @@ public interface CapaConfigurationClient extends DefaultCloudRuntimesClient {
     <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, String label, TypeRef<T> type);
 
     @Override
+    <T> Mono<List<ConfigurationItem<T>>> getConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type);
+
+    @Override
     <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type);
 
     @Override
@@ -50,6 +53,9 @@ public interface CapaConfigurationClient extends DefaultCloudRuntimesClient {
 
     @Override
     <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, String label, TypeRef<T> type);
+
+    @Override
+    <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type);
 
     @Override
     Mono<Void> saveConfiguration(SaveConfigurationRequest saveConfigurationRequest);

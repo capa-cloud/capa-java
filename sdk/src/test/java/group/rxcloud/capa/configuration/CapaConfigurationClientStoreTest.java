@@ -55,7 +55,18 @@ public class CapaConfigurationClientStoreTest {
     public void testDeleteConfiguration_FailWhenThrowUnsupportedOperationException() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
         Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.deleteConfiguration(new ConfigurationRequestItem()).block());
+    }
 
+    @Test
+    public void testGetConfiguration_FailWhenThrowUnsupportedOperationException() {
+        CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.getConfiguration(new ConfigurationRequestItem(),TypeRef.STRING).block());
+    }
+
+    @Test
+    public void testSubscribeConfiguration_FailWhenThrowUnsupportedOperationException() {
+        CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.subscribeConfiguration(new ConfigurationRequestItem(),TypeRef.STRING).blockFirst());
     }
 
     @Test
