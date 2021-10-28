@@ -23,7 +23,7 @@
     <groupId>group.rxcloud</groupId>
     <artifactId>capa-parent</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
+    <version>1.0.4-SNAPSHOT</version>
     <name>capa-sdk-parent</name>
     <description>SDK for Capa.</description>
     <url>https://github.com/reactivegroup</url>
@@ -72,7 +72,7 @@
         <java.version>8</java.version>
         <file.encoding>UTF-8</file.encoding>
         <maven.version>3.8.1</maven.version>
-        <cloud-runtimes.version>1.0.1.RELEASE</cloud-runtimes.version>
+        <cloud-runtimes.version>1.0.4.RELEASE</cloud-runtimes.version>
         <reactor-core.version>3.3.11.RELEASE</reactor-core.version>
         <junit.version>5.3.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
@@ -85,7 +85,6 @@
         <checkstyle.skip>true</checkstyle.skip>
         <rat.skip>true</rat.skip>
         <jacoco.skip>true</jacoco.skip>
-        <revision>1.0.4-SNAPSHOT</revision>
     </properties>
 
     <dependencyManagement>
