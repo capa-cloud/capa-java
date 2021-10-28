@@ -40,7 +40,7 @@ public class CapaConfigurationClientBuilderTest {
     }
 
     @Test
-    public void testBuild_WithCapaConfigStoreBuilderSuppierAsParametersConstructor() {
+    public void testBuild_WithCapaConfigStoreBuilderSupplierAsParametersConstructor() {
         CapaConfigStoreBuilder storeBuilder = Mockito.mock(CapaConfigStoreBuilder.class);
         CapaConfigStore configStore = Mockito.mock(CapaConfigStore.class);
         Mockito.when(storeBuilder.build()).thenReturn(configStore);
