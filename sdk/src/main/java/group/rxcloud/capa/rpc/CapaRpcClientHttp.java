@@ -89,9 +89,9 @@ public class CapaRpcClientHttp extends AbstractCapaRpcClient {
                                     context,
                                     type))
                     .flatMap(httpResponse -> {
-                        T object = httpResponse.getBody();
-                        if (object != null) {
-                            return Mono.just(object);
+                        final T responseBody = httpResponse.getBody();
+                        if (responseBody != null) {
+                            return Mono.just(responseBody);
                         }
                         return Mono.empty();
                     });
