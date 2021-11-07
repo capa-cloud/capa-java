@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package group.rxcloud.capa.spi.http;
 
 import group.rxcloud.capa.component.http.CapaHttp;
@@ -6,6 +22,7 @@ import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.spi.config.CapaSpiOptionsLoader;
 import group.rxcloud.capa.spi.config.CapaSpiProperties;
 import group.rxcloud.capa.spi.config.RpcServiceOptions;
+import group.rxcloud.cloudruntimes.domain.core.invocation.HttpExtension;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
@@ -31,8 +48,8 @@ public abstract class CapaHttpSpi extends CapaHttp {
     /**
      * Templates, delegate to specific http invoker.
      *
-     * @param httpMethod    Ignore, fix to POST. TODO
-     * @param urlParameters Ignore, fix to EMPTY. TODO
+     * @param httpMethod    Ignore, fix to POST. FIXME
+     * @param urlParameters Ignore, fix to EMPTY. FIXME
      */
     @Override
     protected <T> CompletableFuture<HttpResponse<T>> doInvokeApi(String httpMethod,
@@ -55,6 +72,22 @@ public abstract class CapaHttpSpi extends CapaHttp {
             if (context != null) {
                 logger.debug("[CapaHttpSpi] invoke rpc context[{}]", context);
             }
+        }
+        // FIXME Ignore, fix to POST.
+        if (!HttpExtension.POST.getMethod().toString().equalsIgnoreCase(httpMethod)) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("[CapaHttpSpi] invoke rpc httpMethod[{}] only support POST now.",
+                        httpMethod);
+            }
+            httpMethod = HttpExtension.POST.getMethod().toString();
+        }
+        // FIXME Ignore, fix to EMPTY.
+        if (urlParameters != null && !urlParameters.isEmpty()) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("[CapaHttpSpi] invoke rpc urlParameters[{}] not supported now.",
+                        urlParameters);
+            }
+            urlParameters = null;
         }
 
         // parse url path segments
@@ -80,6 +113,29 @@ public abstract class CapaHttpSpi extends CapaHttp {
         // spi invoke
         CompletableFuture<HttpResponse<T>> invokeSpiApi =
                 invokeSpiApi(appId, method, requestData, headers, type, rpcServiceOptions);
+        invokeSpiApi.whenComplete((tHttpResponse, throwable) -> {
+            if (throwable != null) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("[CapaHttpSpi] invoke rpc response error",
+                            throwable);
+                }
+                return;
+            }
+            if (tHttpResponse == null) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("[CapaHttpSpi] invoke rpc response empty[{}]",
+                            tHttpResponse);
+                }
+                return;
+            }
+            final int responseStatusCode = tHttpResponse.getStatusCode();
+            final Map<String, String> responseHeaders = tHttpResponse.getHeaders();
+            final T responseBody = tHttpResponse.getBody();
+            if (logger.isDebugEnabled()) {
+                logger.debug("[CapaHttpSpi] invoke rpc response code[{}] headers[{}] body[{}]",
+                        responseStatusCode, responseHeaders, responseBody);
+            }
+        });
         return invokeSpiApi;
     }
 

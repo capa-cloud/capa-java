@@ -1,0 +1,126 @@
+# Define the workflow's name
+name: "Build and Test"
+# Triggered after push, pull_request and workflow_dispatch events
+on: [push, pull_request, workflow_dispatch]
+
+# Define the environment variables
+env:
+  FAIL_FAST: 0
+  SHOW_ERROR_DETAIL: 1
+
+jobs:
+  build-source:
+    name: "Build Source Code"
+    runs-on: ubuntu-latest
+    env:
+      # The default JDK version
+      JDK_VER: 8
+    outputs:
+      version: ${{ steps.capa-version.outputs.version }}
+    steps:
+      - name: "Checkout the source code"
+        uses: actions/checkout@v2
+        with:
+          path: capa
+      - name: "Set up OpenJDK ${{ env.JDK_VER }}"
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JDK_VER }}
+      - name: "Cache local Maven repository"
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      - name: "Cache capa"
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository/group/rxcloud/capa
+          key: ${{ runner.os }}-capa-snapshot-${{ github.sha }}
+      - name: "Build capa"
+        run: |
+          cd ${{ github.workspace }}/capa
+          mvn clean
+          mvn --batch-mode --no-snapshot-updates -e --no-transfer-progress --fail-fast clean source:jar install -Pjacoco,rat,checkstyle -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 -Dmaven.wagon.http.retryHandler.count=5 -Dmaven.test.skip=true -Dmaven.test.skip.exec=true -Dgpg.skip=true
+      - name: "Pack rat file if failure"
+        if: failure()
+        run: 7z a ${{ github.workspace }}/rat.zip *rat.txt -r
+      - name: "Upload rat file if failure"
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: "rat-file"
+          path: ${{ github.workspace }}/rat.zip
+      - name: "Pack checkstyle file if failure"
+        if: failure()
+        run: 7z a ${{ github.workspace }}/checkstyle.zip *checkstyle* -r
+      - name: "Upload checkstyle file if failure"
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: "checkstyle-file"
+          path: ${{ github.workspace }}/checkstyle.zip
+
+  coverage:
+    name: "Code Coverage"
+    needs: [ build-source ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout the source code"
+        uses: actions/checkout@v2
+        with:
+          path: capa
+      - name: "Set up OpenJDK 8"
+        uses: actions/setup-java@v1
+        with:
+          distribution: 'adopt'
+          java-version: 8
+      - uses: actions/cache@v2
+        name: "Cache local Maven repository"
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: "Calculate code coverage"
+        run: |
+         cd ${{ github.workspace }}/capa
+         mvn --batch-mode --no-snapshot-updates -e --no-transfer-progress --fail-fast clean test verify -Pjacoco -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 -Dmaven.wagon.http.retryHandler.count=5 -DskipTests=false -DskipIntegrationTests=false -Dcheckstyle.skip=true -Drat.skip=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
+      - name: "Upload to Codecov"
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./**/target/site/jacoco/jacoco.xml
+          name: codecov
+
+  unit-test:
+    needs: [ build-source ]
+    name: "Unit Test On ${{ matrix.os }} (OpenJDK: ${{ matrix.jdk }})"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        jdk: [ 8, 11 ]
+    env:
+      DISABLE_FILE_SYSTEM_TEST: true
+    steps:
+      - name: "Checkout the source code"
+        uses: actions/checkout@v2
+        with:
+          path: capa
+      - name: "Set up OpenJDK ${{ matrix.jdk }}"
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+      - uses: actions/cache@v2
+        name: "Cache local Maven repository"
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: "Unit Test"
+        timeout-minutes: 10
+        run: |
+          cd ${{ github.workspace }}/capa
+          mvn --batch-mode --no-snapshot-updates -e --no-transfer-progress --fail-fast clean test verify -Pjacoco,rat,checkstyle -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 -Dmaven.wagon.http.retryHandler.count=5 -DskipTests=false -Dcheckstyle.skip=false -Drat.skip=false -Dmaven.javadoc.skip=true -Dgpg.skip=true
