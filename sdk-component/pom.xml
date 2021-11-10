@@ -23,7 +23,7 @@
     <parent>
         <groupId>group.rxcloud</groupId>
         <artifactId>capa-parent</artifactId>
-        <version>1.0.4.RELEASE</version>
+        <version>1.0.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>capa-sdk-component</artifactId>
@@ -40,6 +40,12 @@
         <dependency>
             <groupId>group.rxcloud</groupId>
             <artifactId>capa-sdk-infrastructure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-sdk</artifactId>
+            <version>1.7.0</version>
         </dependency>
 
         <!-- okhttp -->

@@ -14,18 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.metrics;
+package group.rxcloud.capa.telemetry;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
+import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.api.trace.TracerProvider;
+import io.opentelemetry.context.Context;
 import reactor.core.publisher.Mono;
 
-public interface CapaMetricsClient extends DefaultCloudRuntimesClient {
+public class CapaTelemetryClientGlobal implements CapaTelemetryClient {
 
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
+    private boolean closed;
+
+    private TracerProvider tracerProvider;
+
+    public void setTracerProvider(TracerProvider tracerProvider) {
+        if (!closed) {
+            this.tracerProvider = tracerProvider;
+        }
     }
 
     @Override
-    void close();
+    public Mono<Tracer> getTracer(String instrumentationName) {
+        return Mono.fromSupplier(() -> {
+            return tracerProvider.tracerBuilder(instrumentationName).build();
+        });
+    }
+
+    @Override
+    public void close() {
+        closed = true;
+        tracerProvider = null;
+    }
 }
