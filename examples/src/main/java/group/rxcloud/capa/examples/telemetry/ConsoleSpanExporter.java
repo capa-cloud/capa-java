@@ -25,6 +25,10 @@ public class ConsoleSpanExporter implements SpanExporter {
 
     private final boolean onlyOutputId;
 
+    public ConsoleSpanExporter() {
+        this(ConsoleSpanExporter.class.getSimpleName(), false);
+    }
+
     public ConsoleSpanExporter(String name) {
         this(name, false);
     }

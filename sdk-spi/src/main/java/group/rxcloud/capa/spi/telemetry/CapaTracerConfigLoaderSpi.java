@@ -1,6 +1,6 @@
 package group.rxcloud.capa.spi.telemetry;
 
-import group.rxcloud.capa.component.telemetry.CapaTracerConfigLoader;
+import group.rxcloud.capa.component.telemetry.trace.CapaTracerConfigLoader;
 
 /**
  * @author: chenyijiang

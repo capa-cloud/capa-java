@@ -16,34 +16,52 @@
  */
 package group.rxcloud.capa.telemetry;
 
-import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.api.trace.TracerProvider;
-import io.opentelemetry.context.Context;
+import io.opentelemetry.context.propagation.ContextPropagators;
 import reactor.core.publisher.Mono;
 
-public class CapaTelemetryClientGlobal implements CapaTelemetryClient {
+public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelemetry {
 
-    private boolean closed;
+    private TracerProvider tracerProvider = TracerProvider.noop();
 
-    private TracerProvider tracerProvider;
+    private ContextPropagators contextPropagators = ContextPropagators.noop();
 
-    public void setTracerProvider(TracerProvider tracerProvider) {
-        if (!closed) {
-            this.tracerProvider = tracerProvider;
-        }
+    void setTracerProvider(TracerProvider tracerProvider) {
+        this.tracerProvider = tracerProvider;
+    }
+
+    void setContextPropagators(ContextPropagators contextPropagators) {
+        this.contextPropagators = contextPropagators;
     }
 
     @Override
-    public Mono<Tracer> getTracer(String instrumentationName) {
+    public TracerProvider getTracerProvider() {
+        return tracerProvider;
+    }
+
+    @Override
+    public ContextPropagators getPropagators() {
+        return contextPropagators;
+    }
+
+    @Override
+    public Mono<Tracer> buildTracer(String tracerName) {
         return Mono.fromSupplier(() -> {
-            return tracerProvider.tracerBuilder(instrumentationName).build();
+            return tracerProvider.tracerBuilder(tracerName).build();
+        });
+    }
+
+    @Override
+    public Mono<ContextPropagators> getContextPropagators() {
+        return Mono.fromSupplier(() -> {
+            return contextPropagators;
         });
     }
 
     @Override
     public void close() {
-        closed = true;
-        tracerProvider = null;
+        // todo
     }
 }

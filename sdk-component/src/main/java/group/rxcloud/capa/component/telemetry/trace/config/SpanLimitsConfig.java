@@ -1,4 +1,4 @@
-package group.rxcloud.capa.component.telemetry;
+package group.rxcloud.capa.component.telemetry.trace.config;
 
 import java.io.Serializable;
 

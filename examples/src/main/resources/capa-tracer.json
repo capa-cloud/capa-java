@@ -1,0 +1,14 @@
+{
+  "enableIdValidate" : false,
+  "sampler" : {
+    "name" : "MySampler",
+    "disable" : false
+  },
+  "spanLimits" : {
+    "maxNumAttributes" : 10,
+    "maxAttributeValueLength" : 20
+  },
+  "processors" : [
+    "group.rxcloud.capa.examples.telemetry.ConsoleSpanProcessor"
+  ]
+}
