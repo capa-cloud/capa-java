@@ -24,13 +24,7 @@ import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
 import group.rxcloud.capa.spi.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okhttp3.MediaType;
-import okhttp3.Protocol;
+import okhttp3.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,6 +96,22 @@ public class CapaSerializeHttpSpiTest {
     }
 
     @Test
+    public void testGetRequestHeaderWithParams_SuccessWhenHeaderHasValue() {
+        Map<String, String> headersParams = new HashMap<>();
+        headersParams.put("key", "value");
+        Headers requestHeaderWithParams = capaSerializeHttpSpi.getRequestHeaderWithParams(headersParams);
+        String value = requestHeaderWithParams.get("key");
+        Assertions.assertEquals("value", value);
+    }
+
+    @Test
+    public void testGetRequestHeaderWithParams_SuccessWhenHeaderIsNull() {
+        Headers requestHeaderWithParams = capaSerializeHttpSpi.getRequestHeaderWithParams(null);
+        String value = requestHeaderWithParams.get("key");
+        Assertions.assertNull(value);
+    }
+
+    @Test
     public void testDoAsyncInvoke0_Success() {
         Request request = new Request.Builder().url("https://www.url/").build();
 
@@ -166,6 +176,7 @@ public class CapaSerializeHttpSpiTest {
         future.cancel(true);
     }
 
+
     @Test
     public void testGetRpcServiceOptions_Success() {
         RpcServiceOptions rpcServiceOptions = capaSerializeHttpSpi.getRpcServiceOptions("appId");
@@ -211,7 +222,7 @@ public class CapaSerializeHttpSpiTest {
          * {@inheritDoc}
          */
         @Override
-        public byte[] serialize(Object o)  {
+        public byte[] serialize(Object o) {
             throw new RuntimeException("test serialize exception");
         }
 
@@ -219,7 +230,7 @@ public class CapaSerializeHttpSpiTest {
          * {@inheritDoc}
          */
         @Override
-        public <T> T deserialize(byte[] data, TypeRef<T> type)  {
+        public <T> T deserialize(byte[] data, TypeRef<T> type) {
             throw new RuntimeException("test deserialize exception");
         }
 

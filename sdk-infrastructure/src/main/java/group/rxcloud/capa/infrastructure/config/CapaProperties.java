@@ -55,7 +55,8 @@ public abstract class CapaProperties {
     /**
      * Capa's timeout in seconds for HTTP client reads.
      */
-    public static final Supplier<Integer> HTTP_CLIENT_READ_TIMEOUT_SECONDS = () -> DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS;
+    public static final Supplier<Integer> HTTP_CLIENT_READ_TIMEOUT_SECONDS
+            = () -> DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS;
 
     /**
      * Capa's component properties cache map.
@@ -65,12 +66,17 @@ public abstract class CapaProperties {
     /**
      * Capa's component properties.
      */
-    public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER = (componentDomain) ->
-            COMPONENT_PROPERTIES_MAP.computeIfAbsent(componentDomain, s -> loadCapaComponentProperties(componentDomain));
+    public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER
+            = (componentDomain) -> COMPONENT_PROPERTIES_MAP.computeIfAbsent(componentDomain,
+            s -> loadCapaComponentProperties(componentDomain));
 
     private static Properties loadCapaComponentProperties(final String componentDomain) {
         Objects.requireNonNull(componentDomain, "componentDomain not found.");
-        final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX + componentDomain.toLowerCase() + CAPA_COMPONENT_PROPERTIES_SUFFIX;
+
+        final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX
+                + componentDomain.toLowerCase()
+                + CAPA_COMPONENT_PROPERTIES_SUFFIX;
+
         try (InputStream in = CapaProperties.class.getResourceAsStream(fileName)) {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
             Properties properties = new Properties();

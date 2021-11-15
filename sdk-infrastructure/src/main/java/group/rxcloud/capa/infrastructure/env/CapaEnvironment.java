@@ -38,6 +38,13 @@ public abstract class CapaEnvironment {
 
     static {
         // setup cloud env
+        initCloudEnv();
+
+        // setup vpc env
+        initVpcEnv();
+    }
+
+    private static void initCloudEnv() {
         final String cloudRuntimesEnvDeployCloud = System.getProperty(CLOUD_RUNTIMES_ENV_DEPLOY_CLOUD);
         if ("CTRIP".equalsIgnoreCase(cloudRuntimesEnvDeployCloud)) {
             deployCloudEnvironment = DeployCloudEnvironment.CTRIP_IDC;
@@ -48,8 +55,9 @@ public abstract class CapaEnvironment {
         if (deployCloudEnvironment == null) {
             deployCloudEnvironment = DeployCloudEnvironment.CTRIP_IDC;
         }
+    }
 
-        // setup vpc env
+    private static void initVpcEnv() {
         final String cloudRuntimesEnvDeployVpc = System.getProperty(CLOUD_RUNTIMES_ENV_DEPLOY_VPC);
         if ("FWS".equalsIgnoreCase(cloudRuntimesEnvDeployVpc)
                 || "FAT".equalsIgnoreCase(cloudRuntimesEnvDeployVpc)) {
