@@ -20,10 +20,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static group.rxcloud.capa.infrastructure.constants.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES;
+import static group.rxcloud.capa.infrastructure.constants.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_PREFIX;
+import static group.rxcloud.capa.infrastructure.constants.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_SUFFIX;
 
 /**
  * Global properties for Capa's SDK, using Supplier so they are dynamically resolved.
@@ -53,23 +58,26 @@ public abstract class CapaProperties {
     public static final Supplier<Integer> HTTP_CLIENT_READ_TIMEOUT_SECONDS = () -> DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS;
 
     /**
-     * Capa's component properties.
+     * Capa's component properties cache map.
      */
-    private static final Properties COMPONENT_PROPERTIES = loadCapaComponentProperties();
+    private static final Map<String, Properties> COMPONENT_PROPERTIES_MAP = new ConcurrentHashMap<>();
 
     /**
      * Capa's component properties.
      */
-    public static final Supplier<Properties> COMPONENT_PROPERTIES_SUPPLIER = () -> COMPONENT_PROPERTIES;
+    public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER = (componentDomain) ->
+            COMPONENT_PROPERTIES_MAP.computeIfAbsent(componentDomain, s -> loadCapaComponentProperties(componentDomain));
 
-    private static Properties loadCapaComponentProperties() {
-        try (InputStream in = CapaProperties.class.getResourceAsStream(CAPA_COMPONENT_PROPERTIES)) {
+    private static Properties loadCapaComponentProperties(final String componentDomain) {
+        Objects.requireNonNull(componentDomain, "componentDomain not found.");
+        final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX + componentDomain.toLowerCase() + CAPA_COMPONENT_PROPERTIES_SUFFIX;
+        try (InputStream in = CapaProperties.class.getResourceAsStream(fileName)) {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
             Properties properties = new Properties();
             properties.load(inputStreamReader);
             return properties;
         } catch (IOException e) {
-            throw new IllegalArgumentException(CAPA_COMPONENT_PROPERTIES + " file not found.");
+            throw new IllegalArgumentException(fileName + " file not found.");
         }
     }
 }
