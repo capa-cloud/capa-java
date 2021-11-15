@@ -114,8 +114,8 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
                             return Mono.empty();
                         }
                         return Flux.fromStream(configurationItems
-                                .stream()
-                                .map(this::getStoreResponse))
+                                        .stream()
+                                        .map(this::getStoreResponse))
                                 .collectList();
                     });
         } catch (Exception ex) {
@@ -177,7 +177,6 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
             return CapaExceptions.wrapFlux(ex);
         }
     }
-
 
     private GetRequest getStoreRequest(String appId, String group, String label, List<String> keys, Map<String, String> metadata) {
         GetRequest getRequest = new GetRequest();

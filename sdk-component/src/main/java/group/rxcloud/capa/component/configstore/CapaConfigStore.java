@@ -40,7 +40,7 @@ public abstract class CapaConfigStore implements AutoCloseable {
     protected final CapaObjectSerializer objectSerializer;
 
     /**
-     * Init init the configuration store.
+     * The configuration store name.
      */
     private String storeName;
 
@@ -54,7 +54,7 @@ public abstract class CapaConfigStore implements AutoCloseable {
     }
 
     /**
-     * Init init the configuration store.
+     * Init the configuration store.
      */
     public void init(StoreConfig storeConfig) {
         this.storeName = storeConfig.getStoreName();
@@ -62,7 +62,7 @@ public abstract class CapaConfigStore implements AutoCloseable {
     }
 
     /**
-     * Init init the configuration store.
+     * Init the configuration store.
      */
     protected abstract void doInit(StoreConfig storeConfig);
 
@@ -79,7 +79,7 @@ public abstract class CapaConfigStore implements AutoCloseable {
     public abstract <T> Mono<List<ConfigurationItem<T>>> get(GetRequest getRequest, TypeRef<T> type);
 
     /**
-     * Subscribe subscribe the configurations updates.
+     * Subscribe the configurations updates.
      */
     public abstract <T> Flux<SubscribeResp<T>> subscribe(SubscribeReq subscribeReq, TypeRef<T> type);
 

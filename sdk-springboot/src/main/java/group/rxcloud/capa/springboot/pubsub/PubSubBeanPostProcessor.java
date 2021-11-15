@@ -2,11 +2,11 @@
  * Copyright (c) Microsoft Corporation and Dapr Contributors.
  * Licensed under the MIT License.
  */
-
 package group.rxcloud.capa.springboot.pubsub;
 
 import com.kevinten.vrml.core.beans.SpringContextConfigurator;
 import com.kevinten.vrml.core.serialization.Serialization;
+import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
 import group.rxcloud.capa.pubsub.Topic;
@@ -79,14 +79,14 @@ public class PubSubBeanPostProcessor implements BeanPostProcessor {
 
         subscribeToTopics(clazz.getSuperclass(), embeddedValueResolver, serializer);
 
+        // get TopicSubscriber instance from spring-context
+        final TopicSubscriber topicSubscriber = SpringContextConfigurator.getBean(TopicSubscriber.class);
+
         for (Method method : clazz.getDeclaredMethods()) {
             Topic topic = method.getAnnotation(Topic.class);
             if (topic == null) {
                 continue;
             }
-
-            // get TopicSubscriber instance from spring-context
-            final TopicSubscriber topicSubscriber = SpringContextConfigurator.getBean(TopicSubscriber.class);
 
             final String topicName = embeddedValueResolver.resolveStringValue(topic.name());
             final String pubSubName = embeddedValueResolver.resolveStringValue(topic.pubsubName());
@@ -109,13 +109,14 @@ public class PubSubBeanPostProcessor implements BeanPostProcessor {
                 logger.info("[PubSub.@Topic.subscribe] try to generate pubsub[{}] topic[{}] metadata[{}] listener",
                         pubSubName, topicName, metadata);
             }
+
             // subscribe topic and generate the flux
-            Flux<TopicEventRequest> listener = topicSubscriber.doSubscribe()
-                    .apply(topicSubscription);
+            Flux<TopicEventRequest> listener = topicSubscriber.doSubscribe(topicSubscription);
 
             listener.subscribe(topicEventRequest -> {
                 try {
-                    if (logger.isDebugEnabled()) {
+                    if (logger.isDebugEnabled(
+                    )) {
                         logger.debug("[PubSub.@Topic.subscribe] request[{}]", Serialization.toJsonSafe(topicEventRequest));
                     }
                     method.invoke(topicEventRequest);
@@ -123,17 +124,17 @@ public class PubSubBeanPostProcessor implements BeanPostProcessor {
                     if (logger.isWarnEnabled()) {
                         logger.warn("[PubSub.@Topic.subscribe] IllegalAccessException, request[{}]", Serialization.toJsonSafe(topicEventRequest), e);
                     }
-                    throw new RuntimeException(e);
+                    throw new CapaException(e);
                 } catch (InvocationTargetException e) {
                     if (logger.isWarnEnabled()) {
                         logger.warn("[PubSub.@Topic.subscribe] InvocationTargetException, request[{}]", Serialization.toJsonSafe(topicEventRequest), e);
                     }
-                    throw new RuntimeException(e);
+                    throw new CapaException(e);
                 } catch (Exception e) {
                     if (logger.isWarnEnabled()) {
                         logger.warn("[PubSub.@Topic.subscribe] Exception, request[{}]", Serialization.toJsonSafe(topicEventRequest), e);
                     }
-                    throw new RuntimeException(e);
+                    throw new CapaException(e);
                 }
             });
         }
@@ -150,7 +151,7 @@ public class PubSubBeanPostProcessor implements BeanPostProcessor {
                     logger.error("[PubSub.@Topic.subscribe] illegal metadata[{}]",
                             metadata, e);
                 }
-                throw new RuntimeException(e);
+                throw new CapaException(e);
             }
         }
         return metadataMap;

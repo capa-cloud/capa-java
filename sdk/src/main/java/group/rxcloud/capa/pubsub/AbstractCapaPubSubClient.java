@@ -16,28 +16,28 @@
  */
 package group.rxcloud.capa.pubsub;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-public interface CapaPubSubClient extends DefaultCloudRuntimesClient {
+/**
+ * Abstract class with convenient methods common between client implementations.
+ *
+ * @see CapaPubSubClientPubSub
+ */
+public abstract class AbstractCapaPubSubClient implements CapaPubSubClient {
 
     @Override
-    Mono<String> publishEvent(String pubsubName, String topicName, Object data);
-
-    @Override
-    Mono<String> publishEvent(String pubsubName, String topicName, Object data, Map<String, String> metadata);
-
-    @Override
-    Mono<String> publishEvent(PublishEventRequest request);
-
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
+    public Mono<String> publishEvent(String pubsubName, String topicName, Object data) {
+        PublishEventRequest publishEventRequest = new PublishEventRequest(pubsubName, topicName, data);
+        return this.publishEvent(publishEventRequest);
     }
 
     @Override
-    void close();
+    public Mono<String> publishEvent(String pubsubName, String topicName, Object data, Map<String, String> metadata) {
+        PublishEventRequest request = new PublishEventRequest(pubsubName, topicName, data);
+        request.setMetadata(metadata);
+        return this.publishEvent(request);
+    }
 }

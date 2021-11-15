@@ -14,8 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package group.rxcloud.capa.component.pubsub;
 
-public abstract class PubSub {
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * SubscribeRequest is the request to subscribe to a topic.
+ */
+public class SubscribeRequest {
+
+    private final String topic;
+
+    private Map<String, String> metadata = new HashMap<>();
+
+    public SubscribeRequest(String topic) {
+        this.topic = topic;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public SubscribeRequest setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata == null ? null : Collections.unmodifiableMap(metadata);
+        return this;
+    }
 }

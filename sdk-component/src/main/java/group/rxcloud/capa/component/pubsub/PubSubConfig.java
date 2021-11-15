@@ -14,30 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.pubsub;
-
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
-import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
-import reactor.core.publisher.Mono;
+package group.rxcloud.capa.component.pubsub;
 
 import java.util.Map;
 
-public interface CapaPubSubClient extends DefaultCloudRuntimesClient {
+/**
+ * Metadata represents a set of message-bus specific properties.
+ */
+public class PubSubConfig {
 
-    @Override
-    Mono<String> publishEvent(String pubsubName, String topicName, Object data);
+    private Map<String, String> metadata;
 
-    @Override
-    Mono<String> publishEvent(String pubsubName, String topicName, Object data, Map<String, String> metadata);
-
-    @Override
-    Mono<String> publishEvent(PublishEventRequest request);
-
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
+    public Map<String, String> getMetadata() {
+        return metadata;
     }
 
-    @Override
-    void close();
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
+    }
 }

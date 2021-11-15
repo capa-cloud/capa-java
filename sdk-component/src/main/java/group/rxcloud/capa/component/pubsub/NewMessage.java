@@ -14,30 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.pubsub;
+package group.rxcloud.capa.component.pubsub;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
-import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
-import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
-public interface CapaPubSubClient extends DefaultCloudRuntimesClient {
+/**
+ * NewMessage is an event arriving from a message bus instance.
+ */
+public class NewMessage {
 
-    @Override
-    Mono<String> publishEvent(String pubsubName, String topicName, Object data);
+    private final String topic;
 
-    @Override
-    Mono<String> publishEvent(String pubsubName, String topicName, Object data, Map<String, String> metadata);
+    private final Object data;
 
-    @Override
-    Mono<String> publishEvent(PublishEventRequest request);
+    private Map<String, String> metadata = new HashMap<>();
 
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
+    public NewMessage(String topic, Object data) {
+        this.topic = topic;
+        this.data = data;
     }
 
-    @Override
-    void close();
+    public String getTopic() {
+        return topic;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public NewMessage setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata == null ? null : Collections.unmodifiableMap(metadata);
+        return this;
+    }
 }
