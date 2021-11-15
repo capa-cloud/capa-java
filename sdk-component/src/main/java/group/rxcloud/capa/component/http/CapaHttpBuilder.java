@@ -108,7 +108,7 @@ public class CapaHttpBuilder {
 
         // load spi capa http impl
         try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.get();
+            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("rpc");
             String capaHttpClassPath = properties.getProperty(CapaHttp.class.getName());
             Class<? extends CapaHttp> aClass = (Class<? extends CapaHttp>) Class.forName(capaHttpClassPath);
             Constructor<? extends CapaHttp> constructor = aClass.getConstructor(OkHttpClient.class, CapaObjectSerializer.class);
