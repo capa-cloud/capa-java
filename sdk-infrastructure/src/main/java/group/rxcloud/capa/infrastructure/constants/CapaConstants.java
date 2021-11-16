@@ -27,6 +27,7 @@ public interface CapaConstants {
 
     interface Properties {
 
-        String CAPA_COMPONENT_PROPERTIES = "/capa-component.properties";
+        String CAPA_COMPONENT_PROPERTIES_PREFIX = "/capa-component-";
+        String CAPA_COMPONENT_PROPERTIES_SUFFIX = ".properties";
     }
 }

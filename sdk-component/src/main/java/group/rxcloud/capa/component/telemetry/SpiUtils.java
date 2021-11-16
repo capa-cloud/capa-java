@@ -68,12 +68,12 @@ public final class SpiUtils {
         if (path == null) {
             return null;
         }
-        return load(path, type, null, null);
+        return load(path, type, argTypes, args);
     }
 
     @Nullable
     public static <T> T getFromSpiConfigFile(Class<T> type, Class[] argTypes, Object[] args) {
-        Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.get();
+        Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("telemetry");
         String path = properties.getProperty(type.getName());
         if (path != null) {
             return load(path, type, argTypes, args);

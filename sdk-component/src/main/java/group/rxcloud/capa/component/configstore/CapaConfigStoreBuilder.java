@@ -87,7 +87,7 @@ public class CapaConfigStoreBuilder {
     private CapaConfigStore buildCapaConfigStore() {
         // load spi capa config store impl
         try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.get();
+            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("configuration");
             String capaConfigStoreClassPath = properties.getProperty(CapaConfigStore.class.getName());
             Class<? extends CapaConfigStore> aClass = (Class<? extends CapaConfigStore>) Class.forName(capaConfigStoreClassPath);
             Constructor<? extends CapaConfigStore> constructor = aClass.getConstructor(CapaObjectSerializer.class);

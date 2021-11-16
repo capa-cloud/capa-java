@@ -94,27 +94,27 @@
             <dependency>
                 <groupId>group.rxcloud</groupId>
                 <artifactId>capa-sdk-spi-demo</artifactId>
-                <version>1.0.7.RELEASE</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>group.rxcloud</groupId>
                 <artifactId>capa-sdk-spi</artifactId>
-                <version>1.0.7.RELEASE</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>group.rxcloud</groupId>
                 <artifactId>capa-sdk</artifactId>
-                <version>1.0.7.RELEASE</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>group.rxcloud</groupId>
                 <artifactId>capa-sdk-component</artifactId>
-                <version>1.0.7.RELEASE</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>group.rxcloud</groupId>
                 <artifactId>capa-sdk-infrastructure</artifactId>
-                <version>1.0.7.RELEASE</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- cloud-runtimes-api -->
@@ -141,6 +141,7 @@
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor-core.version}</version>
+                <optional>true</optional>
             </dependency>
 
             <!-- unit test -->
