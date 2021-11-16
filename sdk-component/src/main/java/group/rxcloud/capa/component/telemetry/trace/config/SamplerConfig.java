@@ -14,24 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.config;
+package group.rxcloud.capa.component.telemetry.trace.config;
+
+import java.io.Serializable;
 
 /**
- * RPC service options used in tests only.
  */
-public class TestRpcServiceOptions implements RpcServiceOptions {
+public class SamplerConfig implements Serializable {
 
-    /**
-     * Unique rpc service ID
-     */
-    private final String appId;
+    private static final long serialVersionUID = -2113523925814197551L;
 
-    /**
-     * Instantiates a new Capa rpc service options.
-     *
-     * @param appId the app id
-     */
-    public TestRpcServiceOptions(String appId) {
-        this.appId = appId;
+    // 默认全部取样
+    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig();
+
+    private String name = "_DEFAULT_SAMPLER";
+
+    private boolean disable;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isDisable() {
+        return disable;
+    }
+
+    public void setDisable(boolean disable) {
+        this.disable = disable;
     }
 }
