@@ -14,24 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.config;
+package group.rxcloud.capa.spi.telemetry;
+
+import group.rxcloud.capa.component.telemetry.trace.CapaTracer;
+import io.opentelemetry.api.trace.Tracer;
 
 /**
- * RPC service options used in tests only.
  */
-public class TestRpcServiceOptions implements RpcServiceOptions {
+public abstract class CapaTracerSpi extends CapaTracer {
 
-    /**
-     * Unique rpc service ID
-     */
-    private final String appId;
-
-    /**
-     * Instantiates a new Capa rpc service options.
-     *
-     * @param appId the app id
-     */
-    public TestRpcServiceOptions(String appId) {
-        this.appId = appId;
+    public CapaTracerSpi(String tracerName, String version, String schemaUrl, Tracer tracer) {
+        super(tracerName, version, schemaUrl, tracer);
     }
+
 }

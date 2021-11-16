@@ -14,24 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.config;
+package group.rxcloud.capa.component.telemetry.trace;
+
+import group.rxcloud.capa.component.telemetry.SpiUtils;
+import group.rxcloud.capa.component.telemetry.trace.config.TracerConfig;
 
 /**
- * RPC service options used in tests only.
  */
-public class TestRpcServiceOptions implements RpcServiceOptions {
+public interface CapaTracerConfigLoader {
 
-    /**
-     * Unique rpc service ID
-     */
-    private final String appId;
+    CapaTracerConfigLoader DEFAULT = new CapaTracerConfigLoader() {
+    };
 
-    /**
-     * Instantiates a new Capa rpc service options.
-     *
-     * @param appId the app id
-     */
-    public TestRpcServiceOptions(String appId) {
-        this.appId = appId;
+    String FILE_PATH = "/capa-tracer.json";
+
+    default TracerConfig loadTracerConfig() {
+        return SpiUtils.loadConfigNullable(FILE_PATH, TracerConfig.class);
     }
+
 }
