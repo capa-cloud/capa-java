@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.metrics;
+package group.rxcloud.capa.component.telemetry.trace;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
-import reactor.core.publisher.Mono;
+import io.opentelemetry.context.propagation.TextMapPropagator;
 
-public interface CapaMetricsClient extends DefaultCloudRuntimesClient {
+import java.util.List;
 
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
-    }
+/**
+ */
+public interface CapaContextPropagatorSettings {
 
-    @Override
-    void close();
+    CapaContextPropagatorSettings setContextPropagators(List<TextMapPropagator> contextPropagators);
+
+    CapaContextPropagatorSettings addContextPropagators(TextMapPropagator processor);
+
 }
