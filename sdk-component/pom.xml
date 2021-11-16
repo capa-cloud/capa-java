@@ -23,7 +23,7 @@
     <parent>
         <groupId>group.rxcloud</groupId>
         <artifactId>capa-parent</artifactId>
-        <version>1.0.5.RELEASE</version>
+        <version>1.0.6.RELEASE</version>
     </parent>
 
     <artifactId>capa-sdk-component</artifactId>
@@ -70,6 +70,7 @@
             <artifactId>kotlin-stdlib-common</artifactId>
             <version>${kotlin-stdlib.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
