@@ -24,9 +24,20 @@ import reactor.core.publisher.Mono;
 
 public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelemetry {
 
+    // noop as default.
+    private static CapaTelemetryClientGlobal instance = new CapaTelemetryClientGlobal();
+
     private TracerProvider tracerProvider = TracerProvider.noop();
 
     private ContextPropagators contextPropagators = ContextPropagators.noop();
+
+    public static CapaTelemetryClientGlobal get() {
+        return instance;
+    }
+
+    static void set(CapaTelemetryClientGlobal capaTelemetryClient) {
+        instance = capaTelemetryClient;
+    }
 
     void setTracerProvider(TracerProvider tracerProvider) {
         this.tracerProvider = tracerProvider;
@@ -57,6 +68,21 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
     public Mono<ContextPropagators> getContextPropagators() {
         return Mono.fromSupplier(() -> {
             return contextPropagators;
+        });
+    }
+
+    @Override
+    public Mono<Tracer> buildTracer(String tracerName, String version) {
+        return Mono.fromSupplier(() -> {
+            return tracerProvider.tracerBuilder(tracerName).setInstrumentationVersion(version).build();
+        });
+    }
+
+    @Override
+    public Mono<Tracer> buildTracer(String tracerName, String version, String schemaUrl) {
+        return Mono.fromSupplier(() -> {
+            return tracerProvider.tracerBuilder(tracerName).setInstrumentationVersion(version).setSchemaUrl(schemaUrl)
+                                 .build();
         });
     }
 
