@@ -14,24 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.config;
+package group.rxcloud.capa.spi.telemetry;
+
+import group.rxcloud.capa.component.telemetry.trace.CapaReadWriteSpan;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.sdk.trace.ReadWriteSpan;
 
 /**
- * RPC service options used in tests only.
  */
-public class TestRpcServiceOptions implements RpcServiceOptions {
+public abstract class CapaReadWriteSpanSpi extends CapaReadWriteSpan {
 
-    /**
-     * Unique rpc service ID
-     */
-    private final String appId;
 
-    /**
-     * Instantiates a new Capa rpc service options.
-     *
-     * @param appId the app id
-     */
-    public TestRpcServiceOptions(String appId) {
-        this.appId = appId;
+    public CapaReadWriteSpanSpi(String tracerName, String version, String schemaUrl,
+                                ReadWriteSpan span) {
+        super(tracerName, version, schemaUrl, span);
     }
+
 }

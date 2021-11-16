@@ -23,7 +23,7 @@
     <parent>
         <artifactId>capa-parent</artifactId>
         <groupId>group.rxcloud</groupId>
-        <version>1.0.6.RELEASE</version>
+        <version>1.0.7.RELEASE</version>
     </parent>
 
     <artifactId>capa-sdk-infrastructure</artifactId>
@@ -48,6 +48,18 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
+        </dependency>
+
+        <!-- opentelemetry -->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api-metrics</artifactId>
+            <version>1.9.0-alpha</version>
         </dependency>
 
         <!-- vrml -->
