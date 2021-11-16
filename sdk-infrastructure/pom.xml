@@ -23,7 +23,7 @@
     <parent>
         <artifactId>capa-parent</artifactId>
         <groupId>group.rxcloud</groupId>
-        <version>1.0.4.RELEASE</version>
+        <version>1.0.5.RELEASE</version>
     </parent>
 
     <artifactId>capa-sdk-infrastructure</artifactId>
@@ -62,7 +62,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j-api.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <!-- grpc -->
@@ -70,7 +69,6 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
             <version>${grpc.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <!-- serialize -->
@@ -78,7 +76,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <!-- unit test -->
@@ -105,7 +102,7 @@
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
+                <artifactId>jacoco-maven-plugin</artifactId>er45f
                 <version>${maven.jacoco.version}</version>
                 <executions>
                     <!-- Prepares the property pointing to the JaCoCo
