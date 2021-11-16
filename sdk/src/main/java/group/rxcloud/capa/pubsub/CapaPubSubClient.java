@@ -25,13 +25,13 @@ import java.util.Map;
 public interface CapaPubSubClient extends DefaultCloudRuntimesClient {
 
     @Override
-    Mono<Void> publishEvent(String pubsubName, String topicName, Object data);
+    Mono<String> publishEvent(String pubsubName, String topicName, Object data);
 
     @Override
-    Mono<Void> publishEvent(String pubsubName, String topicName, Object data, Map<String, String> metadata);
+    Mono<String> publishEvent(String pubsubName, String topicName, Object data, Map<String, String> metadata);
 
     @Override
-    Mono<Void> publishEvent(PublishEventRequest request);
+    Mono<String> publishEvent(PublishEventRequest request);
 
     @Override
     default Mono<Void> shutdown() {
