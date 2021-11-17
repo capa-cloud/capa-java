@@ -34,7 +34,6 @@
         <vrml.version>1.0.0</vrml.version>
         <grpc.version>1.39.0</grpc.version>
         <jackson.version>2.12.4</jackson.version>
-        <slf4j-api.version>1.7.32</slf4j-api.version>
     </properties>
 
     <dependencies>
@@ -50,18 +49,17 @@
             <artifactId>reactor-core</artifactId>
         </dependency>
 
+        <!-- slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <!-- vrml -->
         <dependency>
             <groupId>com.kevinten</groupId>
             <artifactId>vrml-error</artifactId>
             <version>${vrml.version}</version>
-        </dependency>
-
-        <!-- slf4j-api -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
         </dependency>
 
         <!-- grpc -->
