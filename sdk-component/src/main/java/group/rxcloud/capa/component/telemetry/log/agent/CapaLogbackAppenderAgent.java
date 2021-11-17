@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.agent;
+package group.rxcloud.capa.component.telemetry.log.agent;
 
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import group.rxcloud.capa.component.log.CapaLogbackAppender;
+import group.rxcloud.capa.component.telemetry.log.CapaLogbackAppender;
 import group.rxcloud.capa.infrastructure.config.CapaProperties;
 
 import java.lang.reflect.Constructor;

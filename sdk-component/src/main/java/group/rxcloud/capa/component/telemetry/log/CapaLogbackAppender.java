@@ -14,20 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log;
+package group.rxcloud.capa.component.telemetry.log;
 
-
-import org.apache.logging.log4j.core.LogEvent;
 
 /**
- * The interface of the log4j appender impl.Implement this and provide your specific impl.
+ * The interface of the logback appender impl.Implement this and provide your specific impl.
  */
-public interface CapaLog4jAppender {
+public interface CapaLogbackAppender<EVENT> {
 
     /**
      * Deal with the log.
      *
      * @param event The log event.
      */
-    void appendLog(LogEvent event);
+    void appendLog(EVENT event);
 }

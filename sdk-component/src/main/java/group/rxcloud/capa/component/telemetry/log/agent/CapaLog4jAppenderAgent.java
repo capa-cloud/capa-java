@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.agent;
+package group.rxcloud.capa.component.telemetry.log.agent;
 
 /**
  * @Author gpeng
  * @Date 2021/11/17 14:16
  */
 
-import group.rxcloud.capa.component.log.CapaLog4jAppender;
+import group.rxcloud.capa.component.telemetry.log.CapaLog4jAppender;
 import group.rxcloud.capa.infrastructure.config.CapaProperties;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Filter;
