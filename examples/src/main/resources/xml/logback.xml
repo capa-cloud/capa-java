@@ -16,21 +16,21 @@
   limitations under the License.
   -->
 <configuration>
-    <!--CLog-->
-    <appender name="CLog" class="group.rxcloud.capa.component.log.CapaLogbackAppenderAgent">
+    <!--Log-->
+    <appender name="Log" class="group.rxcloud.capa.component.log.agent.CapaLogbackAppenderAgent">
     </appender>
 
     <logger name="com.ctrip.ibu.market.e2c" level="INFO" additivity="false">
         <!--        <appender-ref ref="STDOUT"/>-->
-        <appender-ref ref="CLog"/>
+        <appender-ref ref="Log"/>
     </logger>
 
     <logger name="com.ctrip.ibu.telescope.mock.support" level="INFO" additivity="false">
         <!--        <appender-ref ref="STDOUT"/>-->
-        <appender-ref ref="CLog"/>
+        <appender-ref ref="Log"/>
     </logger>
 
     <root level="INFO">
-        <appender-ref ref="CLog"/>
+        <appender-ref ref="Log"/>
     </root>
 </configuration>

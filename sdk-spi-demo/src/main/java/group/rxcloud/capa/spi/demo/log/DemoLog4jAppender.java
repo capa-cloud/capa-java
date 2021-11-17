@@ -17,21 +17,13 @@
 package group.rxcloud.capa.spi.demo.log;
 
 import group.rxcloud.capa.component.log.CapaLog4jAppender;
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 
-import java.io.Serializable;
 
-
-public class DemoLog4jAppender extends CapaLog4jAppender {
-
-    public DemoLog4jAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
-        super(name, filter, layout, ignoreExceptions);
-    }
+public class DemoLog4jAppender implements CapaLog4jAppender {
 
     @Override
-    public void append(LogEvent event) {
+    public void appendLog(LogEvent event) {
         System.out.println("test log log4j and content is " + event.getMessage().getFormattedMessage());
     }
 }

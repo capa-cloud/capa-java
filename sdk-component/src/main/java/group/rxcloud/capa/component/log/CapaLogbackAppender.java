@@ -16,17 +16,16 @@
  */
 package group.rxcloud.capa.component.log;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
  * The interface of the logback appender impl.Implement this and provide your specific impl.
  */
-public interface CapaLogbackAppender {
+public interface CapaLogbackAppender<EVENT> {
 
     /**
      * Deal with the log.
      *
      * @param event The log event.
      */
-    void appendLog(ILoggingEvent event);
+    void appendLog(EVENT event);
 }

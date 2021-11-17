@@ -30,6 +30,11 @@
     <packaging>jar</packaging>
     <name>capa-sdk-examples</name>
 
+    <properties>
+        <log4j.version>2.8.2</log4j.version>
+        <logback.version>1.1.7</logback.version>
+        <slf4j-api.version>1.7.32</slf4j-api.version>
+    </properties>
     <dependencies>
         <!-- sdk module -->
         <dependency>
@@ -41,10 +46,12 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>log4j-api</artifactId>
@@ -56,11 +63,13 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
         <!-- logback -->
-        <!--<dependency>
+       <!-- <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>-->
         <!--lombok-->
         <dependency>

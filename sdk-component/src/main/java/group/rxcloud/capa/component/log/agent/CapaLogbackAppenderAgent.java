@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log;
+package group.rxcloud.capa.component.log.agent;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import group.rxcloud.capa.component.log.CapaLogbackAppender;
 import group.rxcloud.capa.infrastructure.config.CapaProperties;
 
 import java.lang.reflect.Constructor;
@@ -27,7 +27,7 @@ import java.util.Properties;
 /**
  * The agent of the logback impl.
  */
-public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggingEvent> {
+public class CapaLogbackAppenderAgent<EVENT> extends UnsynchronizedAppenderBase<EVENT> {
 
     /**
      * The log component type.
@@ -70,7 +70,7 @@ public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggin
      * @param event The log event.
      */
     @Override
-    protected void append(ILoggingEvent event) {
+    protected void append(EVENT event) {
         logbackAppender.appendLog(event);
     }
 }
