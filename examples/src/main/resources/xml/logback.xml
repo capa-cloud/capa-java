@@ -15,17 +15,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<Configuration status="DEBUG">
-    <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </Console>
-        <CapaLog4jAppender name="log"/>
-    </Appenders>
-    <Loggers>
-        <Root level="INFO">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="log"/>
-        </Root>
-    </Loggers>
-</Configuration>
+<configuration>
+    <!--CLog-->
+    <appender name="CLog" class="group.rxcloud.capa.component.log.CapaLogbackAppenderAgent">
+    </appender>
+
+    <logger name="com.ctrip.ibu.market.e2c" level="INFO" additivity="false">
+        <!--        <appender-ref ref="STDOUT"/>-->
+        <appender-ref ref="CLog"/>
+    </logger>
+
+    <logger name="com.ctrip.ibu.telescope.mock.support" level="INFO" additivity="false">
+        <!--        <appender-ref ref="STDOUT"/>-->
+        <appender-ref ref="CLog"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CLog"/>
+    </root>
+</configuration>
