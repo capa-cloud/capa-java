@@ -33,6 +33,10 @@ import java.util.Properties;
 public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
     /**
+     * The log component type.
+     */
+    private static final String LOG_COMPONENT_TYPE = "log";
+    /**
      * Capa logback appender instance.
      */
     private static final CapaLogbackAppender logbackAppender;
@@ -52,7 +56,7 @@ public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggin
     public static CapaLogbackAppender buildCapaLogbackAppender() {
         // load spi capa Log4j appender impl
         try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.get();
+            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(LOG_COMPONENT_TYPE);
             String capaLogbackAppenderClassPath = properties.getProperty(CapaLogbackAppender.class.getName());
             Class<? extends CapaLogbackAppender> aClass = (Class<? extends CapaLogbackAppender>) Class.forName(capaLogbackAppenderClassPath);
             Constructor<? extends CapaLogbackAppender> constructor = aClass.getConstructor();

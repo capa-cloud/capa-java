@@ -41,6 +41,11 @@ import java.util.Properties;
 public abstract class CapaLog4jAppender extends AbstractAppender {
 
     /**
+     * The log component type.
+     */
+    private static final String LOG_COMPONENT_TYPE = "log";
+
+    /**
      * Instantiates a new Capa log4j appender.
      *
      * @param name             The name of the appender.
@@ -81,7 +86,7 @@ public abstract class CapaLog4jAppender extends AbstractAppender {
     public static CapaLog4jAppender buildCapaLog4jAppender(String name, final Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
         // load spi capa Log4j appender impl
         try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.get();
+            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(LOG_COMPONENT_TYPE);
             String capaLogAppenderClassPath = properties.getProperty(CapaLog4jAppender.class.getName());
             Class<? extends CapaLog4jAppender> aClass = (Class<? extends CapaLog4jAppender>) Class.forName(capaLogAppenderClassPath);
             Constructor<? extends CapaLog4jAppender> constructor = aClass.getConstructor(String.class, Filter.class, Layout.class, boolean.class);
