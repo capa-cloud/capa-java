@@ -20,14 +20,12 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
  * The interface of the logback appender impl.Implement this and provide your specific impl.
- *
- * @Author gpeng
- * @Date 2021/11/12 14:06
  */
 public interface CapaLogbackAppender {
 
     /**
      * Deal with the log.
+     *
      * @param event The log event.
      */
     void appendLog(ILoggingEvent event);

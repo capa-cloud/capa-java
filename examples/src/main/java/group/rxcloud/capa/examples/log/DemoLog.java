@@ -25,9 +25,6 @@ import lombok.extern.slf4j.Slf4j;
  * Notice:
  * 1. Resources cannot contain log4j2.xml and logback.xml files at the same time,
  * 2. log4j-slf4j-impl and logback-classic cannot exist at the same time.
- *
- * @Author gpeng
- * @Date 2021/11/11 17:16
  */
 @Slf4j
 public class DemoLog {

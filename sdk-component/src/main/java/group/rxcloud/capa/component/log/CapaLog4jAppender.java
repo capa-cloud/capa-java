@@ -33,9 +33,6 @@ import java.util.Properties;
 
 /**
  * The abstract log4j appender. Extend this and provide your specific impl.
- *
- * @Author gpeng
- * @Date 2021/11/11 18:56
  */
 @Plugin(name = "CapaLog4jAppender", elementType = Appender.ELEMENT_TYPE, category = "Core")
 public abstract class CapaLog4jAppender extends AbstractAppender {

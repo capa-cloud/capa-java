@@ -19,10 +19,6 @@ package group.rxcloud.capa.spi.demo.log;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import group.rxcloud.capa.component.log.CapaLogbackAppender;
 
-/**
- * @Author gpeng
- * @Date 2021/11/12 11:50
- */
 public class DemoLogbackAppender implements CapaLogbackAppender {
 
     public DemoLogbackAppender() {

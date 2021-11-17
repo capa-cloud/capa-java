@@ -26,9 +26,6 @@ import java.util.Properties;
 
 /**
  * The agent of the logback impl.
- *
- * @Author gpeng
- * @Date 2021/11/11 18:53
  */
 public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggingEvent> {
 

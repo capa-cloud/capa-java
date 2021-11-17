@@ -23,10 +23,7 @@ import org.apache.logging.log4j.core.LogEvent;
 
 import java.io.Serializable;
 
-/**
- * @Author gpeng
- * @Date 2021/11/11 17:10
- */
+
 public class DemoLog4jAppender extends CapaLog4jAppender {
 
     public DemoLog4jAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
