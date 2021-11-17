@@ -59,6 +59,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+            <!-- log4j-slf4j-impl and logback-classic cannot exist at the same time. -->
             <optional>true</optional>
         </dependency>
         <dependency>
