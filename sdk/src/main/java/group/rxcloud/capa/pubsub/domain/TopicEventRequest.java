@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package group.rxcloud.capa.pubsub.domain;
 
 import java.util.Map;
@@ -38,7 +54,7 @@ public class TopicEventRequest {
     private Map<String, String> metadata;
 
     /**
-     * Getter method for property <tt>id</tt>.
+     * Getter method for property id.
      *
      * @return property value of id
      */
@@ -47,7 +63,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>id</tt>.
+     * Setter method for property id.
      *
      * @param id value to be assigned to property id
      */
@@ -56,7 +72,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>source</tt>.
+     * Getter method for property source.
      *
      * @return property value of source
      */
@@ -65,7 +81,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>source</tt>.
+     * Setter method for property source.
      *
      * @param source value to be assigned to property source
      */
@@ -74,7 +90,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>type</tt>.
+     * Getter method for property type.
      *
      * @return property value of type
      */
@@ -83,7 +99,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>type</tt>.
+     * Setter method for property type.
      *
      * @param type value to be assigned to property type
      */
@@ -92,7 +108,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>specVersion</tt>.
+     * Getter method for property specVersion.
      *
      * @return property value of specVersion
      */
@@ -101,7 +117,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>specVersion</tt>.
+     * Setter method for property specVersion.
      *
      * @param specVersion value to be assigned to property specVersion
      */
@@ -110,7 +126,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>contentType</tt>.
+     * Getter method for property contentType.
      *
      * @return property value of contentType
      */
@@ -119,7 +135,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>contentType</tt>.
+     * Setter method for property contentType.
      *
      * @param contentType value to be assigned to property contentType
      */
@@ -128,7 +144,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>data</tt>.
+     * Getter method for property data.
      *
      * @return property value of data
      */
@@ -137,7 +153,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>data</tt>.
+     * Setter method for property data.
      *
      * @param data value to be assigned to property data
      */
@@ -146,7 +162,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>topic</tt>.
+     * Getter method for property topic.
      *
      * @return property value of topic
      */
@@ -155,7 +171,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>topic</tt>.
+     * Setter method for property topic.
      *
      * @param topic value to be assigned to property topic
      */
@@ -164,7 +180,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>pubsubName</tt>.
+     * Getter method for property pubsubName.
      *
      * @return property value of pubsubName
      */
@@ -173,7 +189,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>pubsubName</tt>.
+     * Setter method for property pubsubName.
      *
      * @param pubsubName value to be assigned to property pubsubName
      */
@@ -182,7 +198,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Getter method for property <tt>metadata</tt>.
+     * Getter method for property metadata.
      *
      * @return property value of metadata
      */
@@ -191,7 +207,7 @@ public class TopicEventRequest {
     }
 
     /**
-     * Setter method for property <tt>metadata</tt>.
+     * Setter method for property metadata.
      *
      * @param metadata value to be assigned to property metadata
      */

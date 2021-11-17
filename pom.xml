@@ -61,11 +61,12 @@
 
     <modules>
         <module>examples</module>
+        <module>sdk-springboot</module>
+        <module>sdk-spi-demo</module>
         <module>sdk-spi</module>
         <module>sdk</module>
         <module>sdk-component</module>
         <module>sdk-infrastructure</module>
-        <module>sdk-spi-demo</module>
     </modules>
 
     <properties>
