@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.log;
+package group.rxcloud.capa.component.telemetry.log.appender;
 
 
 /**
- * The interface of the logback appender impl.Implement this and provide your specific impl.
+ * The abstract api of the logback appender impl.Implement this and provide your specific impl.
  */
-public interface CapaLogbackAppender<EVENT> {
+public abstract class CapaLogbackAppender<EVENT> {
 
     /**
      * Deal with the log.
      *
      * @param event The log event.
      */
-    void appendLog(EVENT event);
+    abstract void appendLog(EVENT event);
 }

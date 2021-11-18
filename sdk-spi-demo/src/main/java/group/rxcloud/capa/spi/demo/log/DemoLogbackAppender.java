@@ -17,7 +17,7 @@
 package group.rxcloud.capa.spi.demo.log;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import group.rxcloud.capa.component.telemetry.log.CapaLogbackAppender;
+import group.rxcloud.capa.component.telemetry.log.appender.CapaLogbackAppender;
 
 public class DemoLogbackAppender implements CapaLogbackAppender<ILoggingEvent> {
 

@@ -17,7 +17,7 @@
 package group.rxcloud.capa.component.telemetry.log.agent;
 
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import group.rxcloud.capa.component.telemetry.log.CapaLogbackAppender;
+import group.rxcloud.capa.component.telemetry.log.appender.CapaLogbackAppender;
 import group.rxcloud.capa.infrastructure.config.CapaProperties;
 
 import java.lang.reflect.Constructor;

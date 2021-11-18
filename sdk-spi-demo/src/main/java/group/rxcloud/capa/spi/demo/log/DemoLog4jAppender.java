@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.spi.demo.log;
 
-import group.rxcloud.capa.component.telemetry.log.CapaLog4jAppender;
+import group.rxcloud.capa.component.telemetry.log.appender.CapaLog4jAppender;
 import org.apache.logging.log4j.core.LogEvent;
 
 
