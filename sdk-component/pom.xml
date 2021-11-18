@@ -76,12 +76,14 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
+            <optional>true</optional>
             <version>${log4j.version}</version>
         </dependency>
         <!-- logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+            <optional>true</optional>
             <version>${logback.version}</version>
         </dependency>
         <dependency>
