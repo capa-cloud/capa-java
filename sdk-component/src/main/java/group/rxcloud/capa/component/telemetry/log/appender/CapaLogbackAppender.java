@@ -27,5 +27,5 @@ public abstract class CapaLogbackAppender<EVENT> {
      *
      * @param event The log event.
      */
-    abstract void appendLog(EVENT event);
+    public abstract void appendLog(EVENT event);
 }
