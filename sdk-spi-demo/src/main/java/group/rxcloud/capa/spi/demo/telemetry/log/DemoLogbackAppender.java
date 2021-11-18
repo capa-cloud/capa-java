@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.log;
+package group.rxcloud.capa.spi.demo.telemetry.log;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import group.rxcloud.capa.component.telemetry.log.appender.CapaLogbackAppender;
 
-/**
- * The interface of the logback appender impl.Implement this and provide your specific impl.
- */
-public interface CapaLogbackAppender<EVENT> {
+public class DemoLogbackAppender extends CapaLogbackAppender<ILoggingEvent> {
 
-    /**
-     * Deal with the log.
-     *
-     * @param event The log event.
-     */
-    void appendLog(EVENT event);
+    public DemoLogbackAppender() {
+    }
+
+    @Override
+    public void appendLog(ILoggingEvent event) {
+        System.out.println("test logback log and content is " + event.getFormattedMessage());
+    }
 }

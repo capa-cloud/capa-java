@@ -14,16 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.demo.log;
-
-import group.rxcloud.capa.component.telemetry.log.CapaLog4jAppender;
-import org.apache.logging.log4j.core.LogEvent;
+package group.rxcloud.capa.component.telemetry.log.appender;
 
 
-public class DemoLog4jAppender implements CapaLog4jAppender {
+/**
+ * The abstract api of the logback appender impl.Implement this and provide your specific impl.
+ */
+public abstract class CapaLogbackAppender<EVENT> {
 
-    @Override
-    public void appendLog(LogEvent event) {
-        System.out.println("test log log4j and content is " + event.getMessage().getFormattedMessage());
-    }
+    /**
+     * Deal with the log.
+     *
+     * @param event The log event.
+     */
+    public abstract void appendLog(EVENT event);
 }

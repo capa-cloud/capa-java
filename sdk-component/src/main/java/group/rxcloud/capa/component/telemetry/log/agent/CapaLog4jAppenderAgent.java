@@ -21,7 +21,7 @@ package group.rxcloud.capa.component.telemetry.log.agent;
  * @Date 2021/11/17 14:16
  */
 
-import group.rxcloud.capa.component.telemetry.log.CapaLog4jAppender;
+import group.rxcloud.capa.component.telemetry.log.appender.CapaLog4jAppender;
 import group.rxcloud.capa.infrastructure.config.CapaProperties;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Filter;
