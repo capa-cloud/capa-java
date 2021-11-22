@@ -16,12 +16,6 @@
  */
 package group.rxcloud.capa.component.telemetry.log.agent;
 
-/**
- * @Author gpeng
- * @Date 2021/11/17 14:16
- */
-
-import group.rxcloud.capa.component.telemetry.log.appender.CapaLog4jAppender;
 import group.rxcloud.capa.infrastructure.config.CapaProperties;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Filter;
@@ -116,5 +110,16 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
         logAppender.appendLog(event);
     }
 
+    /**
+     * The abstract api of the log4j appender impl.Implement this and provide your specific impl.
+     */
+    public interface CapaLog4jAppender {
 
+        /**
+         * Deal with the log.
+         *
+         * @param event The log event.
+         */
+        void appendLog(LogEvent event);
+    }
 }
