@@ -20,12 +20,12 @@ package group.rxcloud.capa.component.telemetry.log.appender;
 /**
  * The abstract api of the logback appender impl.Implement this and provide your specific impl.
  */
-public abstract class CapaLogbackAppender<EVENT> {
+public interface CapaLogbackAppender<EVENT> {
 
     /**
      * Deal with the log.
      *
      * @param event The log event.
      */
-    public abstract void appendLog(EVENT event);
+    void appendLog(EVENT event);
 }

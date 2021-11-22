@@ -20,7 +20,7 @@ import group.rxcloud.capa.component.telemetry.log.appender.CapaLog4jAppender;
 import org.apache.logging.log4j.core.LogEvent;
 
 
-public class DemoLog4jAppender extends CapaLog4jAppender {
+public class DemoLog4jAppender implements CapaLog4jAppender {
 
     @Override
     public void appendLog(LogEvent event) {

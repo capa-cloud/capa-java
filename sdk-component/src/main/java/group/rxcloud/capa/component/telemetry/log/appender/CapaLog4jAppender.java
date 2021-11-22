@@ -21,12 +21,12 @@ import org.apache.logging.log4j.core.LogEvent;
 /**
  * The abstract api of the log4j appender impl.Implement this and provide your specific impl.
  */
-public abstract class CapaLog4jAppender {
+public interface CapaLog4jAppender {
 
     /**
      * Deal with the log.
      *
      * @param event The log event.
      */
-   public abstract void appendLog(LogEvent event);
+    void appendLog(LogEvent event);
 }
