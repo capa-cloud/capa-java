@@ -23,7 +23,7 @@
     <groupId>group.rxcloud</groupId>
     <artifactId>capa-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.6.RELEASE</version>
+    <version>1.0.7-alpha-2</version>
     <name>capa-sdk-parent</name>
     <description>SDK for Capa.</description>
     <url>https://github.com/reactivegroup</url>
@@ -61,21 +61,26 @@
 
     <modules>
         <module>examples</module>
+        <module>sdk-springboot</module>
+        <module>sdk-spi-demo</module>
         <module>sdk-spi</module>
         <module>sdk</module>
         <module>sdk-component</module>
         <module>sdk-infrastructure</module>
-        <module>sdk-spi-demo</module>
     </modules>
 
     <properties>
         <java.version>8</java.version>
         <file.encoding>UTF-8</file.encoding>
         <maven.version>3.8.1</maven.version>
-        <cloud-runtimes.version>1.0.7.RELEASE</cloud-runtimes.version>
+        <slf4j.version>1.7.21</slf4j.version>
+        <cloud-runtimes.version>1.0.8.RELEASE</cloud-runtimes.version>
         <reactor-core.version>3.3.11.RELEASE</reactor-core.version>
         <junit.version>5.3.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
+        <open.telemetry.version>1.9.0</open.telemetry.version>
+        <open.telemetry.version.alpha>1.9.0-alpha</open.telemetry.version.alpha>
+
         <checkstyle.version>3.1.2</checkstyle.version>
         <apache.rat.version>0.13</apache.rat.version>
         <cobertura.maven.version>2.7</cobertura.maven.version>
@@ -129,6 +134,25 @@
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor-core.version}</version>
                 <optional>true</optional>
+            </dependency>
+
+            <!--slf4j-->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- open-telemetry-api -->
+            <dependency>
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-api</artifactId>
+                <version>${open.telemetry.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-api-metrics</artifactId>
+                <version>${open.telemetry.version.alpha}</version>
             </dependency>
 
             <!-- unit test -->

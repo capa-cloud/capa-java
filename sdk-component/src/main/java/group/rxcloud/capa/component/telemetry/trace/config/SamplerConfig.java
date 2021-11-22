@@ -14,18 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.metrics;
+package group.rxcloud.capa.component.telemetry.trace.config;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
-import reactor.core.publisher.Mono;
+import java.io.Serializable;
 
-public interface CapaMetricsClient extends DefaultCloudRuntimesClient {
+/**
+ */
+public class SamplerConfig implements Serializable {
 
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
+    private static final long serialVersionUID = -2113523925814197551L;
+
+    // 默认全部取样
+    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig();
+
+    private String name = "_DEFAULT_SAMPLER";
+
+    private boolean disable;
+
+    public String getName() {
+        return name;
     }
 
-    @Override
-    void close();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isDisable() {
+        return disable;
+    }
+
+    public void setDisable(boolean disable) {
+        this.disable = disable;
+    }
 }

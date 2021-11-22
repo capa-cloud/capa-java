@@ -22,7 +22,6 @@ import group.rxcloud.capa.component.configstore.SubscribeResp;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.spi.configstore.CapaConfigStoreSpi;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -48,7 +47,7 @@ public class DemoCapaConfigStore extends CapaConfigStoreSpi {
 
     @Override
     protected void doInit(StoreConfig storeConfig) {
-        // paas
+        logger.info("[DemoCapaConfigStore.doInit] storeConfig[{}]", storeConfig);
     }
 
     @Override
@@ -66,6 +65,7 @@ public class DemoCapaConfigStore extends CapaConfigStoreSpi {
         configurationItems.setLabel(getDefaultLabel());
         configurationItems.setTags(metadata);
         configurationItems.setMetadata(metadata);
+        logger.info("[DemoCapaConfigStore.doGet] configurationItems[{}]", configurationItems);
 
         List<ConfigurationItem<T>> items = Collections.singletonList(configurationItems);
         return Mono.just(items);
@@ -74,11 +74,14 @@ public class DemoCapaConfigStore extends CapaConfigStoreSpi {
     @Override
     protected <T> Flux<SubscribeResp<T>> doSubscribe(String appId, String group, String label, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
         return Flux.interval(Duration.ofSeconds(3))
-                .map(aLong -> this.getSubscribeResp(appId, metadata, aLong));
+                .map(aLong -> {
+                    SubscribeResp<T> subscribeResp = this.generateSubscribeResp(appId, metadata, aLong);
+                    logger.info("[DemoCapaConfigStore.doSubscribe] subscribeResp[{}]", subscribeResp);
+                    return subscribeResp;
+                });
     }
 
-    @NotNull
-    private <T> SubscribeResp<T> getSubscribeResp(String appId, Map<String, String> metadata, Long aLong) {
+    private <T> SubscribeResp<T> generateSubscribeResp(String appId, Map<String, String> metadata, Long aLong) {
         ConfigurationItem<T> configurationItems = new ConfigurationItem<>();
         configurationItems.setKey("test" + aLong);
         configurationItems.setContent(null);

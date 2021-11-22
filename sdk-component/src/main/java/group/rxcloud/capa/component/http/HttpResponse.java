@@ -45,6 +45,8 @@ public class HttpResponse<T> {
 
     /**
      * Gets actual response data.
+     *
+     * @return
      */
     public T getBody() {
         return body;
@@ -52,6 +54,8 @@ public class HttpResponse<T> {
 
     /**
      * Gets http headers.
+     *
+     * @return
      */
     public Map<String, String> getHeaders() {
         return headers;
@@ -59,6 +63,8 @@ public class HttpResponse<T> {
 
     /**
      * Gets http invocation status code.
+     *
+     * @return
      */
     public int getStatusCode() {
         return statusCode;

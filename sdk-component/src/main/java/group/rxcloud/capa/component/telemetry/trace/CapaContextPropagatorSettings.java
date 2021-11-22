@@ -14,8 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.component.telemetry.trace;
 
-package group.rxcloud.capa.component.pubsub;
+import io.opentelemetry.context.propagation.TextMapPropagator;
 
-public abstract class PubSub {
+import java.util.List;
+
+/**
+ */
+public interface CapaContextPropagatorSettings {
+
+    CapaContextPropagatorSettings setContextPropagators(List<TextMapPropagator> contextPropagators);
+
+    CapaContextPropagatorSettings addContextPropagators(TextMapPropagator processor);
+
 }

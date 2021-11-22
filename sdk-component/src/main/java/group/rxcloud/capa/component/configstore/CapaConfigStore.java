@@ -40,7 +40,7 @@ public abstract class CapaConfigStore implements AutoCloseable {
     protected final CapaObjectSerializer objectSerializer;
 
     /**
-     * Init init the configuration store.
+     * The configuration store name.
      */
     private String storeName;
 
@@ -54,7 +54,9 @@ public abstract class CapaConfigStore implements AutoCloseable {
     }
 
     /**
-     * Init init the configuration store.
+     * Init the configuration store.
+     *
+     * @param storeConfig storeConfig
      */
     public void init(StoreConfig storeConfig) {
         this.storeName = storeConfig.getStoreName();
@@ -62,12 +64,14 @@ public abstract class CapaConfigStore implements AutoCloseable {
     }
 
     /**
-     * Init init the configuration store.
+     * Init the configuration store.
      */
     protected abstract void doInit(StoreConfig storeConfig);
 
     /**
      * Gets store name.
+     *
+     * @return storeName
      */
     public String getStoreName() {
         return this.storeName;
@@ -75,26 +79,42 @@ public abstract class CapaConfigStore implements AutoCloseable {
 
     /**
      * GetSpecificKeysValue get specific key value.
+     *
+     * @param getRequest
+     * @param type
+     * @param <T>
+     * @return
      */
     public abstract <T> Mono<List<ConfigurationItem<T>>> get(GetRequest getRequest, TypeRef<T> type);
 
     /**
-     * Subscribe subscribe the configurations updates.
+     * Subscribe the configurations updates.
+     *
+     * @param subscribeReq
+     * @param type
+     * @param <T>
+     * @return
      */
     public abstract <T> Flux<SubscribeResp<T>> subscribe(SubscribeReq subscribeReq, TypeRef<T> type);
 
     /**
      * StopSubscribe stop subs
+     *
+     * @return
      */
     public abstract String stopSubscribe();
 
     /**
      * GetDefaultGroup returns default group.This method will be invoked if a request doesn't specify the group field
+     *
+     * @return
      */
     public abstract String getDefaultGroup();
 
     /**
      * GetDefaultLabel returns default label
+     *
+     * @return
      */
     public abstract String getDefaultLabel();
 }
