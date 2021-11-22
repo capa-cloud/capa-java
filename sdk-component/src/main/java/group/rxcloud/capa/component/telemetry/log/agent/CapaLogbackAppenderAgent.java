@@ -17,7 +17,6 @@
 package group.rxcloud.capa.component.telemetry.log.agent;
 
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import group.rxcloud.capa.component.telemetry.log.appender.CapaLogbackAppender;
 import group.rxcloud.capa.infrastructure.config.CapaProperties;
 
 import java.lang.reflect.Constructor;
@@ -72,5 +71,18 @@ public class CapaLogbackAppenderAgent<EVENT> extends UnsynchronizedAppenderBase<
     @Override
     protected void append(EVENT event) {
         logbackAppender.appendLog(event);
+    }
+
+    /**
+     * The abstract api of the logback appender impl.Implement this and provide your specific impl.
+     */
+    public interface CapaLogbackAppender<EVENT> {
+
+        /**
+         * Deal with the log.
+         *
+         * @param event The log event.
+         */
+        void appendLog(EVENT event);
     }
 }
