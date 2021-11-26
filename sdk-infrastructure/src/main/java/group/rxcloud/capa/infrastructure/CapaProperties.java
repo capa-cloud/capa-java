@@ -33,8 +33,6 @@ import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_PR
 
 /**
  * Global properties for Capa's SDK, using Supplier so they are dynamically resolved.
- * <p>
- * TODO Allow dynamic configuration
  */
 public abstract class CapaProperties {
 

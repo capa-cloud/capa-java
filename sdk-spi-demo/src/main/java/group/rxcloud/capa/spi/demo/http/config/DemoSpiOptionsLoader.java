@@ -14,8 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.spi.demo.http.config;
 
-package group.rxcloud.capa.component.bindings;
+import group.rxcloud.capa.spi.http.config.CapaSpiOptionsLoader;
 
-public abstract class OutputBinding {
+import java.util.Objects;
+
+public class DemoSpiOptionsLoader implements CapaSpiOptionsLoader<DemoRpcServiceOptions> {
+
+    @Override
+    public DemoRpcServiceOptions loadRpcServiceOptions(String appId) {
+        Objects.requireNonNull(appId, "appId");
+        return new DemoRpcServiceOptions(appId);
+    }
 }

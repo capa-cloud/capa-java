@@ -14,19 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.config;
+package group.rxcloud.capa.spi.demo.http.config;
 
+import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 
 /**
- * Read SPI configuration and generate corresponding configuration objects.
+ * RPC service options. Define for AppId.
  */
-public interface CapaSpiOptionsLoader<T extends RpcServiceOptions> {
+public class DemoRpcServiceOptions implements RpcServiceOptions {
 
     /**
-     * Load rpc service options.
-     *
-     * @param appId the appId
-     * @return the rpc service options
+     * Unique rpc service ID
      */
-    T loadRpcServiceOptions(String appId);
+    private final String appId;
+
+    /**
+     * Instantiates a new Capa rpc service options.
+     *
+     * @param appId the app id
+     */
+    public DemoRpcServiceOptions(String appId) {
+        this.appId = appId;
+    }
 }

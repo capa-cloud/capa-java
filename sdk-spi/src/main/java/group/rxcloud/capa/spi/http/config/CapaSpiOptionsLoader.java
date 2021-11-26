@@ -14,22 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.config;
+package group.rxcloud.capa.spi.http.config;
 
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
 
 /**
- * The Capa SPI environment.
+ * Read SPI configuration and generate corresponding configuration objects.
  */
-public abstract class CapaSpiProperties {
+public interface CapaSpiOptionsLoader<T extends RpcServiceOptions> {
 
     /**
-     * Gets default options loader.
+     * Load rpc service options.
      *
-     * @return the default options loader
+     * @param appId the appId
+     * @return the rpc service options
      */
-    public static CapaSpiOptionsLoader getSpiOptionsLoader() {
-        // load spi capa http impl
-        return CapaClassLoader.loadComponentClassObj("rpc", CapaSpiOptionsLoader.class);
-    }
+    T loadRpcServiceOptions(String appId);
 }

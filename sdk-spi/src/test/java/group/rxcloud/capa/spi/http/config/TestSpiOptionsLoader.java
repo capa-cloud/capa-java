@@ -14,12 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.spi.http.config;
 
-package group.rxcloud.capa.spi.config;
-
+import java.util.Objects;
 
 /**
- * RPC service options. Define for AppId.
+ * The spi options loader used in tests only.
  */
-public interface RpcServiceOptions {
+public class TestSpiOptionsLoader implements CapaSpiOptionsLoader<TestRpcServiceOptions> {
+
+    @Override
+    public TestRpcServiceOptions loadRpcServiceOptions(String appId) {
+        Objects.requireNonNull(appId, "appId");
+        return new TestRpcServiceOptions(appId);
+    }
 }

@@ -46,6 +46,18 @@ public interface CapaEnvironment {
     String getDeployRegion();
 
     /**
+     * Gets deploy env, like:
+     * <pre>
+     * + FAT
+     * + UAT
+     * + PRO
+     * </pre>
+     *
+     * @return the deploy env name
+     */
+    String getDeployEnv();
+
+    /**
      * The {@code CapaEnvironment} SPI Class Provider.
      */
     abstract class Provider {
@@ -53,7 +65,7 @@ public interface CapaEnvironment {
         /**
          * The {@code CapaEnvironment} SPI Class Obj.
          */
-        private static CapaEnvironment INSTANCE;
+        private volatile static CapaEnvironment INSTANCE;
 
         /**
          * Gets {@code CapaEnvironment} instance.

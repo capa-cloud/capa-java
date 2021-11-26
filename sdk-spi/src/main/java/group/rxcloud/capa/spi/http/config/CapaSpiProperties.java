@@ -14,8 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.spi.http.config;
 
-package group.rxcloud.capa.component.bindings;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
 
-public abstract class InputBinding {
+/**
+ * The Capa SPI environment.
+ */
+public abstract class CapaSpiProperties {
+
+    /**
+     * Gets default options loader.
+     *
+     * @return the default options loader
+     */
+    public static CapaSpiOptionsLoader getSpiOptionsLoader() {
+        // load spi rpc impl
+        return CapaClassLoader.loadComponentClassObj("rpc-common", CapaSpiOptionsLoader.class);
+    }
 }
