@@ -20,6 +20,7 @@ import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.AttributeType;
 
 /**
+ * Attribute key for status params.
  */
 public final class StatusAttributeKey implements AttributeKey<String> {
 

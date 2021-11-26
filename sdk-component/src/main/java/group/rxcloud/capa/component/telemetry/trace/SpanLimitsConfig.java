@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.trace.config;
+package group.rxcloud.capa.component.telemetry.trace;
 
 import java.io.Serializable;
 
 /**
+ * Span limits.
  */
 public class SpanLimitsConfig implements Serializable {
 

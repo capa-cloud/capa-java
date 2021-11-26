@@ -20,6 +20,7 @@ import io.opentelemetry.api.trace.SpanBuilder;
 import io.opentelemetry.api.trace.Tracer;
 
 /**
+ * Tracer proxy.
  */
 public class CapaTracer implements Tracer {
 

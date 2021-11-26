@@ -14,36 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.trace.config;
+package group.rxcloud.capa.component.telemetry.context;
 
-import java.io.Serializable;
+import io.opentelemetry.context.propagation.TextMapPropagator;
 
 /**
+ * Settings for capa context propagator.
  */
-public class SamplerConfig implements Serializable {
+public interface CapaContextPropagatorSettings {
 
-    private static final long serialVersionUID = -2113523925814197551L;
+    String FILE_PATH = "/capa-context.json";
 
-    // 默认全部取样
-    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig();
+    /**
+     * Replace the whole context config.
+     *
+     * @param config context config
+     * @return current settings.
+     */
+    CapaContextPropagatorSettings setContextConfig(ContextConfig config);
 
-    private String name = "_DEFAULT_SAMPLER";
+    /**
+     * Add one more processor to current context config.
+     *
+     * @param processor processor config
+     * @return current settings.
+     */
+    CapaContextPropagatorSettings addContextPropagators(TextMapPropagator processor);
 
-    private boolean disable;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isDisable() {
-        return disable;
-    }
-
-    public void setDisable(boolean disable) {
-        this.disable = disable;
-    }
 }

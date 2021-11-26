@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry;
+package group.rxcloud.capa.component.telemetry.context;
+
+import group.rxcloud.capa.infrastructure.utils.SpiUtils;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -22,10 +24,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
+ * Method for async context.
  */
 public final class CapaContext {
 
     private static final CapaContextAsyncWrapper WRAPPER = getAsyncWrapper();
+
+    private CapaContext() {
+    }
 
     public static Runnable taskWrapping(Runnable runnable) {
         return WRAPPER.wrap(runnable);
@@ -47,8 +53,12 @@ public final class CapaContext {
         return WRAPPER.wrap(executor);
     }
 
+    public static String getTraceId() {
+        return WRAPPER.getTraceId();
+    }
+
     private static CapaContextAsyncWrapper getAsyncWrapper() {
-        CapaContextAsyncWrapper WRAPPER = SpiUtils.getFromSpiConfigFile(CapaContextAsyncWrapper.class);
+        CapaContextAsyncWrapper WRAPPER = SpiUtils.loadFromSpiComponentFileNullable(CapaContextAsyncWrapper.class, "telemetry");
         if (WRAPPER == null) {
             return new CapaContextAsyncWrapper() {};
         }

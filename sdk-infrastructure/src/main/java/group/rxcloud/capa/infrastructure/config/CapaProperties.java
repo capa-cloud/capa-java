@@ -16,10 +16,8 @@
  */
 package group.rxcloud.capa.infrastructure.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import group.rxcloud.capa.infrastructure.utils.SpiUtils;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -77,13 +75,6 @@ public abstract class CapaProperties {
                 + componentDomain.toLowerCase()
                 + CAPA_COMPONENT_PROPERTIES_SUFFIX;
 
-        try (InputStream in = CapaProperties.class.getResourceAsStream(fileName)) {
-            InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-            Properties properties = new Properties();
-            properties.load(inputStreamReader);
-            return properties;
-        } catch (IOException e) {
-            throw new IllegalArgumentException(fileName + " file not found.");
-        }
+        return SpiUtils.loadProperties(fileName);
     }
 }

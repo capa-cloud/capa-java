@@ -1,0 +1,7 @@
+{
+  "enableIdValidate" : false,
+  "idGenerator": "group.rxcloud.capa.component.telemetry.trace.TestIdGenerator",
+  "processors" : [
+    "group.rxcloud.capa.component.telemetry.trace.TestSpanProcessor"
+  ]
+}

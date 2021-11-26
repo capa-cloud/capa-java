@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry;
+package group.rxcloud.capa.component.telemetry.context;
 
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanContext;
 import io.opentelemetry.context.Context;
 
 import java.util.concurrent.Callable;
@@ -45,6 +47,10 @@ public interface CapaContextAsyncWrapper {
 
     default ScheduledExecutorService wrap(ScheduledExecutorService executor) {
         return Context.current().wrap(executor);
+    }
+
+    default String getTraceId() {
+        return Span.fromContext(Context.current()).getSpanContext().getTraceId();
     }
 
 }

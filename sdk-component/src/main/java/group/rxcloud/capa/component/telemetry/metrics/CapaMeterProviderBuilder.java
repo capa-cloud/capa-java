@@ -16,100 +16,59 @@
  */
 package group.rxcloud.capa.component.telemetry.metrics;
 
-import group.rxcloud.capa.component.telemetry.SpiUtils;
+import group.rxcloud.capa.component.telemetry.SamplerConfig;
+import group.rxcloud.capa.infrastructure.utils.SpiUtils;
 import io.opentelemetry.api.metrics.MeterProvider;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.SdkMeterProviderBuilder;
-import io.opentelemetry.sdk.metrics.exemplar.ExemplarFilter;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
 import io.opentelemetry.sdk.metrics.export.MetricReaderFactory;
 import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * Builder for capa metric provider.
  */
+@NotThreadSafe
 public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
 
+    /**
+     * Config for capa metric provider.
+     */
     private MeterConfig meterConfigs;
 
-    public MeterConfig getMetricsConfigs() {
-        return meterConfigs;
-    }
+    /**
+     * Sampler config.
+     */
+    private SamplerConfig samplerConfig;
 
-    @Override
-    public CapaMeterProviderSettings setMetricsConfig(MeterConfig config) {
-        meterConfigs = meterConfigs;
-        return this;
-    }
+    /**
+     * Readers manually set.
+     */
+    private List<MetricsReaderConfig> metricsReaderConfigs;
 
-    @Override
-    public CapaMeterProviderSettings addMetricReaderConfig(MetricsReaderConfig config) {
-        if (meterConfigs == null) {
-            meterConfigs = new MeterConfig();
-            meterConfigs.setReaders(new ArrayList<>());
-        }
-        meterConfigs.getReaders().add(config);
-        return this;
-    }
-
-
-    private void initMeterConfig() {
-        if (meterConfigs == null) {
-            CapaMeterConfigLoader meterConfigLoader = SpiUtils.getFromSpiConfigFile(CapaMeterConfigLoader.class);
-            if (meterConfigLoader == null) {
-                meterConfigLoader = CapaMeterConfigLoader.DEFAULT;
-            }
-            meterConfigs = meterConfigLoader.loadMetricsConfig();
-        }
-    }
-
-    public MeterProvider buildMeterProvider() {
-        // if config was not explicitly set, try loading the config from the config loader.
-        initMeterConfig();
-
-        MeterConfig meterConfigs = this.meterConfigs;
-        if (meterConfigs == null) {
-            return MeterProvider.noop();
-        }
-        List<MetricsReaderConfig> readerConfigs = this.meterConfigs.getReaders();
-        if (readerConfigs == null || readerConfigs.isEmpty()) {
-            return MeterProvider.noop();
-        }
-
-        List<MetricReaderFactory> factories = bulidReaderFactories(readerConfigs);
-        if (factories.isEmpty()) {
-            return MeterProvider.noop();
-        }
-
-        SdkMeterProviderBuilder builder = SdkMeterProvider.builder()
-                                                          .setExemplarFilter(ExemplarFilter.alwaysSample());
-        factories.forEach(f -> builder.registerMetricReader(f));
-        return builder.build();
-    }
-
-    private List<MetricReaderFactory> bulidReaderFactories(List<MetricsReaderConfig> readerConfigs) {
-        if (readerConfigs == null || readerConfigs.isEmpty()) {
-            return Collections.emptyList();
-        }
+    /**
+     * Build the reader factories with reader configs.
+     * Each factory defined the export interval and exporter of the reader it will generate.
+     *
+     * @param readerConfigs metrics reader configs.
+     * @return metrics reader factories.
+     */
+    private static List<MetricReaderFactory> bulidReaderFactories(List<MetricsReaderConfig> readerConfigs) {
         List<MetricReaderFactory> factories = new ArrayList<>();
         for (MetricsReaderConfig config : readerConfigs) {
-            if (config.isDisable()) {
-                continue;
-            }
-
-            MetricExporter exporter = config.getExporterInstance() != null ? config.getExporterInstance()
-                    : SpiUtils.getFromSpiConfigFile(config.getExporterType(), MetricExporter.class);
+            MetricExporter exporter = SpiUtils
+                    .newInstanceWithConstructorCache(config.getExporterType(), MetricExporter.class);
             if (exporter == null) {
                 throw new IllegalArgumentException(
-                        "Metric Exporter is not configured. readerName = " + config.getReaderName() + '.');
+                        "Metric Exporter is not configured. readerName = " + config.getName() + '.');
             }
 
             ScheduledThreadPoolExecutor worker = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
@@ -117,17 +76,87 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
                 public Thread newThread(@NotNull Runnable r) {
                     Thread thread = new Thread(r);
                     thread.setDaemon(true);
-                    thread.setName("capa-metric-reader-" + config.getReaderName() + '-' + System
+                    thread.setName("capa-metric-reader-" + config.getName() + '-' + System
                             .currentTimeMillis());
                     return thread;
                 }
             });
 
             factories.add(PeriodicMetricReader.builder(exporter)
-                                       .setInterval(config.getExportIntervalMillis(), TimeUnit.MILLISECONDS)
-                                       .setExecutor(worker)
-                                       .newMetricReaderFactory());
+                                              .setInterval(config.getExportIntervalMillis(), TimeUnit.MILLISECONDS)
+                                              .setExecutor(worker)
+                                              .newMetricReaderFactory());
         }
         return factories;
     }
+
+    @Override
+    public CapaMeterProviderBuilder setSamplerConfig(SamplerConfig samplerConfig) {
+        this.samplerConfig = samplerConfig;
+        return this;
+    }
+
+    @Override
+    public CapaMeterProviderBuilder setMeterConfig(MeterConfig config) {
+        meterConfigs = config;
+        return this;
+    }
+
+    @Override
+    public CapaMeterProviderBuilder addMetricReaderConfig(MetricsReaderConfig config) {
+        if (metricsReaderConfigs == null) {
+            metricsReaderConfigs = new ArrayList<>();
+        }
+        metricsReaderConfigs.add(config);
+        return this;
+    }
+
+    /**
+     * Build the meter provider with the config.
+     * In the following cases, a noop implementation will be returned and no new thread will be started.
+     * 1. No metrics reader was defined.
+     *
+     * @return the meter provider.
+     */
+    public MeterProvider buildMeterProvider() {
+
+        List<MetricsReaderConfig> metricsReaderConfigs = this.metricsReaderConfigs;
+        if (metricsReaderConfigs == null || metricsReaderConfigs.isEmpty()) {
+            // if config was not explicitly set, try loading the config from the config loader.
+            initMeterConfig();
+
+            if (meterConfigs != null) {
+                metricsReaderConfigs = meterConfigs.getReaders();
+            }
+        }
+
+        if (metricsReaderConfigs == null || metricsReaderConfigs.isEmpty()) {
+            return MeterProvider.noop();
+        }
+
+        List<MetricReaderFactory> factories = bulidReaderFactories(metricsReaderConfigs);
+
+        initSampleConfig();
+
+        SdkMeterProviderBuilder builder = SdkMeterProvider.builder()
+                                                          .setExemplarFilter(CapaMetricsSampler.getInstance()
+                                                                                               .update(samplerConfig));
+        factories.forEach(f -> builder.registerMetricReader(f));
+        return builder.build();
+    }
+
+    private void initMeterConfig() {
+        if (meterConfigs == null) {
+            meterConfigs = SpiUtils.loadConfigNullable(FILE_PATH, MeterConfig.class);
+            ;
+        }
+    }
+
+    private void initSampleConfig() {
+        if (samplerConfig == null) {
+            samplerConfig = SamplerConfig.loadOrDefault();
+        }
+    }
+
+
 }

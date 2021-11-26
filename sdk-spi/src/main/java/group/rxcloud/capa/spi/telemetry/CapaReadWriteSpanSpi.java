@@ -20,6 +20,7 @@ import group.rxcloud.capa.component.telemetry.trace.CapaReadWriteSpan;
 import io.opentelemetry.sdk.trace.ReadWriteSpan;
 
 /**
+ * SPI Capa read write span.
  */
 public abstract class CapaReadWriteSpanSpi extends CapaReadWriteSpan {
 

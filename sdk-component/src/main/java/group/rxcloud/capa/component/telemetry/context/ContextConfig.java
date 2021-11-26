@@ -14,18 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.trace;
+package group.rxcloud.capa.component.telemetry.context;
 
-import io.opentelemetry.context.propagation.TextMapPropagator;
-
+import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Config for context propagators.
  */
-public interface CapaContextPropagatorSettings {
+public class ContextConfig implements Serializable {
 
-    CapaContextPropagatorSettings setContextPropagators(List<TextMapPropagator> contextPropagators);
+    private static final long serialVersionUID = 6587103489345563395L;
 
-    CapaContextPropagatorSettings addContextPropagators(TextMapPropagator processor);
+    private List<String> contextPropagators;
+
+    public List<String> getContextPropagators() {
+        return contextPropagators;
+    }
+
+    public void setContextPropagators(List<String> contextPropagators) {
+        this.contextPropagators = contextPropagators;
+    }
 
 }

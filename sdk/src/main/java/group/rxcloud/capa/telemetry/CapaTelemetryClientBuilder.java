@@ -16,28 +16,33 @@
  */
 package group.rxcloud.capa.telemetry;
 
+import group.rxcloud.capa.component.telemetry.SamplerConfig;
+import group.rxcloud.capa.component.telemetry.context.CapaContextPropagatorBuilder;
+import group.rxcloud.capa.component.telemetry.context.CapaContextPropagatorSettings;
+import group.rxcloud.capa.component.telemetry.context.ContextConfig;
 import group.rxcloud.capa.component.telemetry.metrics.CapaMeterProviderBuilder;
 import group.rxcloud.capa.component.telemetry.metrics.CapaMeterProviderSettings;
 import group.rxcloud.capa.component.telemetry.metrics.MeterConfig;
 import group.rxcloud.capa.component.telemetry.metrics.MetricsReaderConfig;
-import group.rxcloud.capa.component.telemetry.trace.CapaContextPropagatorSettings;
 import group.rxcloud.capa.component.telemetry.trace.CapaTracerProviderBuilder;
 import group.rxcloud.capa.component.telemetry.trace.CapaTracerProviderSettings;
-import group.rxcloud.capa.component.telemetry.trace.config.SpanLimitsConfig;
-import group.rxcloud.capa.component.telemetry.trace.config.TracerConfig;
+import group.rxcloud.capa.component.telemetry.trace.SpanLimitsConfig;
+import group.rxcloud.capa.component.telemetry.trace.TracerConfig;
+import group.rxcloud.capa.rpc.CapaRpcClient;
 import io.opentelemetry.context.propagation.TextMapPropagator;
 import io.opentelemetry.sdk.trace.IdGenerator;
 import io.opentelemetry.sdk.trace.SpanProcessor;
-import io.opentelemetry.sdk.trace.samplers.Sampler;
-
-import java.util.List;
 
 /**
+ * A builder for the {@link CapaTelemetryClient}
  */
 public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings, CapaTracerProviderSettings, CapaMeterProviderSettings {
 
     private final CapaTracerProviderBuilder tracerProviderBuilder = new CapaTracerProviderBuilder();
+
     private final CapaMeterProviderBuilder meterProviderBuilder = new CapaMeterProviderBuilder();
+
+    private final CapaContextPropagatorBuilder contextPropagatorBuilder = new CapaContextPropagatorBuilder();
 
     @Override
     public CapaTelemetryClientBuilder setTracerConfig(TracerConfig tracerConfig) {
@@ -58,39 +63,27 @@ public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings
     }
 
     @Override
-    public CapaTelemetryClientBuilder setSampler(Sampler sampler) {
-        tracerProviderBuilder.setSampler(sampler);
-        return this;
-    }
-
-    @Override
-    public CapaTelemetryClientBuilder setProcessors(List<SpanProcessor> processors) {
-        tracerProviderBuilder.setProcessors(processors);
-        return this;
-    }
-
-    @Override
     public CapaTelemetryClientBuilder addProcessor(SpanProcessor processor) {
         tracerProviderBuilder.addProcessor(processor);
         return this;
     }
 
     @Override
-    public CapaTelemetryClientBuilder setContextPropagators(List<TextMapPropagator> contextPropagators) {
-        tracerProviderBuilder.setContextPropagators(contextPropagators);
+    public CapaTelemetryClientBuilder setContextConfig(ContextConfig config) {
+        contextPropagatorBuilder.setContextConfig(config);
         return this;
     }
 
     @Override
     public CapaTelemetryClientBuilder addContextPropagators(TextMapPropagator processor) {
-        tracerProviderBuilder.addContextPropagators(processor);
+        contextPropagatorBuilder.addContextPropagators(processor);
         return this;
     }
 
 
     @Override
-    public CapaTelemetryClientBuilder setMetricsConfig(MeterConfig config) {
-        meterProviderBuilder.setMetricsConfig(config);
+    public CapaTelemetryClientBuilder setMeterConfig(MeterConfig config) {
+        meterProviderBuilder.setMeterConfig(config);
         return this;
     }
 
@@ -100,11 +93,18 @@ public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings
         return this;
     }
 
+    @Override
+    public CapaTelemetryClientBuilder setSamplerConfig(SamplerConfig samplerConfig) {
+        meterProviderBuilder.setSamplerConfig(samplerConfig);
+        tracerProviderBuilder.setSamplerConfig(samplerConfig);
+        return this;
+    }
+
     public CapaTelemetryClient build() {
         CapaTelemetryClientGlobal client = new CapaTelemetryClientGlobal();
 
         // context
-        client.setContextPropagators(tracerProviderBuilder.buildContextPropagators());
+        client.setContextPropagators(contextPropagatorBuilder.buildContextPropagators());
 
         // tracer
         client.setTracerProvider(tracerProviderBuilder.buildTracerProvider());
