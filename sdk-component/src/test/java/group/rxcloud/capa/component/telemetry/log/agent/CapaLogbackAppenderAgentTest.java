@@ -17,6 +17,7 @@
 package group.rxcloud.capa.component.telemetry.log.agent;
 
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.message.Message;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,6 +34,9 @@ class CapaLogbackAppenderAgentTest {
     void testAppend() {
         CapaLogbackAppenderAgent.CapaLogbackAppender capaLogbackAppender = CapaLogbackAppenderAgent.buildCapaLogbackAppender();
         LogEvent logEvent = Mockito.mock(LogEvent.class);
+        Message message = Mockito.mock(Message.class);
+        Mockito.when(logEvent.getMessage()).thenReturn(Mockito.mock(Message.class));
+        Mockito.when(message.getFormattedMessage()).thenReturn("TEST");
         capaLogbackAppender.appendLog(logEvent);
     }
 }
