@@ -14,20 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure.constants;
+package group.rxcloud.capa.infrastructure;
 
-public interface CapaConstants {
+/**
+ * The Capa infrastructure constants.
+ */
+interface CapaConstants {
 
-    interface Environments {
-
-        String CLOUD_RUNTIMES_ENV_DEPLOY_CLOUD = "CLOUD_RUNTIMES_ENV_DEPLOY_CLOUD";
-
-        String CLOUD_RUNTIMES_ENV_DEPLOY_VPC = "CLOUD_RUNTIMES_ENV_DEPLOY_VPC";
-    }
-
+    /**
+     * The Properties constants.
+     */
     interface Properties {
 
+        /**
+         * The {@code infrastructure} properties prefix.
+         */
+        String CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX = "/capa-infrastructure-";
+
+        /**
+         * The {@code component} properties prefix.
+         */
         String CAPA_COMPONENT_PROPERTIES_PREFIX = "/capa-component-";
-        String CAPA_COMPONENT_PROPERTIES_SUFFIX = ".properties";
+
+        /**
+         * The constant SUFFIX.
+         */
+        String CAPA_PROPERTIES_SUFFIX = ".properties";
     }
 }

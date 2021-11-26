@@ -17,15 +17,13 @@
 package group.rxcloud.capa.component.http;
 
 
-import group.rxcloud.capa.infrastructure.config.CapaProperties;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.capa.infrastructure.CapaProperties;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import okhttp3.OkHttpClient;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -107,15 +105,10 @@ public class CapaHttpBuilder {
         }
 
         // load spi capa http impl
-        try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("rpc");
-            String capaHttpClassPath = properties.getProperty(CapaHttp.class.getName());
-            Class<? extends CapaHttp> aClass = (Class<? extends CapaHttp>) Class.forName(capaHttpClassPath);
-            Constructor<? extends CapaHttp> constructor = aClass.getConstructor(OkHttpClient.class, CapaObjectSerializer.class);
-            Object newInstance = constructor.newInstance(OK_HTTP_CLIENT.get(), this.objectSerializer);
-            return (CapaHttp) newInstance;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("No CapaHttp Client supported.");
-        }
+        return CapaClassLoader.loadComponentClassObj(
+                "rpc",
+                CapaHttp.class,
+                new Class[]{OkHttpClient.class, CapaObjectSerializer.class},
+                new Object[]{OK_HTTP_CLIENT.get(), this.objectSerializer});
     }
 }

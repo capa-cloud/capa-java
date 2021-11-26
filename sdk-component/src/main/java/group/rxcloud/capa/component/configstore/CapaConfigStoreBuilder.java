@@ -17,13 +17,9 @@
 package group.rxcloud.capa.component.configstore;
 
 
-import group.rxcloud.capa.infrastructure.config.CapaProperties;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
 
 /**
  * A builder for the {@link CapaConfigStore} implementor.
@@ -86,15 +82,10 @@ public class CapaConfigStoreBuilder {
      */
     private CapaConfigStore buildCapaConfigStore() {
         // load spi capa config store impl
-        try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("configuration");
-            String capaConfigStoreClassPath = properties.getProperty(CapaConfigStore.class.getName());
-            Class<? extends CapaConfigStore> aClass = (Class<? extends CapaConfigStore>) Class.forName(capaConfigStoreClassPath);
-            Constructor<? extends CapaConfigStore> constructor = aClass.getConstructor(CapaObjectSerializer.class);
-            Object newInstance = constructor.newInstance(this.objectSerializer);
-            return (CapaConfigStore) newInstance;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("No CapaConfigStore Client supported.");
-        }
+        return CapaClassLoader.loadComponentClassObj(
+                "configuration",
+                CapaConfigStore.class,
+                new Class[]{CapaObjectSerializer.class},
+                new Object[]{this.objectSerializer});
     }
 }

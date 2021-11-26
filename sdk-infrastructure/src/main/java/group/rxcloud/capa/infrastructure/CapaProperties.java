@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure.config;
+package group.rxcloud.capa.infrastructure;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,8 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static group.rxcloud.capa.infrastructure.constants.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_PREFIX;
-import static group.rxcloud.capa.infrastructure.constants.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_SUFFIX;
+import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_PREFIX;
+import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX;
+import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_PROPERTIES_SUFFIX;
 
 /**
  * Global properties for Capa's SDK, using Supplier so they are dynamically resolved.
@@ -59,24 +60,36 @@ public abstract class CapaProperties {
             = () -> DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS;
 
     /**
-     * Capa's component properties cache map.
+     * Capa's properties cache map.
      */
-    private static final Map<String, Properties> COMPONENT_PROPERTIES_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, Properties> PROPERTIES_MAP = new ConcurrentHashMap<>();
+
+    /**
+     * Capa's infrastructure properties.
+     */
+    public static final Function<String, Properties> INFRASTRUCTURE_PROPERTIES_SUPPLIER
+            = (infrastructureDomain) -> PROPERTIES_MAP.computeIfAbsent(infrastructureDomain,
+            s -> {
+                final String fileName = CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX
+                        + infrastructureDomain.toLowerCase()
+                        + CAPA_PROPERTIES_SUFFIX;
+                return loadCapaProperties(fileName);
+            });
 
     /**
      * Capa's component properties.
      */
     public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER
-            = (componentDomain) -> COMPONENT_PROPERTIES_MAP.computeIfAbsent(componentDomain,
-            s -> loadCapaComponentProperties(componentDomain));
+            = (componentDomain) -> PROPERTIES_MAP.computeIfAbsent(componentDomain,
+            s -> {
+                final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX
+                        + componentDomain.toLowerCase()
+                        + CAPA_PROPERTIES_SUFFIX;
+                return loadCapaProperties(fileName);
+            });
 
-    private static Properties loadCapaComponentProperties(final String componentDomain) {
-        Objects.requireNonNull(componentDomain, "componentDomain not found.");
-
-        final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX
-                + componentDomain.toLowerCase()
-                + CAPA_COMPONENT_PROPERTIES_SUFFIX;
-
+    private static Properties loadCapaProperties(final String fileName) {
+        Objects.requireNonNull(fileName, "fileName not found.");
         try (InputStream in = CapaProperties.class.getResourceAsStream(fileName)) {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
             Properties properties = new Properties();

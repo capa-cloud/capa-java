@@ -16,6 +16,7 @@
  */
 package group.rxcloud.capa.infrastructure.config;
 
+import group.rxcloud.capa.infrastructure.CapaProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
