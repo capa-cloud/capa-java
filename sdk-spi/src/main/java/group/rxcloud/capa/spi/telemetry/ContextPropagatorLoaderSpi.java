@@ -14,18 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.trace;
+package group.rxcloud.capa.spi.telemetry;
 
-import io.opentelemetry.context.propagation.TextMapPropagator;
+import group.rxcloud.capa.component.telemetry.context.ContextPropagatorLoader;
 
-import java.util.List;
 
 /**
+ * SPI context propagator loader.
  */
-public interface CapaContextPropagatorSettings {
-
-    CapaContextPropagatorSettings setContextPropagators(List<TextMapPropagator> contextPropagators);
-
-    CapaContextPropagatorSettings addContextPropagators(TextMapPropagator processor);
+public abstract class ContextPropagatorLoaderSpi implements ContextPropagatorLoader {
 
 }

@@ -23,7 +23,7 @@
     <groupId>group.rxcloud</groupId>
     <artifactId>capa-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.7-alpha-3</version>
+    <version>1.0.7-alpha-4</version>
     <name>capa-sdk-parent</name>
     <description>SDK for Capa.</description>
     <url>https://github.com/reactivegroup</url>
@@ -331,6 +331,7 @@
                         <exclude>docs/**</exclude>
                         <exclude>spec/**</exclude>
                         <exclude>**/generated/**</exclude>
+                        <exclude>**/*.json</exclude>
                     </excludes>
                 </configuration>
             </plugin>

@@ -16,13 +16,21 @@
  */
 package group.rxcloud.capa.component.telemetry.metrics;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * Config for meters.
  */
-public class MeterConfig {
-    
+public class MeterConfig implements Serializable {
+
+    private static final long serialVersionUID = 7090415828392034412L;
+
+    /**
+     * Configs for metrics readers.
+     * Each reader related with a scheduled thread.
+     */
     private List<MetricsReaderConfig> readers = Collections.emptyList();
 
     public List<MetricsReaderConfig> getReaders() {

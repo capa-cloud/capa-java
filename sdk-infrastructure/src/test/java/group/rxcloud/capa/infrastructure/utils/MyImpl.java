@@ -14,36 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.trace.config;
 
-import java.io.Serializable;
+package group.rxcloud.capa.infrastructure.utils;
 
-/**
- */
-public class SamplerConfig implements Serializable {
+public class MyImpl implements MyInterface{
 
-    private static final long serialVersionUID = -2113523925814197551L;
-
-    // 默认全部取样
-    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig();
-
-    private String name = "_DEFAULT_SAMPLER";
-
-    private boolean disable;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isDisable() {
-        return disable;
-    }
-
-    public void setDisable(boolean disable) {
-        this.disable = disable;
-    }
 }

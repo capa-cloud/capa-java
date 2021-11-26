@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry;
+package group.rxcloud.capa.component.telemetry.context;
+
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Context;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -23,35 +26,30 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  */
-public final class CapaContext {
+public interface CapaContextAsyncWrapper {
 
-    private static final CapaContextAsyncWrapper WRAPPER = getAsyncWrapper();
-
-    public static Runnable taskWrapping(Runnable runnable) {
-        return WRAPPER.wrap(runnable);
+    default Runnable wrap(Runnable runnable) {
+        return Context.current().wrap(runnable);
     }
 
-    public static <T> Callable<T> taskWrapping(Callable<T> callable) {
-        return WRAPPER.wrap(callable);
+    default <T> Callable<T> wrap(Callable<T> callable) {
+        return Context.current().wrap(callable);
     }
 
-    public static Executor taskWrapping(Executor executor) {
-        return WRAPPER.wrap(executor);
+    default Executor wrap(Executor executor) {
+        return Context.current().wrap(executor);
     }
 
-    public static ExecutorService taskWrapping(ExecutorService executor) {
-        return WRAPPER.wrap(executor);
+    default ExecutorService wrap(ExecutorService executor) {
+        return Context.current().wrap(executor);
     }
 
-    public static ScheduledExecutorService taskWrapping(ScheduledExecutorService executor) {
-        return WRAPPER.wrap(executor);
+    default ScheduledExecutorService wrap(ScheduledExecutorService executor) {
+        return Context.current().wrap(executor);
     }
 
-    private static CapaContextAsyncWrapper getAsyncWrapper() {
-        CapaContextAsyncWrapper WRAPPER = SpiUtils.getFromSpiConfigFile(CapaContextAsyncWrapper.class);
-        if (WRAPPER == null) {
-            return new CapaContextAsyncWrapper() {};
-        }
-        return WRAPPER;
+    default String getTraceId() {
+        return Span.fromContext(Context.current()).getSpanContext().getTraceId();
     }
+
 }

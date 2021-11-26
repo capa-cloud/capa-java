@@ -1,0 +1,6 @@
+{
+  "readers": [{
+    "name": "my-reader",
+    "exporterType": "group.rxcloud.capa.component.telemetry.metrics.TestMetricsExporter"
+  }]
+}

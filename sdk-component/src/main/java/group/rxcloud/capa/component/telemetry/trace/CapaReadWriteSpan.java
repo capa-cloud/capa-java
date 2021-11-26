@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Read write span proxy.
  */
 public class CapaReadWriteSpan implements ReadWriteSpan {
 

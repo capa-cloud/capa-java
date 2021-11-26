@@ -1,0 +1,3 @@
+{
+  "contextPropagators": ["group.rxcloud.capa.component.telemetry.context.TestPropagator","group.rxcloud.capa.component.telemetry.context.TestPropagator","group.rxcloud.capa.component.telemetry.context.TestPropagator"]
+}

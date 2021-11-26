@@ -14,22 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.trace;
 
-import group.rxcloud.capa.component.telemetry.SpiUtils;
-import group.rxcloud.capa.component.telemetry.trace.config.TracerConfig;
+package group.rxcloud.capa.infrastructure.utils;
 
-/**
- */
-public interface CapaTracerConfigLoader {
+public class MyImplWithArgs implements MyInterfaceWithArgs{
 
-    CapaTracerConfigLoader DEFAULT = new CapaTracerConfigLoader() {
-    };
+    private MyImplWithArgs(Integer a) {
 
-    String FILE_PATH = "/capa-tracer.json";
+    }
+    public MyImplWithArgs(String a) {
 
-    default TracerConfig loadTracerConfig() {
-        return SpiUtils.loadConfigNullable(FILE_PATH, TracerConfig.class);
+    }
+    public MyImplWithArgs(Integer a, String b) {
+
     }
 
+    public MyImplWithArgs(boolean a, short b, int c, long d, float e, double f, byte g, char h, String i) {
+
+    }
 }

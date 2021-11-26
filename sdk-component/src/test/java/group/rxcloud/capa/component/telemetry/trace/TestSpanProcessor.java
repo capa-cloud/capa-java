@@ -14,37 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry;
+package group.rxcloud.capa.component.telemetry.trace;
 
 import io.opentelemetry.context.Context;
+import io.opentelemetry.sdk.trace.ReadWriteSpan;
+import io.opentelemetry.sdk.trace.ReadableSpan;
+import io.opentelemetry.sdk.trace.SpanProcessor;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
+ * @author: chenyijiang
+ * @date: 2021/11/25 21:52
  */
-public interface CapaContextAsyncWrapper {
+public class TestSpanProcessor implements SpanProcessor {
 
-    default Runnable wrap(Runnable runnable) {
-        return Context.current().wrap(runnable);
+    static Set<String> spanNames = new HashSet<>();
+
+    @Override
+    public void onStart(Context context, ReadWriteSpan span) {
+
     }
 
-    default <T> Callable<T> wrap(Callable<T> callable) {
-        return Context.current().wrap(callable);
+    @Override
+    public boolean isStartRequired() {
+        return false;
     }
 
-    default Executor wrap(Executor executor) {
-        return Context.current().wrap(executor);
+    @Override
+    public void onEnd(ReadableSpan span) {
+        spanNames.add(span.getName());
     }
 
-    default ExecutorService wrap(ExecutorService executor) {
-        return Context.current().wrap(executor);
+    @Override
+    public boolean isEndRequired() {
+        return false;
     }
 
-    default ScheduledExecutorService wrap(ScheduledExecutorService executor) {
-        return Context.current().wrap(executor);
+    public static boolean called(String name) {
+        return spanNames.contains(name);
     }
-
 }

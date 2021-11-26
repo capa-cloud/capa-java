@@ -20,6 +20,7 @@ import group.rxcloud.capa.component.telemetry.trace.CapaSpanBuilder;
 import io.opentelemetry.api.trace.SpanBuilder;
 
 /**
+ * SPI Capa span builder.
  */
 public abstract class CapaSpanBuilderSpi extends CapaSpanBuilder {
 

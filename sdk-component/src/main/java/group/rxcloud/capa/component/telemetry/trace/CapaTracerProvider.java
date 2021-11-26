@@ -21,6 +21,7 @@ import io.opentelemetry.api.trace.TracerBuilder;
 import io.opentelemetry.api.trace.TracerProvider;
 
 /**
+ * Capa tracer provider proxy.
  */
 public class CapaTracerProvider implements TracerProvider {
 

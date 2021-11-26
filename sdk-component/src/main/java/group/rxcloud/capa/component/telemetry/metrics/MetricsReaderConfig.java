@@ -16,43 +16,32 @@
  */
 package group.rxcloud.capa.component.telemetry.metrics;
 
-import io.opentelemetry.sdk.metrics.export.MetricExporter;
-
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Config for metrics reader.
+ * Control the export interval and target exporter.
  */
 public class MetricsReaderConfig implements Serializable {
 
     private static final long serialVersionUID = 5186270483151262376L;
 
-    private String readerName = "UNKNOWN";
+    /**
+     * Reader name, used to find the related reader thread.
+     */
+    private String name = "_DEFAULT_METRIC_READER";
 
-    private boolean disable;
-
-    // default 1min.
+    /**
+     * Exporter interval.
+     * default 1min.
+     */
     private long exportIntervalMillis = TimeUnit.MINUTES.toMillis(1L);
-    
+
+    /**
+     * Exporter class name. Must have a no-args constructor.
+     */
     private String exporterType;
-    
-    private transient MetricExporter exporterInstance;
-
-    public boolean isDisable() {
-        return disable;
-    }
-
-    public void setDisable(boolean disable) {
-        this.disable = disable;
-    }
-
-    public MetricExporter getExporterInstance() {
-        return exporterInstance;
-    }
-
-    public void setExporterInstance(MetricExporter exporterInstance) {
-        this.exporterInstance = exporterInstance;
-    }
 
     public String getExporterType() {
         return exporterType;
@@ -62,12 +51,12 @@ public class MetricsReaderConfig implements Serializable {
         this.exporterType = exporterType;
     }
 
-    public String getReaderName() {
-        return readerName;
+    public String getName() {
+        return name;
     }
 
-    public void setReaderName(String readerName) {
-        this.readerName = readerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getExportIntervalMillis() {
@@ -78,7 +67,7 @@ public class MetricsReaderConfig implements Serializable {
         this.exportIntervalMillis = exportIntervalMillis;
     }
 
-    public void setExportMillis(long export, TimeUnit timeUnit) {
-        this.exportIntervalMillis = timeUnit.toMillis(export);
+    public void setExportInterval(long export, TimeUnit timeUnit) {
+        setExportIntervalMillis(timeUnit.toMillis(export));
     }
 }

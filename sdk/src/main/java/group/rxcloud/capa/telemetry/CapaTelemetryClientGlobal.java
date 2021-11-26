@@ -52,6 +52,9 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
         instance = capaTelemetryClient;
     }
 
+   CapaTelemetryClientGlobal() {
+    }
+
     @Override
     public TracerProvider getTracerProvider() {
         return tracerProvider;
@@ -131,9 +134,7 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
         });
     }
 
-
     @Override
     public void close() {
-        // todo
     }
 }
