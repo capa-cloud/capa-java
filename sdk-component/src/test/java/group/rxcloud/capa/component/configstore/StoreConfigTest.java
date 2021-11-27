@@ -46,5 +46,4 @@ public class StoreConfigTest {
 
         Assertions.assertEquals("30000", storeConfig.getTimeOut());
     }
-
 }

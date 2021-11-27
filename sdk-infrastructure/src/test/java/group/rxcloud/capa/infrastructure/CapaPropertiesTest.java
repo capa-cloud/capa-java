@@ -14,16 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure.config;
+package group.rxcloud.capa.infrastructure;
 
-import group.rxcloud.capa.infrastructure.CapaProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
 public class CapaPropertiesTest {
-
 
     @Test
     public void testGetApiProtocol_Success() {

@@ -27,6 +27,7 @@ import java.util.Collections;
  * @date 2021/10/19
  */
 public class SubscribeReqTest {
+
     @Test
     public void testSubscribeReqSetterGetter_Success() {
         SubscribeReq req = new SubscribeReq();

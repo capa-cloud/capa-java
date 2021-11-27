@@ -48,6 +48,4 @@ public class DefaultObjectSerializerTest {
         byte[] serializeString = defaultObjectSerializer.serialize("serialize");
         Assertions.assertNotNull(serializeString);
     }
-
-
 }

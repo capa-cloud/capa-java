@@ -298,5 +298,4 @@ public class CapaSerializeHttpSpiTest {
                     Runnable::run);
         }
     }
-
 }
