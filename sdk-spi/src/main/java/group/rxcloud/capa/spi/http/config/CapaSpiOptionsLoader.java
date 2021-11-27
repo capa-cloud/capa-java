@@ -14,39 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure.serializer;
+package group.rxcloud.capa.spi.http.config;
 
-
-import group.rxcloud.cloudruntimes.utils.TypeRef;
-
-import java.io.IOException;
 
 /**
- * Default serializer/deserializer for request/response objects.
+ * Read SPI configuration and generate corresponding configuration objects.
  */
-public class DefaultObjectSerializer extends ObjectSerializer implements CapaObjectSerializer {
+public interface CapaSpiOptionsLoader<T extends RpcServiceOptions> {
 
     /**
-     * {@inheritDoc}
+     * Load rpc service options.
+     *
+     * @param appId the appId
+     * @return the rpc service options
      */
-    @Override
-    public byte[] serialize(Object o) throws IOException {
-        return super.serialize(o);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T deserialize(byte[] data, TypeRef<T> type) throws IOException {
-        return super.deserialize(data, type);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getContentType() {
-        return "application/json";
-    }
+    T loadRpcServiceOptions(String appId);
 }

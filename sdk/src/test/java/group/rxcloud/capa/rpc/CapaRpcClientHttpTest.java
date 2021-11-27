@@ -41,5 +41,4 @@ public class CapaRpcClientHttpTest {
 
         Assertions.assertNotNull(client);
     }
-
 }

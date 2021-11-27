@@ -16,11 +16,7 @@
  */
 package group.rxcloud.capa.component.pubsub;
 
-import group.rxcloud.capa.infrastructure.config.CapaProperties;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
 
 /**
  * A builder for the {@link CapaPubSub} implementor.
@@ -56,15 +52,6 @@ public class CapaPubSubBuilder {
      * @return Instance of {@link CapaPubSub} implementor
      */
     private CapaPubSub buildCapaPubSub() {
-        try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("pubsub");
-            String capaPubSubClassPath = properties.getProperty(CapaPubSub.class.getName());
-            Class<? extends CapaPubSub> aClass = (Class<? extends CapaPubSub>) Class.forName(capaPubSubClassPath);
-            Constructor<? extends CapaPubSub> constructor = aClass.getConstructor();
-            Object newInstance = constructor.newInstance();
-            return (CapaPubSub) newInstance;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("No CapaPubSub Client supported.");
-        }
+        return CapaClassLoader.loadComponentClassObj("pubsub", CapaPubSub.class);
     }
 }

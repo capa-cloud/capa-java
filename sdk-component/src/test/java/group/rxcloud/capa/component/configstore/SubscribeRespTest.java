@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
  * @date 2021/10/19
  */
 public class SubscribeRespTest {
+
     @Test
     public void testSubscribeRespSetterGetter_Success() {
         SubscribeResp<String> resp = new SubscribeResp<>();

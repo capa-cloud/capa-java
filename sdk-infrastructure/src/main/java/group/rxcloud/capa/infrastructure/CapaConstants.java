@@ -14,26 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.demo.config;
-
-import group.rxcloud.capa.spi.config.RpcServiceOptions;
+package group.rxcloud.capa.infrastructure;
 
 /**
- * RPC service options. Define for AppId.
+ * The Capa infrastructure constants.
  */
-public class DemoRpcServiceOptions implements RpcServiceOptions {
+interface CapaConstants {
 
     /**
-     * Unique rpc service ID
+     * The Properties constants.
      */
-    private final String appId;
+    interface Properties {
 
-    /**
-     * Instantiates a new Capa rpc service options.
-     *
-     * @param appId the app id
-     */
-    public DemoRpcServiceOptions(String appId) {
-        this.appId = appId;
+        /**
+         * The {@code infrastructure} properties prefix.
+         */
+        String CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX = "/capa-infrastructure-";
+
+        /**
+         * The {@code component} properties prefix.
+         */
+        String CAPA_COMPONENT_PROPERTIES_PREFIX = "/capa-component-";
+
+        /**
+         * The constant SUFFIX.
+         */
+        String CAPA_PROPERTIES_SUFFIX = ".properties";
     }
 }

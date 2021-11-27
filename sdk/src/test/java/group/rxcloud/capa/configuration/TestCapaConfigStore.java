@@ -43,7 +43,7 @@ public class TestCapaConfigStore extends CapaConfigStore {
 
     @Override
     protected void doInit(StoreConfig storeConfig) {
-        //no extra work for init
+        // no extra work for init
     }
 
     @Override
@@ -101,6 +101,6 @@ public class TestCapaConfigStore extends CapaConfigStore {
 
     @Override
     public void close() throws Exception {
-        //no need to close
+        // no need to close
     }
 }

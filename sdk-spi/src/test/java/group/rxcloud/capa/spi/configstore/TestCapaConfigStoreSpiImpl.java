@@ -16,7 +16,9 @@
  */
 package group.rxcloud.capa.spi.configstore;
 
-import group.rxcloud.capa.component.configstore.*;
+import group.rxcloud.capa.component.configstore.ConfigurationItem;
+import group.rxcloud.capa.component.configstore.StoreConfig;
+import group.rxcloud.capa.component.configstore.SubscribeResp;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Flux;
@@ -32,7 +34,6 @@ import java.util.Map;
  * @date 2021/10/19
  */
 public class TestCapaConfigStoreSpiImpl extends CapaConfigStoreSpi {
-
 
     /**
      * Instantiates a new Capa ConfigStore.
@@ -83,7 +84,7 @@ public class TestCapaConfigStoreSpiImpl extends CapaConfigStoreSpi {
 
     @Override
     protected void doInit(StoreConfig storeConfig) {
-        //do nothing
+        // do nothing
     }
 
     @Override
@@ -93,6 +94,6 @@ public class TestCapaConfigStoreSpiImpl extends CapaConfigStoreSpi {
 
     @Override
     public void close() throws Exception {
-        //do nothing
+        // do nothing
     }
 }

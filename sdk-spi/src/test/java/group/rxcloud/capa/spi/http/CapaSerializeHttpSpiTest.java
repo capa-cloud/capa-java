@@ -22,7 +22,7 @@ import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
-import group.rxcloud.capa.spi.config.RpcServiceOptions;
+import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.*;
 import org.junit.jupiter.api.Assertions;
@@ -181,7 +181,7 @@ public class CapaSerializeHttpSpiTest {
     public void testGetRpcServiceOptions_Success() {
         RpcServiceOptions rpcServiceOptions = capaSerializeHttpSpi.getRpcServiceOptions("appId");
         String className = rpcServiceOptions.getClass().getName();
-        Assertions.assertEquals("group.rxcloud.capa.spi.config.TestRpcServiceOptions", className);
+        Assertions.assertEquals("group.rxcloud.capa.spi.http.config.TestRpcServiceOptions", className);
     }
 
     @Test
@@ -298,5 +298,4 @@ public class CapaSerializeHttpSpiTest {
                     Runnable::run);
         }
     }
-
 }
