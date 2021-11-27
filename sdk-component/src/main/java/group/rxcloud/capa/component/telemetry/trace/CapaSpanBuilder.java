@@ -28,6 +28,7 @@ import io.opentelemetry.sdk.trace.ReadWriteSpan;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Span builder proxy.
  */
 public class CapaSpanBuilder implements SpanBuilder {
 

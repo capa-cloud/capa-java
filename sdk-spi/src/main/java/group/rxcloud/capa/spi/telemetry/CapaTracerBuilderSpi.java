@@ -20,6 +20,7 @@ import group.rxcloud.capa.component.telemetry.trace.CapaTracerBuilder;
 import io.opentelemetry.api.trace.TracerBuilder;
 
 /**
+ * SPI Capa tracer builder.
  */
 public abstract class CapaTracerBuilderSpi extends CapaTracerBuilder {
 

@@ -14,13 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.telemetry;
+package group.rxcloud.capa.examples.telemetry;
 
-import group.rxcloud.capa.component.telemetry.metrics.CapaMeterConfigLoader;
+import io.opentelemetry.sdk.common.CompletableResultCode;
+import io.opentelemetry.sdk.metrics.data.MetricData;
+import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
-/**
- *
- */
-public abstract class CapaMeterConfigLoaderSpi implements CapaMeterConfigLoader {
+import java.util.Collection;
 
+public class MetricTestExporter implements MetricExporter {
+
+    @Override
+    public CompletableResultCode export(Collection<MetricData> metrics) {
+        metrics.forEach(System.out::println);
+        return CompletableResultCode.ofSuccess();
+    }
+
+    @Override
+    public CompletableResultCode flush() {
+        return CompletableResultCode.ofSuccess();
+    }
+
+    @Override
+    public CompletableResultCode shutdown() {
+        return CompletableResultCode.ofSuccess();
+    }
 }

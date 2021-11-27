@@ -19,7 +19,9 @@ package group.rxcloud.capa.component.telemetry.trace;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.AttributeType;
 
+
 /**
+ * Attribute key for event params.
  */
 public final class EventAttributeKey implements AttributeKey<Long> {
 

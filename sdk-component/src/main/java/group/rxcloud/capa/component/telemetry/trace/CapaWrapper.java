@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component.telemetry.trace;
 
-import group.rxcloud.capa.component.telemetry.SpiUtils;
+import group.rxcloud.capa.infrastructure.utils.SpiUtils;
 import io.opentelemetry.api.trace.SpanBuilder;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.api.trace.TracerBuilder;
@@ -28,6 +28,10 @@ import javax.annotation.Nullable;
  * Load capa implementation.
  */
 final class CapaWrapper {
+    
+    static final String FILE_SUFFIX = "telemetry";
+
+    static final boolean CACHE = true;
 
     private CapaWrapper() {
     }
@@ -38,8 +42,8 @@ final class CapaWrapper {
             return (CapaSpanBuilder) builder;
         }
         CapaSpanBuilder result = SpiUtils
-                .getFromSpiConfigFile(CapaSpanBuilder.class, new Class[]{String.class, String.class, String.class, String.class, SpanBuilder.class},
-                        new Object[]{tracerName, version, schemaUrl, spanName, builder});
+                .loadFromSpiComponentFileNullable(CapaSpanBuilder.class, new Class[]{String.class, String.class, String.class, String.class, SpanBuilder.class},
+                        new Object[]{tracerName, version, schemaUrl, spanName, builder}, FILE_SUFFIX, CACHE);
         if (result == null) {
             result = new CapaSpanBuilder(tracerName, version, schemaUrl, spanName, builder);
         }
@@ -52,7 +56,8 @@ final class CapaWrapper {
             return (CapaReadWriteSpan) span;
         }
         CapaReadWriteSpan result = SpiUtils
-                .getFromSpiConfigFile(CapaReadWriteSpan.class, new Class[]{String.class, String.class, String.class, ReadWriteSpan.class}, new Object[]{tracerName, version, schemaUrl, span});
+                .loadFromSpiComponentFileNullable(CapaReadWriteSpan.class, new Class[]{String.class, String.class, String.class, ReadWriteSpan.class}, new Object[]{tracerName, version, schemaUrl, span},
+                        FILE_SUFFIX, CACHE);
         if (result == null) {
             result = new CapaReadWriteSpan(tracerName, version, schemaUrl, span);
         }
@@ -64,8 +69,8 @@ final class CapaWrapper {
         if (tracer instanceof CapaTracer) {
             return (CapaTracer) tracer;
         }
-        CapaTracer result = SpiUtils.getFromSpiConfigFile(CapaTracer.class, new Class[]{String.class, String.class, String.class, Tracer.class},
-                new Object[]{tracerName, version, schemaUrl, tracer});
+        CapaTracer result = SpiUtils.loadFromSpiComponentFileNullable(CapaTracer.class, new Class[]{String.class, String.class, String.class, Tracer.class},
+                new Object[]{tracerName, version, schemaUrl, tracer}, FILE_SUFFIX, CACHE);
         if (result == null) {
             result = new CapaTracer(tracerName, version, schemaUrl, tracer);
         }
@@ -78,8 +83,8 @@ final class CapaWrapper {
             return (CapaTracerBuilder) tracerBuilder;
         }
         CapaTracerBuilder result = SpiUtils
-                .getFromSpiConfigFile(CapaTracerBuilder.class, new Class[]{String.class, TracerBuilder.class},
-                        new Object[]{tracerName, tracerBuilder});
+                .loadFromSpiComponentFileNullable(CapaTracerBuilder.class, new Class[]{String.class, TracerBuilder.class},
+                        new Object[]{tracerName, tracerBuilder}, FILE_SUFFIX, CACHE);
         if (result == null) {
             result = new CapaTracerBuilder(tracerName, tracerBuilder);
         }

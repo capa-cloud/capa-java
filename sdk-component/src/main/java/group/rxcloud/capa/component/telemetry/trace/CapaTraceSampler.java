@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component.telemetry.trace;
 
-import group.rxcloud.capa.component.telemetry.trace.config.SamplerConfig;
+import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.context.Context;
@@ -27,23 +27,34 @@ import io.opentelemetry.sdk.trace.samplers.SamplingResult;
 import java.util.List;
 
 /**
- * todo add more args ablout sampling
+ * Sampler for trace data.
+ * Choose to sample all or none data according to the config file.
  */
-public class CapaSampler implements Sampler {
+public class CapaTraceSampler implements Sampler {
+
+    private static final CapaTraceSampler INSTANCE = new CapaTraceSampler(SamplerConfig.DEFAULT_CONFIG);
 
     private Sampler inner;
 
-    public CapaSampler(SamplerConfig config) {
+    public static CapaTraceSampler getInstance() {
+        return INSTANCE;
+    }
+
+    private CapaTraceSampler(SamplerConfig config) {
         update(config);
     }
 
-    public void update(SamplerConfig config) {
-        if (config.isDisable()) {
-            inner = Sampler.alwaysOff();
-        } else {
-            inner = Sampler.alwaysOn();
+    public CapaTraceSampler update(SamplerConfig config) {
+        if (config == null) {
+            return this;
         }
-        // todo more.
+
+        if (config.isTraceSample()) {
+            inner = Sampler.alwaysOn();
+        } else {
+            inner = Sampler.alwaysOff();
+        }
+        return this;
     }
 
     @Override

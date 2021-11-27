@@ -14,18 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.metrics;
+package group.rxcloud.capa.component.telemetry.trace;
 
-import group.rxcloud.capa.component.telemetry.SpiUtils;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
+ * @author: chenyijiang
+ * @date: 2021/11/25 23:00
  */
-public interface CapaMeterConfigLoader {
-    CapaMeterConfigLoader DEFAULT = new CapaMeterConfigLoader() {};
+public class EventAttributeKeyTest {
 
-    String FILE_PATH = "/capa-meter.json";
+    @Test
+    public void getNum() {
+        assertNull(EventAttributeKey.COUNT.getNum("aaa"));
 
-    default MeterConfig loadMetricsConfig() {
-        return SpiUtils.loadConfigNullable(FILE_PATH, MeterConfig.class);
+        assertNull(EventAttributeKey.COUNT.getNum(Long.MAX_VALUE));
+        assertNull(EventAttributeKey.COUNT.getNum(Long.MIN_VALUE));
+        assertEquals(22, EventAttributeKey.COUNT.getNum(22L).intValue());
     }
 }

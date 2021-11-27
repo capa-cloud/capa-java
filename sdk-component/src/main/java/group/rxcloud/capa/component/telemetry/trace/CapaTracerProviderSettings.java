@@ -16,28 +16,55 @@
  */
 package group.rxcloud.capa.component.telemetry.trace;
 
-import group.rxcloud.capa.component.telemetry.trace.config.SpanLimitsConfig;
-import group.rxcloud.capa.component.telemetry.trace.config.TracerConfig;
+import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.sdk.trace.IdGenerator;
 import io.opentelemetry.sdk.trace.SpanProcessor;
-import io.opentelemetry.sdk.trace.samplers.Sampler;
-
-import java.util.List;
 
 /**
+ * Settings for capa trace provider.
  */
 public interface CapaTracerProviderSettings {
 
+    String FILE_PATH = "/capa-tracer.json";
+
+    /**
+     * Replace the whole config for the meter.
+     *
+     * @param tracerConfig tracer config
+     * @return current settings.
+     */
     CapaTracerProviderSettings setTracerConfig(TracerConfig tracerConfig);
 
+    /**
+     * Set the span limits.
+     *
+     * @param spanLimits span limits config.
+     * @return current settings.
+     */
     CapaTracerProviderSettings setSpanLimits(SpanLimitsConfig spanLimits);
 
+    /**
+     * Set the trace/span id generator.
+     *
+     * @param idGenerator trace/span id generator.
+     * @return current settings.
+     */
     CapaTracerProviderSettings setIdGenerator(IdGenerator idGenerator);
 
-    CapaTracerProviderSettings setSampler(Sampler sampler);
-
-    CapaTracerProviderSettings setProcessors(List<SpanProcessor> processors);
-
+    /**
+     * Add one more span processor to current meter config.
+     *
+     * @param processor span processor.
+     * @return current settings.
+     */
     CapaTracerProviderSettings addProcessor(SpanProcessor processor);
+
+    /**
+     * Set sample config.
+     *
+     * @param samplerConfig sample config.
+     * @return current settings.
+     */
+    CapaTracerProviderSettings setSamplerConfig(SamplerConfig samplerConfig);
 
 }
