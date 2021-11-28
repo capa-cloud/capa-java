@@ -35,7 +35,6 @@ import java.util.Map;
  */
 public class TestCapaConfigStoreSpiImpl extends CapaConfigStoreSpi {
 
-
     /**
      * Instantiates a new Capa ConfigStore.
      *
@@ -85,7 +84,7 @@ public class TestCapaConfigStoreSpiImpl extends CapaConfigStoreSpi {
 
     @Override
     protected void doInit(StoreConfig storeConfig) {
-        //do nothing
+        // do nothing
     }
 
     @Override
@@ -95,6 +94,6 @@ public class TestCapaConfigStoreSpiImpl extends CapaConfigStoreSpi {
 
     @Override
     public void close() throws Exception {
-        //do nothing
+        // do nothing
     }
 }

@@ -1,5 +1,5 @@
-## Log API design
+## Log design
 
-目前来看，Log遵循通用日志规范（slf4j），并且都是写入标准控制台，并由日志采集服务进行采集
+**API layer**: slf4j standard api
 
-无需自行定义一套API，直接使用标准日志库，并适配不同的采集器即可
+**Component layer**: diff appender for log4j/logback/...

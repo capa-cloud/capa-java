@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
-package group.rxcloud.capa.component.bindings;
+package group.rxcloud.capa.spi.http.config;
 
-public abstract class InputBinding {
+
+/**
+ * RPC service options. Define for AppId.
+ */
+public interface RpcServiceOptions {
 }

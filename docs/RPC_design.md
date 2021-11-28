@@ -1,3 +1,3 @@
-## RPC API design
+## RPC design
 
-TODO
+![RPC layer](./capa-design/capa-rpc-layer.PNG)

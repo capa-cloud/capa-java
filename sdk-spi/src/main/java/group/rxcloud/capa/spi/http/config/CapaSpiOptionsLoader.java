@@ -14,8 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.spi.http.config;
 
-package group.rxcloud.capa.component.state;
 
-public abstract class Store {
+/**
+ * Read SPI configuration and generate corresponding configuration objects.
+ */
+public interface CapaSpiOptionsLoader<T extends RpcServiceOptions> {
+
+    /**
+     * Load rpc service options.
+     *
+     * @param appId the appId
+     * @return the rpc service options
+     */
+    T loadRpcServiceOptions(String appId);
 }

@@ -14,20 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure.constants;
+package group.rxcloud.capa.spi.demo.http.config;
 
-public interface CapaConstants {
+import group.rxcloud.capa.spi.http.config.CapaSpiOptionsLoader;
 
-    interface Environments {
+import java.util.Objects;
 
-        String CLOUD_RUNTIMES_ENV_DEPLOY_CLOUD = "CLOUD_RUNTIMES_ENV_DEPLOY_CLOUD";
+public class DemoSpiOptionsLoader implements CapaSpiOptionsLoader<DemoRpcServiceOptions> {
 
-        String CLOUD_RUNTIMES_ENV_DEPLOY_VPC = "CLOUD_RUNTIMES_ENV_DEPLOY_VPC";
-    }
-
-    interface Properties {
-
-        String CAPA_COMPONENT_PROPERTIES_PREFIX = "/capa-component-";
-        String CAPA_COMPONENT_PROPERTIES_SUFFIX = ".properties";
+    @Override
+    public DemoRpcServiceOptions loadRpcServiceOptions(String appId) {
+        Objects.requireNonNull(appId, "appId");
+        return new DemoRpcServiceOptions(appId);
     }
 }

@@ -14,8 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.spi.demo;
 
-package group.rxcloud.capa.component.bindings;
+import group.rxcloud.capa.infrastructure.CapaEnvironment;
 
-public abstract class OutputBinding {
+public class DemoCapaEnvironment implements CapaEnvironment {
+
+    @Override
+    public String getDeployCloud() {
+        return "DEMO";
+    }
+
+    @Override
+    public String getDeployRegion() {
+        return "DEMO";
+    }
+
+    @Override
+    public String getDeployEnv() {
+        return "DEMO";
+    }
 }

@@ -14,12 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.config;
+package group.rxcloud.capa.spi.demo.http.config;
+
+import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 
 /**
- * RPC service options used in tests only.
+ * RPC service options. Define for AppId.
  */
-public class TestRpcServiceOptions implements RpcServiceOptions {
+public class DemoRpcServiceOptions implements RpcServiceOptions {
 
     /**
      * Unique rpc service ID
@@ -31,7 +33,7 @@ public class TestRpcServiceOptions implements RpcServiceOptions {
      *
      * @param appId the app id
      */
-    public TestRpcServiceOptions(String appId) {
+    public DemoRpcServiceOptions(String appId) {
         this.appId = appId;
     }
 }

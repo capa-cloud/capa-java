@@ -14,17 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.demo.config;
+package group.rxcloud.capa.spi.http.config;
 
-import group.rxcloud.capa.spi.config.CapaSpiOptionsLoader;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
 
-import java.util.Objects;
+/**
+ * The Capa SPI environment.
+ */
+public abstract class CapaSpiProperties {
 
-public class DemoSpiOptionsLoader implements CapaSpiOptionsLoader<DemoRpcServiceOptions> {
-
-    @Override
-    public DemoRpcServiceOptions loadRpcServiceOptions(String appId) {
-        Objects.requireNonNull(appId, "appId");
-        return new DemoRpcServiceOptions(appId);
+    /**
+     * Gets default options loader.
+     *
+     * @return the default options loader
+     */
+    public static CapaSpiOptionsLoader getSpiOptionsLoader() {
+        // load spi rpc impl
+        return CapaClassLoader.loadComponentClassObj("rpc-common", CapaSpiOptionsLoader.class);
     }
 }

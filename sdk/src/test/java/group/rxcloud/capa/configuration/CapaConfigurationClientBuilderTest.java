@@ -48,7 +48,6 @@ public class CapaConfigurationClientBuilderTest {
         Assertions.assertNotNull(builder.build());
     }
 
-
     @Test
     public void testConstructorWithStoreConfigAsParameter() {
         CapaConfigurationClientBuilder builder = new CapaConfigurationClientBuilder(new StoreConfig());

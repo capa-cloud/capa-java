@@ -18,7 +18,7 @@ package group.rxcloud.capa.rpc;
 
 
 import group.rxcloud.capa.component.http.CapaHttpBuilder;
-import group.rxcloud.capa.infrastructure.config.CapaProperties;
+import group.rxcloud.capa.infrastructure.CapaProperties;
 
 import java.util.function.Supplier;
 
