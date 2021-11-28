@@ -17,11 +17,7 @@
 package group.rxcloud.capa.component.telemetry.log.agent;
 
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import group.rxcloud.capa.infrastructure.config.CapaProperties;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
 
 /**
  * The agent of the logback impl.
@@ -50,17 +46,10 @@ public class CapaLogbackAppenderAgent<EVENT> extends UnsynchronizedAppenderBase<
      * @return CapaLogbackAppender instance.
      */
     public static CapaLogbackAppender buildCapaLogbackAppender() {
-        // load spi capa Log4j appender impl
-        try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(LOG_COMPONENT_TYPE);
-            String capaLogbackAppenderClassPath = properties.getProperty(CapaLogbackAppender.class.getName());
-            Class<? extends CapaLogbackAppender> aClass = (Class<? extends CapaLogbackAppender>) Class.forName(capaLogbackAppenderClassPath);
-            Constructor<? extends CapaLogbackAppender> constructor = aClass.getConstructor();
-            Object newInstance = constructor.newInstance();
-            return (CapaLogbackAppender) newInstance;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("No Capa Logback Appender supported.");
-        }
+        // load spi capa logback appender impl
+        return CapaClassLoader.loadComponentClassObj(
+                LOG_COMPONENT_TYPE,
+                CapaLogbackAppender.class);
     }
 
     /**

@@ -119,7 +119,6 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
      * @return the meter provider.
      */
     public MeterProvider buildMeterProvider() {
-
         List<MetricsReaderConfig> metricsReaderConfigs = this.metricsReaderConfigs;
         if (metricsReaderConfigs == null || metricsReaderConfigs.isEmpty()) {
             // if config was not explicitly set, try loading the config from the config loader.
@@ -148,7 +147,6 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
     private void initMeterConfig() {
         if (meterConfigs == null) {
             meterConfigs = SpiUtils.loadConfigNullable(FILE_PATH, MeterConfig.class);
-            ;
         }
     }
 
@@ -157,6 +155,4 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
             samplerConfig = SamplerConfig.loadOrDefault();
         }
     }
-
-
 }

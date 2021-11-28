@@ -23,6 +23,7 @@ import group.rxcloud.capa.component.telemetry.SamplerConfig;
  */
 public interface CapaMeterProviderSettings {
 
+    // FIXME: 2021/11/28 change to capa-component-telemetry-meter.json
     String FILE_PATH ="/capa-meter.json";
 
     /**

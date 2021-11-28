@@ -23,6 +23,7 @@ import io.opentelemetry.context.propagation.TextMapPropagator;
  */
 public interface CapaContextPropagatorSettings {
 
+    // FIXME: 2021/11/28 change to capa-component-telemetry-context.json
     String FILE_PATH = "/capa-context.json";
 
     /**
@@ -40,5 +41,4 @@ public interface CapaContextPropagatorSettings {
      * @return current settings.
      */
     CapaContextPropagatorSettings addContextPropagators(TextMapPropagator processor);
-
 }

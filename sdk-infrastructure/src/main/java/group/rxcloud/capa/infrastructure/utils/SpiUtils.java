@@ -20,7 +20,7 @@ package group.rxcloud.capa.infrastructure.utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import group.rxcloud.capa.infrastructure.config.CapaProperties;
+import group.rxcloud.capa.infrastructure.CapaProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +81,6 @@ public final class SpiUtils {
         }
         return null;
     }
-
 
     public static Properties loadProperties(String path) {
         try (InputStream in = SpiUtils.class.getResourceAsStream(path)) {

@@ -35,5 +35,4 @@ public class ContextConfig implements Serializable {
     public void setContextPropagators(List<String> contextPropagators) {
         this.contextPropagators = contextPropagators;
     }
-
 }

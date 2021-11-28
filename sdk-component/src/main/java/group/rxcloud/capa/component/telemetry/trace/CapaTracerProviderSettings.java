@@ -25,6 +25,7 @@ import io.opentelemetry.sdk.trace.SpanProcessor;
  */
 public interface CapaTracerProviderSettings {
 
+    // FIXME: 2021/11/28 change to capa-component-telemetry-tracer.json
     String FILE_PATH = "/capa-tracer.json";
 
     /**

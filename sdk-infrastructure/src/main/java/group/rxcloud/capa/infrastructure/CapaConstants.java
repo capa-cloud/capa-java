@@ -30,15 +30,18 @@ interface CapaConstants {
          * The {@code infrastructure} properties prefix.
          */
         String CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX = "/capa-infrastructure-";
-
         /**
          * The {@code component} properties prefix.
          */
         String CAPA_COMPONENT_PROPERTIES_PREFIX = "/capa-component-";
 
         /**
-         * The constant SUFFIX.
+         * The properties suffix.
          */
         String CAPA_PROPERTIES_SUFFIX = ".properties";
+        /**
+         * The json suffix.
+         */
+        String CAPA_JSON_SUFFIX = ".json";
     }
 }

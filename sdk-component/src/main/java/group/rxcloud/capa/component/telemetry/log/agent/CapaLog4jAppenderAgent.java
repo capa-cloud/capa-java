@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component.telemetry.log.agent;
 
-import group.rxcloud.capa.infrastructure.config.CapaProperties;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
@@ -28,9 +28,6 @@ import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
 
 /**
  * The abstract log4j appender. Extend this and provide your specific impl.
@@ -93,16 +90,9 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
      */
     public static CapaLog4jAppender buildCapaLog4jAppender() {
         // load spi capa Log4j appender impl
-        try {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(LOG_COMPONENT_TYPE);
-            String capaLogAppenderClassPath = properties.getProperty(CapaLog4jAppender.class.getName());
-            Class<? extends CapaLog4jAppender> aClass = (Class<? extends CapaLog4jAppender>) Class.forName(capaLogAppenderClassPath);
-            Constructor<? extends CapaLog4jAppender> constructor = aClass.getConstructor();
-            Object newInstance = constructor.newInstance();
-            return (CapaLog4jAppender) newInstance;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("No Capa log4j appender supported.");
-        }
+        return CapaClassLoader.loadComponentClassObj(
+                LOG_COMPONENT_TYPE,
+                CapaLog4jAppender.class);
     }
 
     @Override

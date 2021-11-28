@@ -51,5 +51,4 @@ public interface CapaContextAsyncWrapper {
     default String getTraceId() {
         return Span.fromContext(Context.current()).getSpanContext().getTraceId();
     }
-
 }
