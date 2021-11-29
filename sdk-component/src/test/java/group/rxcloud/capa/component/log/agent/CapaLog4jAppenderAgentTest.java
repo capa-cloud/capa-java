@@ -14,29 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.log.agent;
+package group.rxcloud.capa.component.log.agent;
 
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.message.Message;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-class CapaLogbackAppenderAgentTest {
+class CapaLog4jAppenderAgentTest {
 
     @Test
-    void testBuildCapaLogbackAppender() {
-        CapaLogbackAppenderAgent.CapaLogbackAppender capaLogbackAppender = CapaLogbackAppenderAgent.buildCapaLogbackAppender();
-        Assertions.assertNotNull(capaLogbackAppender);
+    void testCreateAppender() {
+        Filter filter = Mockito.mock(Filter.class);
+        Layout layout = Mockito.mock(Layout.class);
+        new CapaLog4jAppenderAgent("CapaLog4jAppender", filter, layout, true);
+    }
+
+    @Test
+    void testBuildCapaLog4jAppender() {
+        Filter filter = Mockito.mock(Filter.class);
+        Layout layout = Mockito.mock(Layout.class);
+        CapaLog4jAppenderAgent.createAppender("CapaLog4jAppender", filter, layout, true);
     }
 
     @Test
     void testAppend() {
-        CapaLogbackAppenderAgent.CapaLogbackAppender capaLogbackAppender = CapaLogbackAppenderAgent.buildCapaLogbackAppender();
+        Filter filter = Mockito.mock(Filter.class);
+        Layout layout = Mockito.mock(Layout.class);
+        CapaLog4jAppenderAgent capaLog4jAppender = CapaLog4jAppenderAgent.createAppender("CapaLog4jAppender", filter, layout, true);
         LogEvent logEvent = Mockito.mock(LogEvent.class);
         Message message = Mockito.mock(Message.class);
         Mockito.when(logEvent.getMessage()).thenReturn(Mockito.mock(Message.class));
         Mockito.when(message.getFormattedMessage()).thenReturn("TEST");
-        capaLogbackAppender.appendLog(logEvent);
+        capaLog4jAppender.append(logEvent);
     }
 }

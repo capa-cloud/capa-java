@@ -40,7 +40,7 @@ public class CapaConfigStoreSpiTest {
 
     @Test
     public void testGet_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
         Mono<List<ConfigurationItem<String>>> listMono = configStoreSpiImpl.get(constructGetRequest(), TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = listMono.block();
         Assertions.assertNotNull(configurationItems);
@@ -63,19 +63,19 @@ public class CapaConfigStoreSpiTest {
 
     @Test
     public void testSubscribe_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
         Flux<SubscribeResp<String>> subscribeFlux = configStoreSpiImpl.subscribe(constructSubscribeReq(), TypeRef.STRING);
         SubscribeResp<String> resp = subscribeFlux.blockFirst();
         Assertions.assertNotNull(resp);
-        Assertions.assertEquals("12345",resp.getAppId());
+        Assertions.assertEquals("12345", resp.getAppId());
 
-        Assertions.assertEquals(2,resp.getItems().size());
+        Assertions.assertEquals(2, resp.getItems().size());
         ConfigurationItem<String> firstConfigurationItem = resp.getItems().get(0);
 
-        Assertions.assertEquals("testKey1",firstConfigurationItem.getKey());
+        Assertions.assertEquals("testKey1", firstConfigurationItem.getKey());
         Assertions.assertNull(firstConfigurationItem.getContent());
-        Assertions.assertEquals("testGroup",firstConfigurationItem.getGroup());
-        Assertions.assertEquals("testLabel",firstConfigurationItem.getLabel());
+        Assertions.assertEquals("testGroup", firstConfigurationItem.getGroup());
+        Assertions.assertEquals("testLabel", firstConfigurationItem.getLabel());
 
         Assertions.assertNotNull(firstConfigurationItem.getLabel());
         Assertions.assertEquals(2, firstConfigurationItem.getTags().size());
@@ -88,14 +88,14 @@ public class CapaConfigStoreSpiTest {
 
     @Test
     public void testGetDefaultGroup_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
         String defaultGroup = configStoreSpiImpl.getDefaultGroup();
         Assertions.assertEquals("application", defaultGroup);
     }
 
     @Test
     public void testGetDefaultLabel_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
         String defaultLabel = configStoreSpiImpl.getDefaultLabel();
         Assertions.assertEquals("", defaultLabel);
     }
@@ -114,12 +114,12 @@ public class CapaConfigStoreSpiTest {
         return getRequest;
     }
 
-    private SubscribeReq constructSubscribeReq(){
+    private SubscribeReq constructSubscribeReq() {
         SubscribeReq req = new SubscribeReq();
         req.setAppId("12345");
         req.setGroup("testGroup");
         req.setLabel("testLabel");
-        req.setKeys(Lists.newArrayList("testKey1","testKey2"));
+        req.setKeys(Lists.newArrayList("testKey1", "testKey2"));
 
         Map<String, String> metaDataMap = new HashMap<>();
         metaDataMap.put("cluster", "default");

@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.demo.telemetry.log;
+package group.rxcloud.capa.spi.demo.log;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import group.rxcloud.capa.component.telemetry.log.agent.CapaLogbackAppenderAgent;
+import group.rxcloud.capa.component.log.agent.CapaLogbackAppenderAgent;
 
 public class DemoLogbackAppender implements CapaLogbackAppenderAgent.CapaLogbackAppender<ILoggingEvent> {
 

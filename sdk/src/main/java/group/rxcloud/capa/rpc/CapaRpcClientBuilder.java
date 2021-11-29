@@ -19,6 +19,8 @@ package group.rxcloud.capa.rpc;
 
 import group.rxcloud.capa.component.http.CapaHttpBuilder;
 import group.rxcloud.capa.infrastructure.CapaProperties;
+import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
+import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 
 import java.util.function.Supplier;
 
@@ -42,6 +44,22 @@ public class CapaRpcClientBuilder {
      */
     public CapaRpcClientBuilder() {
         this(new CapaHttpBuilder());
+    }
+
+    /**
+     * Creates a constructor for {@link CapaRpcClient}.
+     */
+    public CapaRpcClientBuilder(TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
+        this.apiProtocol = CapaApiProtocol.parseProtocol(CapaProperties.API_PROTOCOL.get());
+
+        CapaHttpBuilder capaHttpBuilder = new CapaHttpBuilder();
+        if (telemetryHooks != null) {
+            capaHttpBuilder.withTelemetryHooks(telemetryHooks);
+        }
+        if (configurationHooks != null) {
+            capaHttpBuilder.withConfigurationHooks(configurationHooks);
+        }
+        this.httpBuilder = capaHttpBuilder;
     }
 
     /**

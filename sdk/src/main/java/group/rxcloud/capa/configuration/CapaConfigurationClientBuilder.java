@@ -20,6 +20,7 @@ package group.rxcloud.capa.configuration;
 import group.rxcloud.capa.component.configstore.CapaConfigStore;
 import group.rxcloud.capa.component.configstore.CapaConfigStoreBuilder;
 import group.rxcloud.capa.component.configstore.StoreConfig;
+import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +42,15 @@ public class CapaConfigurationClientBuilder {
      */
     public CapaConfigurationClientBuilder(StoreConfig storeConfig) {
         this(Collections.singletonList(new CapaConfigStoreBuilder(storeConfig)));
+    }
+
+    /**
+     * Creates a constructor for {@link CapaConfigurationClient}.
+     */
+    public CapaConfigurationClientBuilder(StoreConfig storeConfig, TelemetryHooks telemetryHooks) {
+        CapaConfigStoreBuilder capaConfigStoreBuilder = new CapaConfigStoreBuilder(storeConfig);
+        capaConfigStoreBuilder.withTelemetryHooks(telemetryHooks);
+        this.configStoreBuilders = Collections.singletonList(capaConfigStoreBuilder);
     }
 
     /**

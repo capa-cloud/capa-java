@@ -19,12 +19,21 @@ package group.rxcloud.capa.spi.http;
 import group.rxcloud.capa.component.http.CapaHttp;
 import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
+import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
+import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
 import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
-import okhttp3.*;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +59,7 @@ public class CapaSerializeHttpSpiTest {
     public void setUp() {
         okHttpClient = new OkHttpClient.Builder().build();
         defaultObjectSerializer = new DefaultObjectSerializer();
-        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, defaultObjectSerializer);
+        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, defaultObjectSerializer, null, null);
     }
 
     @Test
@@ -63,12 +72,12 @@ public class CapaSerializeHttpSpiTest {
 
     @Test
     public void testGetRequestWithSerialize_FailWhenThrowException() {
-        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestIOExceptionObjectSerializer());
+        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestIOExceptionObjectSerializer(), null, null);
         Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getRequestWithSerialize("Object");
         });
 
-        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestRuntimeExceptionObjectSerializer());
+        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestRuntimeExceptionObjectSerializer(),null,null);
         Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getRequestWithSerialize("Object");
         });
@@ -135,12 +144,12 @@ public class CapaSerializeHttpSpiTest {
     @Test
     public void testGetResponseBodyWithDeserialize_FailWhenThrowException() {
         HttpResponse<byte[]> httpResponse = new HttpResponse<>(null, null, 200);
-        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestIOExceptionObjectSerializer());
+        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestIOExceptionObjectSerializer(), null, null);
         Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getResponseBodyWithDeserialize(TypeRef.STRING, httpResponse);
         });
 
-        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestRuntimeExceptionObjectSerializer());
+        capaSerializeHttpSpi = new TestCapaSerializeHttpSpi(okHttpClient, new TestRuntimeExceptionObjectSerializer(), null, null);
         Assertions.assertThrows(CapaException.class, () -> {
             capaSerializeHttpSpi.getResponseBodyWithDeserialize(TypeRef.STRING, httpResponse);
         });
@@ -280,8 +289,9 @@ public class CapaSerializeHttpSpiTest {
      */
     private class TestCapaSerializeHttpSpi extends CapaSerializeHttpSpi {
 
-        public TestCapaSerializeHttpSpi(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
-            super(httpClient, objectSerializer);
+        public TestCapaSerializeHttpSpi(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
+                                        TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
+            super(httpClient, objectSerializer, telemetryHooks, configurationHooks);
         }
 
         @Override

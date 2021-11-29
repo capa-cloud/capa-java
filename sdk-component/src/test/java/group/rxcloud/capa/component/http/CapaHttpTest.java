@@ -38,7 +38,7 @@ public class CapaHttpTest {
         headers.put("Content-Type", "application/json");
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        TestCapaHttp capaHttp = new TestCapaHttp(builder.build(), new DefaultObjectSerializer());
+        TestCapaHttp capaHttp = new TestCapaHttp(builder.build(), new DefaultObjectSerializer(), null, null);
         Mono<HttpResponse<String>> responseMono = capaHttp.invokeApi("post",
                 null,
                 null,
@@ -56,7 +56,7 @@ public class CapaHttpTest {
     @Test
     public void testClose_Success() throws Exception {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        TestCapaHttp capaHttp = new TestCapaHttp(builder.build(), new DefaultObjectSerializer());
+        TestCapaHttp capaHttp = new TestCapaHttp(builder.build(), new DefaultObjectSerializer(), null, null);
 
         capaHttp.close();
     }

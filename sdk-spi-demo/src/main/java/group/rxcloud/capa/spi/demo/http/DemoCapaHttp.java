@@ -17,6 +17,8 @@
 package group.rxcloud.capa.spi.demo.http;
 
 import group.rxcloud.capa.component.http.HttpResponse;
+import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
+import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.capa.spi.demo.http.config.DemoRpcServiceOptions;
@@ -42,8 +44,9 @@ public class DemoCapaHttp extends CapaSerializeHttpSpi {
      * @param httpClient       the http client
      * @param objectSerializer the object serializer
      */
-    public DemoCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
-        super(httpClient, objectSerializer);
+    public DemoCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
+                        TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
+        super(httpClient, objectSerializer, telemetryHooks, configurationHooks);
     }
 
     @Override

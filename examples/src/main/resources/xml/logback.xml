@@ -17,7 +17,7 @@
   -->
 <configuration>
     <!--Log-->
-    <appender name="Log" class="group.rxcloud.capa.component.telemetry.log.agent.CapaLogbackAppenderAgent">
+    <appender name="Log" class="group.rxcloud.capa.component.log.agent.CapaLogbackAppenderAgent">
     </appender>
 
     <logger name="com.ctrip.ibu.market.e2c" level="INFO" additivity="false">
