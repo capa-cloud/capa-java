@@ -74,7 +74,7 @@
         <file.encoding>UTF-8</file.encoding>
         <maven.version>3.8.1</maven.version>
         <cloud-runtimes.version>1.0.7.RELEASE</cloud-runtimes.version>
-        <reactor-core.version>3.3.11.RELEASE</reactor-core.version>
+        <reactor-core.version>3.3.22.RELEASE</reactor-core.version>
         <junit.version>5.3.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
         <checkstyle.version>3.1.2</checkstyle.version>
