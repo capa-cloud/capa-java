@@ -331,6 +331,7 @@
                         <exclude>docs/**</exclude>
                         <exclude>spec/**</exclude>
                         <exclude>**/generated/**</exclude>
+                        <exclude>**/*.json</exclude>
                     </excludes>
                 </configuration>
             </plugin>
