@@ -24,7 +24,14 @@ import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
 import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
-import okhttp3.*;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -285,12 +292,15 @@ public class CapaSerializeHttpSpiTest {
         }
 
         @Override
-        protected <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(String appId,
-                                                                      String method,
-                                                                      Object requestData,
-                                                                      Map<String, String> headers,
-                                                                      TypeRef<T> type,
-                                                                      RpcServiceOptions rpcServiceOptions) {
+        protected <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(
+                String appId,
+                String method,
+                Object requestData,
+                String httpMethod,
+                Map<String, String> headers,
+                Map<String, List<String>> urlParameters,
+                TypeRef<T> type,
+                RpcServiceOptions rpcServiceOptions) {
             return CompletableFuture.supplyAsync(
                     () -> {
                         return new HttpResponse<>(null, null, 200);

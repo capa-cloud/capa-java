@@ -28,6 +28,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +51,13 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
     public CapaConfigurationClientStore(List<CapaConfigStore> stores) {
         if (stores == null || stores.isEmpty()) {
             this.configStores = new HashMap<>(2, 1);
+            this.registryNames = Collections.emptyList();
         } else {
             this.configStores = stores.stream()
                     .collect(Collectors.toMap(
                             CapaConfigStore::getStoreName,
                             Function.identity()));
+            this.registryNames = new ArrayList<>(this.configStores.keySet());
         }
     }
 

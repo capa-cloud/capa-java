@@ -38,6 +38,8 @@ public abstract class CapaPubSub implements AutoCloseable {
 
     /**
      * Gets pubsub name.
+     *
+     * @return pubsubName
      */
     public String getPubSubName() {
         return this.pubsubName;

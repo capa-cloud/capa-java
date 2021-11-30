@@ -14,18 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.metrics;
+package group.rxcloud.capa.spi.telemetry;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
-import reactor.core.publisher.Mono;
+import group.rxcloud.capa.component.telemetry.context.ContextPropagatorLoader;
 
-public interface CapaMetricsClient extends DefaultCloudRuntimesClient {
 
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
-    }
+/**
+ * SPI context propagator loader.
+ */
+public abstract class ContextPropagatorLoaderSpi implements ContextPropagatorLoader {
 
-    @Override
-    void close();
 }

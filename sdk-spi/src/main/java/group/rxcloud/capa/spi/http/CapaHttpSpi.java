@@ -22,7 +22,6 @@ import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.spi.http.config.CapaSpiOptionsLoader;
 import group.rxcloud.capa.spi.http.config.CapaSpiProperties;
 import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
-import group.rxcloud.cloudruntimes.domain.core.invocation.HttpExtension;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
@@ -41,15 +40,18 @@ public abstract class CapaHttpSpi extends CapaHttp {
 
     private static final Logger logger = LoggerFactory.getLogger(CapaHttpSpi.class);
 
+    /**
+     * Instantiates a new Capa http spi.
+     *
+     * @param httpClient       the http client
+     * @param objectSerializer the object serializer
+     */
     public CapaHttpSpi(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
         super(httpClient, objectSerializer);
     }
 
     /**
      * Templates, delegate to specific http invoker.
-     *
-     * @param httpMethod    Ignore, fix to POST. FIXME
-     * @param urlParameters Ignore, fix to EMPTY. FIXME
      */
     @Override
     protected <T> CompletableFuture<HttpResponse<T>> doInvokeApi(String httpMethod,
@@ -72,22 +74,6 @@ public abstract class CapaHttpSpi extends CapaHttp {
             if (context != null) {
                 logger.debug("[CapaHttpSpi] invoke rpc context[{}]", context);
             }
-        }
-        // FIXME Ignore, fix to POST.
-        if (!HttpExtension.POST.getMethod().toString().equalsIgnoreCase(httpMethod)) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("[CapaHttpSpi] invoke rpc httpMethod[{}] only support POST now.",
-                        httpMethod);
-            }
-            httpMethod = HttpExtension.POST.getMethod().toString();
-        }
-        // FIXME Ignore, fix to EMPTY.
-        if (urlParameters != null && !urlParameters.isEmpty()) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("[CapaHttpSpi] invoke rpc urlParameters[{}] not supported now.",
-                        urlParameters);
-            }
-            urlParameters = null;
         }
 
         // parse url path segments
@@ -112,7 +98,7 @@ public abstract class CapaHttpSpi extends CapaHttp {
 
         // spi invoke
         CompletableFuture<HttpResponse<T>> invokeSpiApi =
-                invokeSpiApi(appId, method, requestData, headers, type, rpcServiceOptions);
+                invokeSpiApi(appId, method, requestData, httpMethod, headers, urlParameters, type, rpcServiceOptions);
         invokeSpiApi.whenComplete((tHttpResponse, throwable) -> {
             if (throwable != null) {
                 if (logger.isWarnEnabled()) {
@@ -141,6 +127,9 @@ public abstract class CapaHttpSpi extends CapaHttp {
 
     /**
      * Override to get the configuration of the corresponding appId.
+     *
+     * @param appId the app id
+     * @return the rpc service options
      */
     protected RpcServiceOptions getRpcServiceOptions(String appId) {
         CapaSpiOptionsLoader capaSpiOptionsLoader = CapaSpiProperties.getSpiOptionsLoader();
@@ -154,15 +143,20 @@ public abstract class CapaHttpSpi extends CapaHttp {
      * @param appId             the app id
      * @param method            the invoke method
      * @param requestData       the request data
+     * @param httpMethod        the http method
      * @param headers           the headers
+     * @param urlParameters     the url parameters
      * @param type              the response type
      * @param rpcServiceOptions the rpc service options
      * @return the async completable future
      */
-    protected abstract <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(String appId,
-                                                                           String method,
-                                                                           Object requestData,
-                                                                           Map<String, String> headers,
-                                                                           TypeRef<T> type,
-                                                                           RpcServiceOptions rpcServiceOptions);
+    protected abstract <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(
+            String appId,
+            String method,
+            Object requestData,
+            String httpMethod,
+            Map<String, String> headers,
+            Map<String, List<String>> urlParameters,
+            TypeRef<T> type,
+            RpcServiceOptions rpcServiceOptions);
 }

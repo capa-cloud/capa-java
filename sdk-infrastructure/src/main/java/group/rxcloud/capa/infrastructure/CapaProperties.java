@@ -16,6 +16,12 @@
  */
 package group.rxcloud.capa.infrastructure;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +36,7 @@ import java.util.function.Supplier;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_PREFIX;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_PROPERTIES_SUFFIX;
+import static group.rxcloud.capa.infrastructure.Module.OBJECT_MAPPER;
 
 /**
  * Global properties for Capa's SDK, using Supplier so they are dynamically resolved.
@@ -60,13 +67,13 @@ public abstract class CapaProperties {
     /**
      * Capa's properties cache map.
      */
-    private static final Map<String, Properties> PROPERTIES_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, Object> PROPERTIES_MAP = new ConcurrentHashMap<>();
 
     /**
      * Capa's infrastructure properties.
      */
     public static final Function<String, Properties> INFRASTRUCTURE_PROPERTIES_SUPPLIER
-            = (infrastructureDomain) -> PROPERTIES_MAP.computeIfAbsent(infrastructureDomain,
+            = (infrastructureDomain) -> (Properties) PROPERTIES_MAP.computeIfAbsent(infrastructureDomain,
             s -> {
                 final String fileName = CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX
                         + infrastructureDomain.toLowerCase()
@@ -78,7 +85,7 @@ public abstract class CapaProperties {
      * Capa's component properties.
      */
     public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER
-            = (componentDomain) -> PROPERTIES_MAP.computeIfAbsent(componentDomain,
+            = (componentDomain) -> (Properties) PROPERTIES_MAP.computeIfAbsent(componentDomain,
             s -> {
                 final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX
                         + componentDomain.toLowerCase()
@@ -97,4 +104,23 @@ public abstract class CapaProperties {
             throw new IllegalArgumentException(fileName + " file not found.");
         }
     }
+
+    public static <T> T loadCapaConfig(final String fileName, Class<T> configClazz) {
+        Objects.requireNonNull(fileName, "fileName not found.");
+        try (InputStream in = configClazz.getResourceAsStream(fileName)) {
+            InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
+            return OBJECT_MAPPER.readValue(inputStreamReader, configClazz);
+        } catch (JsonParseException | JsonMappingException e) {
+            throw new IllegalArgumentException(fileName + " file not load.");
+        } catch (IOException e) {
+            throw new IllegalArgumentException(fileName + " file not found.");
+        }
+    }
+}
+
+interface Module {
+
+    ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 }
