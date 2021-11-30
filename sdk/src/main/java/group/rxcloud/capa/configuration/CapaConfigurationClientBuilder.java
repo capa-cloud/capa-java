@@ -20,7 +20,6 @@ package group.rxcloud.capa.configuration;
 import group.rxcloud.capa.component.configstore.CapaConfigStore;
 import group.rxcloud.capa.component.configstore.CapaConfigStoreBuilder;
 import group.rxcloud.capa.component.configstore.StoreConfig;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 
 import java.util.Collections;
 import java.util.List;

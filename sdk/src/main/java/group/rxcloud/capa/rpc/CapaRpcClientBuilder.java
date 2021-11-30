@@ -19,8 +19,6 @@ package group.rxcloud.capa.rpc;
 
 import group.rxcloud.capa.component.http.CapaHttpBuilder;
 import group.rxcloud.capa.infrastructure.CapaProperties;
-import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 
 import java.util.function.Supplier;
 

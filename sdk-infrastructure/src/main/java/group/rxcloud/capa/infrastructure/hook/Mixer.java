@@ -16,20 +16,58 @@
  */
 package group.rxcloud.capa.infrastructure.hook;
 
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Inner Runtimes Mixer.
  */
 public abstract class Mixer {
 
+    private static final Logger logger = LoggerFactory.getLogger(Mixer.class);
+
     private static ConfigurationHooks configurationHooks;
     private static TelemetryHooks telemetryHooks;
+
+    static {
+        try {
+            MixerProvider mixerProvider = CapaClassLoader.loadInfrastructureClassObj("mixer", MixerProvider.class);
+            if (mixerProvider != null) {
+                registerConfigurationHooks(mixerProvider.provideConfigurationHooks());
+                registerTelemetryHooks(mixerProvider.provideTelemetryHooks());
+            }
+        } catch (Exception e) {
+            logger.info("[CapaMixer] load empty mixer. expected error: ", e);
+        }
+    }
+
+    /**
+     * The SPI Mixer provider.
+     */
+    interface MixerProvider {
+
+        /**
+         * Provide global configuration hooks.
+         *
+         * @return the configuration hooks
+         */
+        ConfigurationHooks provideConfigurationHooks();
+
+        /**
+         * Provide global telemetry hooks.
+         *
+         * @return the telemetry hooks
+         */
+        TelemetryHooks provideTelemetryHooks();
+    }
 
     /**
      * Register configuration hooks.
      *
      * @param configurationHooks the configuration hooks
      */
-    public static void registerConfigurationHooks(ConfigurationHooks configurationHooks) {
+    private static void registerConfigurationHooks(ConfigurationHooks configurationHooks) {
         Mixer.configurationHooks = configurationHooks;
     }
 
@@ -38,7 +76,7 @@ public abstract class Mixer {
      *
      * @param telemetryHooks the telemetry hooks
      */
-    public static void registerTelemetryHooks(TelemetryHooks telemetryHooks) {
+    private static void registerTelemetryHooks(TelemetryHooks telemetryHooks) {
         Mixer.telemetryHooks = telemetryHooks;
     }
 
