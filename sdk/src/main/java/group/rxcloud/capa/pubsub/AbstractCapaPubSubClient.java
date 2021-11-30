@@ -32,6 +32,11 @@ public abstract class AbstractCapaPubSubClient implements CapaPubSubClient {
     protected List<String> registryNames;
 
     @Override
+    public List<String> registryNames() {
+        return registryNames;
+    }
+
+    @Override
     public Mono<String> publishEvent(String pubsubName, String topicName, Object data) {
         PublishEventRequest publishEventRequest = new PublishEventRequest(pubsubName, topicName, data);
         return this.publishEvent(publishEventRequest);

@@ -35,6 +35,11 @@ public abstract class AbstractCapaRpcClient implements CapaRpcClient {
     protected List<String> registryNames;
 
     @Override
+    public List<String> registryNames() {
+        return registryNames;
+    }
+
+    @Override
     public <T> Mono<T> invokeMethod(String appId, String methodName, Object request, HttpExtension httpExtension, Map<String, String> metadata, TypeRef<T> type) {
         InvokeMethodRequestBuilder builder = new InvokeMethodRequestBuilder(appId, methodName);
         InvokeMethodRequest req = builder
