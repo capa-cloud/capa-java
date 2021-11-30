@@ -118,7 +118,7 @@ For a Maven project, add the following to your pom.xml file:
         <dependency>
             <groupId>group.rxcloud</groupId>
             <artifactId>capa-sdk</artifactId>
-            <version>1.0.7-beta-2</version>
+            <version>1.0.7-beta-3</version>
         </dependency>
         ...
     </dependencies>
@@ -138,7 +138,7 @@ Sample implementation library:
         <dependency>
             <groupId>group.rxcloud</groupId>
             <artifactId>capa-sdk-spi-demo</artifactId>
-            <version>1.0.7-beta-2</version>
+            <version>1.0.7-beta-3</version>
         </dependency>
         ...
     </dependencies>
