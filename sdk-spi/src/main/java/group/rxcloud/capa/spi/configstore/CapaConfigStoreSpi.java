@@ -21,7 +21,6 @@ import group.rxcloud.capa.component.configstore.ConfigurationItem;
 import group.rxcloud.capa.component.configstore.GetRequest;
 import group.rxcloud.capa.component.configstore.SubscribeReq;
 import group.rxcloud.capa.component.configstore.SubscribeResp;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import org.slf4j.Logger;
