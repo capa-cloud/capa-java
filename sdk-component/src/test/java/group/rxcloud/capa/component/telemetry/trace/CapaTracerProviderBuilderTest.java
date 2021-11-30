@@ -65,7 +65,7 @@ public class CapaTracerProviderBuilderTest {
                 .addProcessor(processor)
                 .setSpanLimits(outter)
                 .setIdGenerator(IdGenerator.random())
-                .setSamplerConfig(SamplerConfig.DEFAULT_CONFIG)
+                .setSamplerConfig(() -> SamplerConfig.DEFAULT_CONFIG)
                 .buildTracerProvider();
         Span spanAnother = provider.tracerBuilder("otherTracer").build().spanBuilder("otherSpan").startSpan();
         spanAnother.end(System.currentTimeMillis(), TimeUnit.MILLISECONDS);

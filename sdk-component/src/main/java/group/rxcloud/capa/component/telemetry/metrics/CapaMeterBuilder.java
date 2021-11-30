@@ -16,37 +16,41 @@
  */
 package group.rxcloud.capa.component.telemetry.metrics;
 
-import group.rxcloud.capa.component.telemetry.SamplerConfig;
-import io.opentelemetry.sdk.common.CompletableResultCode;
-import io.opentelemetry.sdk.metrics.data.MetricData;
-
-import java.util.Collection;
-import java.util.function.Supplier;
+import io.opentelemetry.api.metrics.Meter;
+import io.opentelemetry.api.metrics.MeterBuilder;
 
 /**
- * @author: chenyijiang
- * @date: 2021/11/25 17:04
+ * Builder for capa meter.
  */
-public class TestMetricsExporter extends CapaMetricsExporter {
+public class CapaMeterBuilder implements MeterBuilder {
 
-    public TestMetricsExporter(
-            Supplier<SamplerConfig> samplerConfig) {
-        super(samplerConfig);
+    private final MeterBuilder meterBuilder;
+
+    private final String name;
+
+    private String schemaUrl;
+
+    private String version;
+
+    public CapaMeterBuilder(String name, MeterBuilder builder) {
+        this.name = name;
+        meterBuilder = builder;
     }
 
     @Override
-    public CompletableResultCode doExport(Collection<MetricData> metrics) {
-        metrics.forEach(System.out::println);
-        return CompletableResultCode.ofSuccess();
+    public MeterBuilder setSchemaUrl(String schemaUrl) {
+        this.schemaUrl = schemaUrl;
+        return meterBuilder.setSchemaUrl(schemaUrl);
     }
 
     @Override
-    public CompletableResultCode doFlush() {
-        return CompletableResultCode.ofSuccess();
+    public MeterBuilder setInstrumentationVersion(String instrumentationVersion) {
+        version = instrumentationVersion;
+        return meterBuilder.setInstrumentationVersion(instrumentationVersion);
     }
 
     @Override
-    public CompletableResultCode shutdown() {
-        return CompletableResultCode.ofSuccess();
+    public Meter build() {
+        return CapaMeterWrapper.wrap(name, schemaUrl, version, meterBuilder.build());
     }
 }

@@ -23,14 +23,14 @@
     <parent>
         <artifactId>capa-parent</artifactId>
         <groupId>group.rxcloud</groupId>
-        <version>1.0.7-beta-3</version>
+        <version>1.0.7-beta-4</version>
     </parent>
 
     <artifactId>sdk-springboot</artifactId>
     <name>capa-sdk-springboot</name>
 
     <properties>
-        <springboot.version>2.3.12.RELEASE</springboot.version>
+        <springboot.version>2.3.5.RELEASE</springboot.version>
         <vrml.version>1.0.1-RELEASE</vrml.version>
     </properties>
 

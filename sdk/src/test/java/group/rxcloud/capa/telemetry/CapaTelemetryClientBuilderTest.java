@@ -59,7 +59,7 @@ public class CapaTelemetryClientBuilderTest {
         readerConfig.setExportInterval(1, TimeUnit.SECONDS);
         CapaTelemetryClient capaTelemetryClient = new CapaTelemetryClientBuilder()
                 .addProcessor(new TraceProcessor())
-                .setSamplerConfig(SamplerConfig.DEFAULT_CONFIG)
+                .setSamplerConfig(() -> SamplerConfig.DEFAULT_CONFIG)
                 .setSpanLimits(new SpanLimitsConfig())
                 .setIdGenerator(IdGenerator.random())
                 .setTracerConfig(new TracerConfig())

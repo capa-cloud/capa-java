@@ -21,61 +21,40 @@ import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.sdk.metrics.exemplar.ExemplarFilter;
 
+import java.util.function.Supplier;
+
 /**
  * Sampler for metrics data.
  * Choose to sample all or none data according to the config file.
  */
 public class CapaMetricsSampler implements ExemplarFilter {
 
-    /**
-     * Sampler instance, which samples all the data if no config was explicitly set.
-     */
-    private static final CapaMetricsSampler INSTANCE = new CapaMetricsSampler(SamplerConfig.DEFAULT_CONFIG);
+    private final Supplier<SamplerConfig> samplerConfigSupplier;
 
-    /**
-     * Inner instance.
-     */
-    private ExemplarFilter inner;
-
-    /**
-     * Get the sampler instance.
-     *
-     * @return the sampler instance.
-     */
-    public static CapaMetricsSampler getInstance() {
-        return INSTANCE;
-    }
-
-    private CapaMetricsSampler(SamplerConfig config) {
-        update(config);
-    }
-
-    /**
-     * Update the sample policy.
-     *
-     * @param config new sample config.
-     * @return the updated sampler instance.
-     */
-    public CapaMetricsSampler update(SamplerConfig config) {
-        if (config == null) {
-            return this;
+    public CapaMetricsSampler(Supplier<SamplerConfig> samplerConfigSupplier) {
+        if (samplerConfigSupplier == null) {
+            samplerConfigSupplier = () -> SamplerConfig.DEFAULT_CONFIG;
         }
-
-        if (config.isMetricsSample()) {
-            inner = ExemplarFilter.alwaysSample();
-        } else {
-            inner = ExemplarFilter.neverSample();
-        }
-        return this;
+        this.samplerConfigSupplier = samplerConfigSupplier;
     }
 
     @Override
     public boolean shouldSampleMeasurement(long value, Attributes attributes, Context context) {
-        return inner.shouldSampleMeasurement(value, attributes, context);
+        return get().shouldSampleMeasurement(value, attributes, context);
     }
 
     @Override
     public boolean shouldSampleMeasurement(double value, Attributes attributes, Context context) {
-        return inner.shouldSampleMeasurement(value, attributes, context);
+        return get().shouldSampleMeasurement(value, attributes, context);
     }
+
+    private ExemplarFilter get() {
+        SamplerConfig config = samplerConfigSupplier.get();
+        if (config != null && !config.isMetricsEnable()) {
+            return ExemplarFilter.neverSample();
+        }
+
+        return ExemplarFilter.alwaysSample();
+    }
+
 }

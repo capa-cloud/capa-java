@@ -53,6 +53,6 @@ public class CapaTracerBuilder implements TracerBuilder {
 
     @Override
     public Tracer build() {
-        return CapaWrapper.wrap(tracerName, version, schemaUrl, tracerBuilder.build());
+        return CapaTracerWrapper.wrap(tracerName, version, schemaUrl, tracerBuilder.build());
     }
 }

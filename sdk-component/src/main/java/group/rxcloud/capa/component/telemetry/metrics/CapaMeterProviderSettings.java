@@ -18,6 +18,8 @@ package group.rxcloud.capa.component.telemetry.metrics;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
 
+import java.util.function.Supplier;
+
 /**
  * Settings for capa meter provider.
  */
@@ -48,5 +50,5 @@ public interface CapaMeterProviderSettings {
      * @param samplerConfig sample config.
      * @return current settings.
      */
-    CapaMeterProviderSettings setSamplerConfig(SamplerConfig samplerConfig);
+    CapaMeterProviderSettings setSamplerConfig(Supplier<SamplerConfig> samplerConfig);
 }
