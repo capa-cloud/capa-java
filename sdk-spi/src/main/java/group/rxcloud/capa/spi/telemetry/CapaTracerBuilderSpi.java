@@ -27,5 +27,4 @@ public abstract class CapaTracerBuilderSpi extends CapaTracerBuilder {
     public CapaTracerBuilderSpi(String tracerName, TracerBuilder builder) {
         super(tracerName, builder);
     }
-
 }

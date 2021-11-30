@@ -34,6 +34,8 @@ import java.util.List;
  */
 public abstract class AbstractCapaConfigurationClient implements CapaConfigurationClient {
 
+    protected List<String> registryNames;
+
     @Override
     public Mono<Void> saveConfiguration(SaveConfigurationRequest saveConfigurationRequest) {
         return Mono.error(new UnsupportedOperationException("unsupported save configuration"));

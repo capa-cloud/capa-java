@@ -28,5 +28,4 @@ public abstract class CapaSpanBuilderSpi extends CapaSpanBuilder {
                               SpanBuilder spanBuilder) {
         super(tracerName, version, schemaUrl, spanName, spanBuilder);
     }
-
 }

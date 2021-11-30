@@ -22,6 +22,7 @@ import group.rxcloud.cloudruntimes.domain.core.invocation.InvokeMethodRequest;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +31,8 @@ import java.util.Map;
  * @see CapaRpcClientHttp
  */
 public abstract class AbstractCapaRpcClient implements CapaRpcClient {
+
+    protected List<String> registryNames;
 
     @Override
     public <T> Mono<T> invokeMethod(String appId, String methodName, Object request, HttpExtension httpExtension, Map<String, String> metadata, TypeRef<T> type) {

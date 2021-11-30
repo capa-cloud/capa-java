@@ -23,6 +23,7 @@ import group.rxcloud.cloudruntimes.domain.core.invocation.InvokeMethodRequest;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,9 @@ public class CapaRpcClientHttp extends AbstractCapaRpcClient {
 
     public CapaRpcClientHttp(CapaHttp client) {
         this.client = client;
+
+        this.registryNames = new ArrayList<>(1);
+        this.registryNames.add("http");
     }
 
     @Override
