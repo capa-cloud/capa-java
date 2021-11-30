@@ -97,6 +97,7 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
+        event.getLevel();
         logAppender.appendLog(event);
     }
 
