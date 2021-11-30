@@ -36,7 +36,7 @@ public class TestCapaHttp extends CapaHttp {
 
     public TestCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
                         TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
-        super(httpClient, objectSerializer, telemetryHooks, configurationHooks);
+        super(httpClient, objectSerializer);
     }
 
     @Override

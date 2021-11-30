@@ -45,15 +45,6 @@ public class CapaConfigurationClientBuilder {
     }
 
     /**
-     * Creates a constructor for {@link CapaConfigurationClient}.
-     */
-    public CapaConfigurationClientBuilder(StoreConfig storeConfig, TelemetryHooks telemetryHooks) {
-        CapaConfigStoreBuilder capaConfigStoreBuilder = new CapaConfigStoreBuilder(storeConfig);
-        capaConfigStoreBuilder.withTelemetryHooks(telemetryHooks);
-        this.configStoreBuilders = Collections.singletonList(capaConfigStoreBuilder);
-    }
-
-    /**
      * Creates a constructor for {@link CapaConfigurationClient} with custom {@link CapaConfigStoreBuilder}.
      */
     public CapaConfigurationClientBuilder(Supplier<CapaConfigStoreBuilder> capaConfigStoreBuilderSupplier) {

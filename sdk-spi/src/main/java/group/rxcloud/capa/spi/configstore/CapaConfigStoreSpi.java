@@ -44,8 +44,8 @@ public abstract class CapaConfigStoreSpi extends CapaConfigStore {
      *
      * @param objectSerializer Serializer for transient request/response objects.
      */
-    public CapaConfigStoreSpi(CapaObjectSerializer objectSerializer, TelemetryHooks telemetryHooks) {
-        super(objectSerializer, telemetryHooks);
+    public CapaConfigStoreSpi(CapaObjectSerializer objectSerializer) {
+        super(objectSerializer);
     }
 
     @Override

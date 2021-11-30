@@ -16,8 +16,6 @@
  */
 package group.rxcloud.capa.component.http;
 
-import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.MediaType;
@@ -70,24 +68,16 @@ public abstract class CapaHttp implements AutoCloseable {
      */
     protected final CapaObjectSerializer objectSerializer;
 
-    protected final TelemetryHooks telemetryHooks;
-    protected final ConfigurationHooks configurationHooks;
-
     /**
      * Instantiates a new Capa http.
      *
-     * @param httpClient         RestClient used for all API calls in this new instance.
-     * @param objectSerializer   Serializer for transient request/response objects.
-     * @param telemetryHooks     optional
-     * @param configurationHooks optional
+     * @param httpClient       RestClient used for all API calls in this new instance.
+     * @param objectSerializer Serializer for transient request/response objects.
      * @see CapaHttpBuilder
      */
-    public CapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
-                    TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
+    public CapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
         this.httpClient = httpClient;
         this.objectSerializer = objectSerializer;
-        this.telemetryHooks = telemetryHooks;
-        this.configurationHooks = configurationHooks;
     }
 
     /**

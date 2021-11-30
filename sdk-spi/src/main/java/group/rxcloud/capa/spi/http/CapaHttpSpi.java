@@ -18,8 +18,6 @@ package group.rxcloud.capa.spi.http;
 
 import group.rxcloud.capa.component.http.CapaHttp;
 import group.rxcloud.capa.component.http.HttpResponse;
-import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.spi.http.config.CapaSpiOptionsLoader;
 import group.rxcloud.capa.spi.http.config.CapaSpiProperties;
@@ -43,9 +41,8 @@ public abstract class CapaHttpSpi extends CapaHttp {
 
     private static final Logger logger = LoggerFactory.getLogger(CapaHttpSpi.class);
 
-    public CapaHttpSpi(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
-                       TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
-        super(httpClient, objectSerializer, telemetryHooks, configurationHooks);
+    public CapaHttpSpi(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
+        super(httpClient, objectSerializer);
     }
 
     /**

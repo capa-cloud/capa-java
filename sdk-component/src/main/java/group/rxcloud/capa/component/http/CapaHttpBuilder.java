@@ -19,8 +19,6 @@ package group.rxcloud.capa.component.http;
 
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
 import group.rxcloud.capa.infrastructure.CapaProperties;
-import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import okhttp3.OkHttpClient;
@@ -48,9 +46,6 @@ public class CapaHttpBuilder {
      */
     private CapaObjectSerializer objectSerializer;
 
-    private TelemetryHooks telemetryHooks;
-    private ConfigurationHooks configurationHooks;
-
     /**
      * Creates a constructor for CapaHttp.
      * <p>
@@ -77,22 +72,6 @@ public class CapaHttpBuilder {
             throw new IllegalArgumentException("Content Type should not be null or empty");
         }
         this.objectSerializer = objectSerializer;
-        return this;
-    }
-
-    public CapaHttpBuilder withTelemetryHooks(TelemetryHooks telemetryHooks) {
-        if (telemetryHooks == null) {
-            throw new IllegalArgumentException("TelemetryHooks is required");
-        }
-        this.telemetryHooks = telemetryHooks;
-        return this;
-    }
-
-    public CapaHttpBuilder withConfigurationHooks(ConfigurationHooks configurationHooks) {
-        if (configurationHooks == null) {
-            throw new IllegalArgumentException("ConfigurationHooks is required");
-        }
-        this.configurationHooks = configurationHooks;
         return this;
     }
 
@@ -130,12 +109,8 @@ public class CapaHttpBuilder {
                 "rpc",
                 CapaHttp.class,
                 new Class[]{OkHttpClient.class,
-                        CapaObjectSerializer.class,
-                        TelemetryHooks.class,
-                        ConfigurationHooks.class},
+                        CapaObjectSerializer.class},
                 new Object[]{OK_HTTP_CLIENT.get(),
-                        this.objectSerializer,
-                        this.telemetryHooks,
-                        this.configurationHooks});
+                        this.objectSerializer});
     }
 }

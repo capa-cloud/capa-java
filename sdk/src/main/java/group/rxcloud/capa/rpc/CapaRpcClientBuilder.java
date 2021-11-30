@@ -47,22 +47,6 @@ public class CapaRpcClientBuilder {
     }
 
     /**
-     * Creates a constructor for {@link CapaRpcClient}.
-     */
-    public CapaRpcClientBuilder(TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
-        this.apiProtocol = CapaApiProtocol.parseProtocol(CapaProperties.API_PROTOCOL.get());
-
-        CapaHttpBuilder capaHttpBuilder = new CapaHttpBuilder();
-        if (telemetryHooks != null) {
-            capaHttpBuilder.withTelemetryHooks(telemetryHooks);
-        }
-        if (configurationHooks != null) {
-            capaHttpBuilder.withConfigurationHooks(configurationHooks);
-        }
-        this.httpBuilder = capaHttpBuilder;
-    }
-
-    /**
      * Creates a constructor for {@link CapaRpcClient} with custom {@link CapaHttpBuilder}.
      */
     public CapaRpcClientBuilder(Supplier<CapaHttpBuilder> capaHttpBuilderSupplier) {

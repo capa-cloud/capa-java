@@ -209,7 +209,7 @@ public class CapaRpcClientBuilderTest {
 
         public ExceptionCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
                                  TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
-            super(httpClient, objectSerializer, telemetryHooks, configurationHooks);
+            super(httpClient, objectSerializer);
         }
 
         @Override

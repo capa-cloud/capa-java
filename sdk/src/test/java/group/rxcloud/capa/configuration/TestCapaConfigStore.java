@@ -44,7 +44,7 @@ public class TestCapaConfigStore extends CapaConfigStore {
      * @param objectSerializer Serializer for transient request/response objects.
      */
     public TestCapaConfigStore(CapaObjectSerializer objectSerializer, TelemetryHooks telemetryHooks) {
-        super(objectSerializer, telemetryHooks);
+        super(objectSerializer);
     }
 
     @Override

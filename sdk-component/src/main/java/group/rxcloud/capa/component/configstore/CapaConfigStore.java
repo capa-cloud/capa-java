@@ -17,7 +17,6 @@
 package group.rxcloud.capa.component.configstore;
 
 
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Flux;
@@ -40,8 +39,6 @@ public abstract class CapaConfigStore implements AutoCloseable {
      */
     protected final CapaObjectSerializer objectSerializer;
 
-    protected final TelemetryHooks telemetryHooks;
-
     /**
      * The configuration store name.
      */
@@ -51,11 +48,9 @@ public abstract class CapaConfigStore implements AutoCloseable {
      * Instantiates a new Capa ConfigStore.
      *
      * @param objectSerializer Serializer for transient request/response objects.
-     * @param telemetryHooks   optional telemetry hooks
      */
-    public CapaConfigStore(CapaObjectSerializer objectSerializer, TelemetryHooks telemetryHooks) {
+    public CapaConfigStore(CapaObjectSerializer objectSerializer) {
         this.objectSerializer = objectSerializer;
-        this.telemetryHooks = telemetryHooks;
     }
 
     /**

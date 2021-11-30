@@ -40,7 +40,7 @@ public class CapaConfigStoreSpiTest {
 
     @Test
     public void testGet_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
         Mono<List<ConfigurationItem<String>>> listMono = configStoreSpiImpl.get(constructGetRequest(), TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = listMono.block();
         Assertions.assertNotNull(configurationItems);
@@ -63,7 +63,7 @@ public class CapaConfigStoreSpiTest {
 
     @Test
     public void testSubscribe_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
         Flux<SubscribeResp<String>> subscribeFlux = configStoreSpiImpl.subscribe(constructSubscribeReq(), TypeRef.STRING);
         SubscribeResp<String> resp = subscribeFlux.blockFirst();
         Assertions.assertNotNull(resp);
@@ -88,14 +88,14 @@ public class CapaConfigStoreSpiTest {
 
     @Test
     public void testGetDefaultGroup_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
         String defaultGroup = configStoreSpiImpl.getDefaultGroup();
         Assertions.assertEquals("application", defaultGroup);
     }
 
     @Test
     public void testGetDefaultLabel_Success() {
-        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer(), null);
+        TestCapaConfigStoreSpiImpl configStoreSpiImpl = new TestCapaConfigStoreSpiImpl(new DefaultObjectSerializer());
         String defaultLabel = configStoreSpiImpl.getDefaultLabel();
         Assertions.assertEquals("", defaultLabel);
     }

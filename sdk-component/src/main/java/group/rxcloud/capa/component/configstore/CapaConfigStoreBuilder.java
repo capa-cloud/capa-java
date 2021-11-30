@@ -18,7 +18,6 @@ package group.rxcloud.capa.component.configstore;
 
 
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 
@@ -31,8 +30,6 @@ public class CapaConfigStoreBuilder {
      * Serializer used for request and response objects in CapaClient.
      */
     private CapaObjectSerializer objectSerializer;
-
-    private TelemetryHooks telemetryHooks;
 
     private final StoreConfig storeConfig;
 
@@ -66,14 +63,6 @@ public class CapaConfigStoreBuilder {
         return this;
     }
 
-    public CapaConfigStoreBuilder withTelemetryHooks(TelemetryHooks telemetryHooks) {
-        if (telemetryHooks == null) {
-            throw new IllegalArgumentException("TelemetryHooks is required");
-        }
-        this.telemetryHooks = telemetryHooks;
-        return this;
-    }
-
     /**
      * Build an instance of the client based on the provided setup.
      *
@@ -96,7 +85,7 @@ public class CapaConfigStoreBuilder {
         return CapaClassLoader.loadComponentClassObj(
                 "configuration",
                 CapaConfigStore.class,
-                new Class[]{CapaObjectSerializer.class, TelemetryHooks.class},
-                new Object[]{this.objectSerializer, this.telemetryHooks});
+                new Class[]{CapaObjectSerializer.class},
+                new Object[]{this.objectSerializer});
     }
 }

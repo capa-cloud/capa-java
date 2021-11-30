@@ -19,7 +19,6 @@ package group.rxcloud.capa.spi.demo.configstore;
 import group.rxcloud.capa.component.configstore.ConfigurationItem;
 import group.rxcloud.capa.component.configstore.StoreConfig;
 import group.rxcloud.capa.component.configstore.SubscribeResp;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.spi.configstore.CapaConfigStoreSpi;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
@@ -42,8 +41,8 @@ public class DemoCapaConfigStore extends CapaConfigStoreSpi {
      *
      * @param objectSerializer Serializer for transient request/response objects.
      */
-    public DemoCapaConfigStore(CapaObjectSerializer objectSerializer, TelemetryHooks telemetryHooks) {
-        super(objectSerializer, telemetryHooks);
+    public DemoCapaConfigStore(CapaObjectSerializer objectSerializer) {
+        super(objectSerializer);
     }
 
     @Override

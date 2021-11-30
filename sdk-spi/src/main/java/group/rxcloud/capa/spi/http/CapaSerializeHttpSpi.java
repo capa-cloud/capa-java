@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.exceptions.CapaErrorContext;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
-import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.domain.core.invocation.Metadata;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
@@ -57,9 +55,8 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
      * @param httpClient       the http client
      * @param objectSerializer the object serializer
      */
-    public CapaSerializeHttpSpi(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
-                                TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
-        super(httpClient, objectSerializer, telemetryHooks, configurationHooks);
+    public CapaSerializeHttpSpi(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
+        super(httpClient, objectSerializer);
     }
 
     /**
