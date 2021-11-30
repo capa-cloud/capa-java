@@ -18,8 +18,6 @@ package group.rxcloud.capa.rpc;
 
 import group.rxcloud.capa.component.http.CapaHttp;
 import group.rxcloud.capa.component.http.HttpResponse;
-import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
-import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
@@ -34,8 +32,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class TestCapaHttp extends CapaHttp {
 
-    public TestCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
-                        TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
+    public TestCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
         super(httpClient, objectSerializer);
     }
 

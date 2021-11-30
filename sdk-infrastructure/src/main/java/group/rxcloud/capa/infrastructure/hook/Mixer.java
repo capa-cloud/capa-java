@@ -20,6 +20,9 @@ import group.rxcloud.capa.infrastructure.CapaClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+
 /**
  * The Inner Runtimes Mixer.
  */
@@ -85,8 +88,18 @@ public abstract class Mixer {
      *
      * @return the configuration hooks
      */
-    public static ConfigurationHooks getConfigurationHooks() {
+    @Nullable
+    public static ConfigurationHooks configurationHooks() {
         return configurationHooks;
+    }
+
+    /**
+     * Gets configuration hooks.
+     *
+     * @return the configuration hooks
+     */
+    public static Optional<ConfigurationHooks> configurationHooksNullable() {
+        return Optional.ofNullable(configurationHooks);
     }
 
     /**
@@ -94,7 +107,17 @@ public abstract class Mixer {
      *
      * @return the telemetry hooks
      */
-    public static TelemetryHooks getTelemetryHooks() {
+    @Nullable
+    public static TelemetryHooks telemetryHooks() {
         return telemetryHooks;
+    }
+
+    /**
+     * Gets telemetry hooks.
+     *
+     * @return the telemetry hooks
+     */
+    public static Optional<TelemetryHooks> telemetryHooksNullable() {
+        return Optional.ofNullable(telemetryHooks);
     }
 }
