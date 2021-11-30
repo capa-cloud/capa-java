@@ -33,6 +33,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Builder for capa tracer provider.
@@ -63,7 +64,7 @@ public class CapaTracerProviderBuilder implements CapaTracerProviderSettings {
     /**
      * Sampler config.
      */
-    private SamplerConfig samplerConfig;
+    private Supplier<SamplerConfig> samplerConfig = SamplerConfig.DEFAULT_SUPPLIER;
 
     private static boolean addSpanLimits(SpanLimitsConfig spanLimits, SpanLimitsBuilder limits) {
         if (spanLimits == null) {
@@ -112,7 +113,7 @@ public class CapaTracerProviderBuilder implements CapaTracerProviderSettings {
     }
 
     @Override
-    public CapaTracerProviderBuilder setSamplerConfig(SamplerConfig samplerConfig) {
+    public CapaTracerProviderBuilder setSamplerConfig(Supplier<SamplerConfig> samplerConfig) {
         this.samplerConfig = samplerConfig;
         return this;
     }
@@ -210,14 +211,7 @@ public class CapaTracerProviderBuilder implements CapaTracerProviderSettings {
     }
 
     private void addSampler(SdkTracerProviderBuilder builder) {
-        initSampleConfig();
-        builder.setSampler(Sampler.parentBased(CapaTraceSampler.getInstance().update(samplerConfig)));
-    }
-
-    private void initSampleConfig() {
-        if (samplerConfig == null) {
-            samplerConfig = SamplerConfig.loadOrDefault();
-        }
+        builder.setSampler(Sampler.parentBased(new CapaTraceSampler(samplerConfig)));
     }
 
     private void addProcessors(SdkTracerProviderBuilder builder) {

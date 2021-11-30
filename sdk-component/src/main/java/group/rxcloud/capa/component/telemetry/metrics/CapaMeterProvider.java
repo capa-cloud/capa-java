@@ -16,37 +16,31 @@
  */
 package group.rxcloud.capa.component.telemetry.metrics;
 
-import group.rxcloud.capa.component.telemetry.SamplerConfig;
-import io.opentelemetry.sdk.common.CompletableResultCode;
-import io.opentelemetry.sdk.metrics.data.MetricData;
+import io.opentelemetry.api.metrics.Meter;
+import io.opentelemetry.api.metrics.MeterBuilder;
+import io.opentelemetry.api.metrics.MeterProvider;
 
-import java.util.Collection;
-import java.util.function.Supplier;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * @author: chenyijiang
- * @date: 2021/11/25 17:04
+ * Builder for capa meter provider.
  */
-public class TestMetricsExporter extends CapaMetricsExporter {
+@NotThreadSafe
+public class CapaMeterProvider implements MeterProvider {
 
-    public TestMetricsExporter(
-            Supplier<SamplerConfig> samplerConfig) {
-        super(samplerConfig);
+    private final MeterProvider meterProvider;
+
+    public CapaMeterProvider(MeterProvider meterProvider) {
+        this.meterProvider = meterProvider;
     }
 
     @Override
-    public CompletableResultCode doExport(Collection<MetricData> metrics) {
-        metrics.forEach(System.out::println);
-        return CompletableResultCode.ofSuccess();
+    public Meter get(String instrumentationName) {
+        return CapaMeterWrapper.wrap(instrumentationName, null, null, meterProvider.get(instrumentationName));
     }
 
     @Override
-    public CompletableResultCode doFlush() {
-        return CompletableResultCode.ofSuccess();
-    }
-
-    @Override
-    public CompletableResultCode shutdown() {
-        return CompletableResultCode.ofSuccess();
+    public MeterBuilder meterBuilder(String instrumentationName) {
+        return CapaMeterWrapper.wrap(instrumentationName, meterProvider.meterBuilder(instrumentationName));
     }
 }

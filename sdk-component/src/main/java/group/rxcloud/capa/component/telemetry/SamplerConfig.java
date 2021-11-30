@@ -16,66 +16,81 @@
  */
 package group.rxcloud.capa.component.telemetry;
 
-import group.rxcloud.capa.infrastructure.utils.SpiUtils;
+import group.rxcloud.capa.component.telemetry.metrics.CapaMeterProviderBuilder;
+import group.rxcloud.capa.infrastructure.CapaProperties;
+import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
+import group.rxcloud.capa.infrastructure.hook.Mixer;
+import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
+import group.rxcloud.cloudruntimes.utils.TypeRef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.Properties;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Sampler config.
  */
 public class SamplerConfig implements Serializable {
 
-    public static final String FILE_PATH = "/capa-sample.properties";
+    public static final transient String FILE_PATH = "capa-sample.properties";
 
     /**
      * Sample all data as default.
      */
     public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig();
 
-    private static final long serialVersionUID = -2113523925814197551L;
+    private static final transient Logger log = LoggerFactory.getLogger(CapaMeterProviderBuilder.class);
 
-    private boolean metricsSample = true;
-
-    private boolean traceSample = true;
-
-    private boolean logSample = true;
-
-    public boolean isMetricsSample() {
-        return metricsSample;
-    }
-
-    public void setMetricsSample(boolean metricsSample) {
-        this.metricsSample = metricsSample;
-    }
-
-    public boolean isTraceSample() {
-        return traceSample;
-    }
-
-    public void setTraceSample(boolean traceSample) {
-        this.traceSample = traceSample;
-    }
-
-    public boolean isLogSample() {
-        return logSample;
-    }
-
-    public void setLogSample(boolean logSample) {
-        this.logSample = logSample;
-    }
-
-    public static SamplerConfig loadOrDefault() {
-        Properties properties = SpiUtils.loadPropertiesNullable(FILE_PATH);
-        if (properties == null) {
-            return DEFAULT_CONFIG;
+    public static final transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> {
+        try {
+            String storeName = Optional.ofNullable(CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("configuration")
+                                                                                               .getProperty(
+                                                                                                       "CONFIGURATION_COMPONENT_STORE_NAME"))
+                                       .orElse("UN_CONFIGURED_STORE_CONFIG_NAME");
+            Optional<ConfigurationHooks> hooksOptional = Mixer.configurationHooksNullable();
+            if (hooksOptional.isPresent()) {
+                List<ConfigurationItem<SamplerConfig>> config = hooksOptional.get().getConfiguration(storeName,
+                        null,
+                        Collections.singletonList(FILE_PATH),
+                        null,
+                        "",
+                        "",
+                        TypeRef.get(SamplerConfig.class)).block();
+                if (!config.isEmpty()) {
+                    SamplerConfig item = config.get(0).getContent();
+                    return item == null ? DEFAULT_CONFIG : item;
+                }
+            }
+        } catch (Throwable throwable) {
+            log.warn("Fail to load config item. Dynamic config is disabled for capa telemetry.", throwable);
         }
 
-        SamplerConfig result = new SamplerConfig();
-        result.setMetricsSample(Boolean.valueOf(properties.getProperty("metricsSample", Boolean.TRUE.toString())));
-        result.setTraceSample(Boolean.valueOf(properties.getProperty("traceSample", Boolean.TRUE.toString())));
-        result.setLogSample(Boolean.valueOf(properties.getProperty("logSample", Boolean.TRUE.toString())));
+        return DEFAULT_CONFIG;
+    };
 
-        return result;
+    private static final long serialVersionUID = -2113523925814197551L;
+
+    private boolean metricsEnable = true;
+
+    private boolean traceEnable = true;
+
+    public boolean isMetricsEnable() {
+        return metricsEnable;
+    }
+
+    public void setMetricsEnable(boolean metricsEnable) {
+        this.metricsEnable = metricsEnable;
+    }
+
+    public boolean isTraceEnable() {
+        return traceEnable;
+    }
+
+    public void setTraceEnable(boolean traceEnable) {
+        this.traceEnable = traceEnable;
     }
 }

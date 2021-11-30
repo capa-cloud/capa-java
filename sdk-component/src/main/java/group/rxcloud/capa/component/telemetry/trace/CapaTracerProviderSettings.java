@@ -20,6 +20,8 @@ import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.sdk.trace.IdGenerator;
 import io.opentelemetry.sdk.trace.SpanProcessor;
 
+import java.util.function.Supplier;
+
 /**
  * Settings for capa trace provider.
  */
@@ -66,6 +68,6 @@ public interface CapaTracerProviderSettings {
      * @param samplerConfig sample config.
      * @return current settings.
      */
-    CapaTracerProviderSettings setSamplerConfig(SamplerConfig samplerConfig);
+    CapaTracerProviderSettings setSamplerConfig(Supplier<SamplerConfig> samplerConfig);
 
 }
