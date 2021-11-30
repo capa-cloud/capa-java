@@ -94,7 +94,7 @@ public abstract class CapaProperties {
             });
 
     private static Properties loadCapaProperties(final String fileName) {
-        Objects.requireNonNull(fileName, "fileName not found.3444444444444444444");
+        Objects.requireNonNull(fileName, "fileName not found.");
         try (InputStream in = CapaProperties.class.getResourceAsStream(fileName)) {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
             Properties properties = new Properties();

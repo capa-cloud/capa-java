@@ -30,6 +30,10 @@ import java.util.Map;
 
 public interface ConfigurationHooks extends ConfigurationRuntimes {
 
+    String currentStoreName();
+
+    String currentAppId();
+
     @Override
     default <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
         throw new UnsupportedOperationException("If you want to use this operate, please impl this.");

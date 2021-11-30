@@ -63,7 +63,6 @@ public interface CapaConfigurationClient extends DefaultCloudRuntimesClient {
     @Override
     Mono<Void> deleteConfiguration(ConfigurationRequestItem configurationRequestItem);
 
-
     @Override
     default Mono<Void> shutdown() {
         return Mono.empty();

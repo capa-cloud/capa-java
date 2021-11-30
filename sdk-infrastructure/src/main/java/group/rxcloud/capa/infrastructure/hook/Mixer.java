@@ -48,7 +48,7 @@ public abstract class Mixer {
     /**
      * The SPI Mixer provider.
      */
-    interface MixerProvider {
+    public interface MixerProvider {
 
         /**
          * Provide global configuration hooks.
