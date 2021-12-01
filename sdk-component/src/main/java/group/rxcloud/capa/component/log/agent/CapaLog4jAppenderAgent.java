@@ -16,6 +16,8 @@
  */
 package group.rxcloud.capa.component.log.agent;
 
+import group.rxcloud.capa.component.log.enums.CapaLogLevel;
+import group.rxcloud.capa.component.log.manager.LogManager;
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Filter;
@@ -28,6 +30,7 @@ import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * The abstract log4j appender. Extend this and provide your specific impl.
@@ -97,7 +100,12 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
-        logAppender.appendLog(event);
+        if (event != null && event.getLevel() != null) {
+            Optional<CapaLogLevel> capaLogLevel = CapaLogLevel.toCapaLogLevel(event.getLevel().name());
+            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanBeOutput(capaLogLevel.get())) {
+                logAppender.appendLog(event);
+            }
+        }
     }
 
     /**

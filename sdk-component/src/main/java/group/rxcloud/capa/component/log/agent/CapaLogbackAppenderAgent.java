@@ -16,13 +16,18 @@
  */
 package group.rxcloud.capa.component.log.agent;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import group.rxcloud.capa.component.log.enums.CapaLogLevel;
+import group.rxcloud.capa.component.log.manager.LogManager;
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
+
+import java.util.Optional;
 
 /**
  * The agent of the logback impl.
  */
-public class CapaLogbackAppenderAgent<EVENT> extends UnsynchronizedAppenderBase<EVENT> {
+public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
     /**
      * The log component type.
@@ -58,20 +63,25 @@ public class CapaLogbackAppenderAgent<EVENT> extends UnsynchronizedAppenderBase<
      * @param event The log event.
      */
     @Override
-    protected void append(EVENT event) {
-        logbackAppender.appendLog(event);
+    protected void append(ILoggingEvent event) {
+        if (event != null && event.getLevel() != null) {
+            Optional<CapaLogLevel> capaLogLevel = CapaLogLevel.toCapaLogLevel(event.getLevel().levelStr);
+            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanBeOutput(capaLogLevel.get())) {
+                logbackAppender.appendLog(event);
+            }
+        }
     }
 
     /**
      * The abstract api of the logback appender impl.Implement this and provide your specific impl.
      */
-    public interface CapaLogbackAppender<EVENT> {
+    public interface CapaLogbackAppender {
 
         /**
          * Deal with the log.
          *
          * @param event The log event.
          */
-        void appendLog(EVENT event);
+        void appendLog(ILoggingEvent event);
     }
 }

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.examples.log;
+package group.rxcloud.capa.examples.telemetry;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +30,11 @@ import lombok.extern.slf4j.Slf4j;
 public class DemoLog {
 
     public static void main(String[] args) {
-        log.info("test");
+        try {
+            log.info("test");
+        }catch (Exception e){
+            System.out.println();
+        }
+
     }
 }

@@ -23,6 +23,6 @@ public class DemoLog4jAppender implements CapaLog4jAppenderAgent.CapaLog4jAppend
 
     @Override
     public void appendLog(LogEvent event) {
-        System.out.println("test log log4j and content is " + event.getMessage().getFormattedMessage());
+        System.out.println("Test log log4j and content is " + event.getMessage().getFormattedMessage());
     }
 }
