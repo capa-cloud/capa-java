@@ -57,6 +57,11 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
 
     protected List<String> registryNames;
 
+    @Override
+    public List<String> registryNames() {
+        return registryNames;
+    }
+
     CapaTelemetryClientGlobal() {
         this.registryNames = new ArrayList<>(1);
         this.registryNames.add("opentelemetry");

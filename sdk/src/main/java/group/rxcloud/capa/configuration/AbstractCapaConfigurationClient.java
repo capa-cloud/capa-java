@@ -37,6 +37,11 @@ public abstract class AbstractCapaConfigurationClient implements CapaConfigurati
     protected List<String> registryNames;
 
     @Override
+    public List<String> registryNames() {
+        return registryNames;
+    }
+
+    @Override
     public Mono<Void> saveConfiguration(SaveConfigurationRequest saveConfigurationRequest) {
         return Mono.error(new UnsupportedOperationException("unsupported save configuration"));
     }
