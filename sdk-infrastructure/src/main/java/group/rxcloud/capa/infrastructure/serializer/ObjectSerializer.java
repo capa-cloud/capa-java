@@ -48,6 +48,13 @@ public class ObjectSerializer {
     }
 
     /**
+     * Hook method for custom object mapper.
+     */
+    protected ObjectMapper getObjectMapper() {
+        return OBJECT_MAPPER;
+    }
+
+    /**
      * Serializes a given state object into byte array.
      *
      * @param state State object to be serialized.
@@ -74,7 +81,7 @@ public class ObjectSerializer {
         }
 
         // Not string, not primitive, so it is a complex type: we use JSON for that.
-        return OBJECT_MAPPER.writeValueAsBytes(state);
+        return getObjectMapper().writeValueAsBytes(state);
     }
 
     /**
@@ -87,7 +94,7 @@ public class ObjectSerializer {
      * @throws IOException In case content cannot be deserialized.
      */
     public <T> T deserialize(byte[] content, TypeRef<T> type) throws IOException {
-        return deserialize(content, OBJECT_MAPPER.constructType(type.getType()));
+        return deserialize(content, getObjectMapper().constructType(type.getType()));
     }
 
     /**
@@ -100,7 +107,7 @@ public class ObjectSerializer {
      * @throws IOException In case content cannot be deserialized.
      */
     public <T> T deserialize(byte[] content, Class<T> clazz) throws IOException {
-        return deserialize(content, OBJECT_MAPPER.constructType(clazz));
+        return deserialize(content, getObjectMapper().constructType(clazz));
     }
 
     private <T> T deserialize(byte[] content, JavaType javaType) throws IOException {
@@ -138,7 +145,7 @@ public class ObjectSerializer {
             }
         }
 
-        return OBJECT_MAPPER.readValue(content, javaType);
+        return getObjectMapper().readValue(content, javaType);
     }
 
     /**
@@ -149,7 +156,7 @@ public class ObjectSerializer {
      * @throws IOException In case content cannot be parsed.
      */
     public JsonNode parseNode(byte[] content) throws IOException {
-        return OBJECT_MAPPER.readTree(content);
+        return getObjectMapper().readTree(content);
     }
 
     /**
@@ -161,7 +168,7 @@ public class ObjectSerializer {
      * @return Result as corresponding type.
      * @throws IOException if cannot deserialize primitive time.
      */
-    private static <T> T deserializePrimitives(byte[] content, JavaType javaType) throws IOException {
+    private <T> T deserializePrimitives(byte[] content, JavaType javaType) throws IOException {
         if ((content == null) || (content.length == 0)) {
             if (javaType.hasRawClass(boolean.class)) {
                 return (T) Boolean.FALSE;
@@ -198,6 +205,6 @@ public class ObjectSerializer {
             return null;
         }
 
-        return OBJECT_MAPPER.readValue(content, javaType);
+        return getObjectMapper().readValue(content, javaType);
     }
 }
