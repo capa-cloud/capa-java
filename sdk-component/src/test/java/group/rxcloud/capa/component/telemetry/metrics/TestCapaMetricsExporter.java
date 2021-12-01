@@ -19,44 +19,33 @@ package group.rxcloud.capa.component.telemetry.metrics;
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.sdk.common.CompletableResultCode;
 import io.opentelemetry.sdk.metrics.data.MetricData;
-import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
 import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
- *
+ * @author: chenyijiang
+ * @date: 2021/12/1 19:20
  */
-public abstract class CapaMetricsExporter implements MetricExporter {
+public class TestCapaMetricsExporter extends CapaMetricsExporter {
 
-    private Supplier<SamplerConfig> samplerConfig;
-
-    public CapaMetricsExporter(Supplier<SamplerConfig> samplerConfig) {
-        this.samplerConfig = samplerConfig;
+    public TestCapaMetricsExporter(
+            Supplier<SamplerConfig> samplerConfig) {
+        super(samplerConfig);
     }
 
     @Override
-    public CompletableResultCode export(Collection<MetricData> metrics) {
-        SamplerConfig config = samplerConfig.get();
-        if (config != null && !config.isMetricsEnable()) {
-            return CompletableResultCode.ofSuccess();
-        }
-
-        return doExport(metrics);
+    protected CompletableResultCode doExport(Collection<MetricData> metrics) {
+        return CompletableResultCode.ofSuccess();
     }
 
     @Override
-    public CompletableResultCode flush() {
-        SamplerConfig config = samplerConfig.get();
-        if (config != null && !config.isMetricsEnable()) {
-            return CompletableResultCode.ofSuccess();
-        }
-
-        return doFlush();
+    protected CompletableResultCode doFlush() {
+        return  CompletableResultCode.ofSuccess();
     }
 
-    protected abstract CompletableResultCode doExport(Collection<MetricData> metrics);
-
-    protected abstract CompletableResultCode doFlush();
-
+    @Override
+    public CompletableResultCode shutdown() {
+        return CompletableResultCode.ofSuccess();
+    }
 }
