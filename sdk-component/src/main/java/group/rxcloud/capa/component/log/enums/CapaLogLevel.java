@@ -19,6 +19,9 @@ package group.rxcloud.capa.component.log.enums;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * Capa log level.
+ */
 public enum CapaLogLevel {
     /**
      * Standard order of log priorities:
@@ -41,13 +44,23 @@ public enum CapaLogLevel {
         this.levelName = levelName;
     }
 
+    /**
+     * Convert logLevelArg to {@link CapaLogLevel}
+     *
+     * @param logLevelArg
+     * @return
+     */
     public static Optional<CapaLogLevel> toCapaLogLevel(String logLevelArg) {
         return Arrays.stream(CapaLogLevel.values())
                 .filter(logLevel -> logLevel.levelName.equalsIgnoreCase(logLevelArg))
                 .findAny();
-
     }
 
+    /**
+     * Get level.
+     *
+     * @return
+     */
     public int getLevel() {
         return level;
     }

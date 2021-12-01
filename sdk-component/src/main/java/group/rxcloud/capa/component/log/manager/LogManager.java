@@ -19,32 +19,97 @@ package group.rxcloud.capa.component.log.manager;
 import group.rxcloud.capa.component.log.configuration.LogSwitchConfiguration;
 import group.rxcloud.capa.component.log.enums.CapaLogLevel;
 
+import java.util.Map;
+
+/**
+ * LogManager, to manage log output levels.
+ */
 public class LogManager {
 
-    public static Boolean isLogLevelSwitchOn(CapaLogLevel capaLogLevel) {
-        LogSwitchConfiguration.LogsSwitchConfig logsSwitchConfig = LogSwitchConfiguration.getLogsSwitchConfig();
-        //no configuration instance or logs switch configuration, then follow the default logic
-        if (logsSwitchConfig == null || Boolean.FALSE.equals(logsSwitchConfig.getLogsSwitch())) {
+    /**
+     * Dynamically adjust the log level switch name.
+     */
+    private static final String LOG_LEVEL_SWITCH_NAME = "logLevelSwitch";
+    /**
+     * All level switch name.
+     */
+    private static final String ALL_LEVEL_SWITCH_NAME = "allLevelSwitch";
+    /**
+     * Trace level switch name.
+     */
+    private static final String TRACE_LEVEL_SWITCH_NAME = "traceLevelSwitch";
+    /**
+     * Debug level switch name.
+     */
+    private static final String DEBUG_LEVEL_SWITCH_NAME = "debugLevelSwitch";
+    /**
+     * Info level switch name.
+     */
+    private static final String INFO_LEVEL_SWITCH_NAME = "infoLevelSwitch";
+    /**
+     * Warn level switch.
+     */
+    private static final String WARN_LEVEL_SWITCH_NAME = "warnLevelSwitch";
+    /**
+     * Error level switch.
+     */
+    private static final String ERROR_LEVEL_SWITCH_NAME = "errorLevelSwitch";
+    /**
+     * Fatal level switch
+     */
+    private static final String FATAL_LEVEL_SWITCH_NAME = "fatalLevelSwitch";
+    /**
+     * Off level switch.
+     */
+    private static final String OFF_LEVEL_SWITCH_NAME = "offLevelSwitch";
+
+    /**
+     * Whether logs can be output.
+     * @param capaLogLevel
+     * @return
+     */
+    public static Boolean whetherLogsCanBeOutput(CapaLogLevel capaLogLevel) {
+        Map<String, Boolean> logsSwitchConfigs = LogSwitchConfiguration.getLogsSwitchConfig();
+        //no configuration instance or logs switch configuration, then follow the default logic.
+        if (logsSwitchConfigs == null
+                || logsSwitchConfigs.isEmpty()
+                || Boolean.FALSE.equals(logsSwitchConfigs.get(LOG_LEVEL_SWITCH_NAME))) {
             return isLogsLevelClosedWithDefault(capaLogLevel);
         }
 
         switch (capaLogLevel) {
             case ALL:
-                return logsSwitchConfig.getAllLevelSwitch() == null ? Boolean.FALSE : logsSwitchConfig.getAllLevelSwitch();
+                return logsSwitchConfigs.get(ALL_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.FALSE
+                        : logsSwitchConfigs.get(ALL_LEVEL_SWITCH_NAME);
             case TRACE:
-                return logsSwitchConfig.getTraceLevelSwitch() == null ? Boolean.FALSE : logsSwitchConfig.getTraceLevelSwitch();
+                return logsSwitchConfigs.get(TRACE_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.FALSE
+                        : logsSwitchConfigs.get(TRACE_LEVEL_SWITCH_NAME);
             case DEBUG:
-                return logsSwitchConfig.getDebugLevelSwitch() == null ? Boolean.FALSE : logsSwitchConfig.getDebugLevelSwitch();
+                return logsSwitchConfigs.get(DEBUG_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.FALSE
+                        : logsSwitchConfigs.get(DEBUG_LEVEL_SWITCH_NAME);
             case INFO:
-                return logsSwitchConfig.getInfoLevelSwitch() == null ? Boolean.TRUE : logsSwitchConfig.getInfoLevelSwitch();
+                return logsSwitchConfigs.get(INFO_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.TRUE
+                        : logsSwitchConfigs.get(INFO_LEVEL_SWITCH_NAME);
             case WARN:
-                return logsSwitchConfig.getWarnLevelSwitch() == null ? Boolean.TRUE : logsSwitchConfig.getWarnLevelSwitch();
+                return logsSwitchConfigs.get(WARN_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.TRUE
+                        : logsSwitchConfigs.get(WARN_LEVEL_SWITCH_NAME);
             case ERROR:
-                return logsSwitchConfig.getErrorLevelSwitch() == null ? Boolean.TRUE : logsSwitchConfig.getErrorLevelSwitch();
+                return logsSwitchConfigs.get(ERROR_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.TRUE
+                        : logsSwitchConfigs.get(ERROR_LEVEL_SWITCH_NAME);
             case FATAL:
-                return logsSwitchConfig.getFatalLevelSwitch() == null ? Boolean.TRUE : logsSwitchConfig.getFatalLevelSwitch();
+                return logsSwitchConfigs.get(FATAL_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.TRUE
+                        : logsSwitchConfigs.get(FATAL_LEVEL_SWITCH_NAME);
             case OFF:
-                return logsSwitchConfig.getOffLevelSwitch() == null ? Boolean.TRUE : logsSwitchConfig.getOffLevelSwitch();
+                return logsSwitchConfigs.get(OFF_LEVEL_SWITCH_NAME) == null
+                        ? Boolean.TRUE
+                        : logsSwitchConfigs.get(OFF_LEVEL_SWITCH_NAME) == null;
             default:
                 return Boolean.FALSE;
         }
@@ -54,7 +119,7 @@ public class LogManager {
      * Logs of the {@link CapaLogLevel#INFO} level or higher are normally output, but logs of the {@link CapaLogLevel#INFO} level lower are not output.
      *
      * @param capaLogLevel
-     * @return whether capaLogLevel's priority is equal or more then {@link CapaLogLevel#INFO}.
+     * @return whether the capaLogLevel's priority is equal or more then {@link CapaLogLevel#INFO}.
      */
     private static Boolean isLogsLevelClosedWithDefault(CapaLogLevel capaLogLevel) {
         return capaLogLevel.getLevel() >= CapaLogLevel.INFO.getLevel();

@@ -17,6 +17,7 @@
 package group.rxcloud.capa.component.log.configuration;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
 import group.rxcloud.capa.infrastructure.hook.Mixer;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationResp;
@@ -25,14 +26,30 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import reactor.core.publisher.Flux;
 
+import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Log switch configuration
+ */
 public class LogSwitchConfiguration {
 
+    /**
+     * Capa configuration hooks.
+     */
     private static final Optional<ConfigurationHooks> configurationHooks;
-    private static final String LOGS_SWITCH_CONFIG_FILE_NAME = "logs-switch.properties";
-    private static LogsSwitchConfig logsSwitchConfig;
+    /**
+     * Log switch config file name.
+     */
+    private static final String LOGS_SWITCH_CONFIG_FILE_NAME = "log-level-switch.properties";
+    /**
+     * Log switch config's value.
+     */
+    private static Map<String, Boolean> logsSwitchConfig = Maps.newHashMap();
 
+    /**
+     * Init configuration hooks and subscribe configuration.
+     */
     static {
         configurationHooks = Mixer.configurationHooksNullable();
         configurationHooks.ifPresent(configurationHooks -> {
@@ -40,18 +57,22 @@ public class LogSwitchConfiguration {
         });
     }
 
+    /**
+     * Subscribe configuration.
+     *
+     * @param configurationHooks
+     */
     private static void subscribeConfiguration(ConfigurationHooks configurationHooks) {
-        // todo get storeName and appId from hooks of configuration
-        String storeName = "";
-        String appId = "";
-        Flux<SubConfigurationResp<LogsSwitchConfig>> configFlux = configurationHooks.subscribeConfiguration(
+        String storeName = configurationHooks.registryStoreNames().get(0);
+        String appId = configurationHooks.defaultConfigurationAppId();
+        Flux<SubConfigurationResp<Map>> configFlux = configurationHooks.subscribeConfiguration(
                 storeName,
                 appId,
                 Lists.newArrayList(LOGS_SWITCH_CONFIG_FILE_NAME),
                 null,
                 StringUtils.EMPTY,
                 StringUtils.EMPTY,
-                TypeRef.get(LogsSwitchConfig.class));
+                TypeRef.get(Map.class));
         configFlux.subscribe(resp -> {
             if (CollectionUtils.isNotEmpty(resp.getItems())) {
                 logsSwitchConfig = resp.getItems().get(0).getContent();
@@ -59,91 +80,12 @@ public class LogSwitchConfiguration {
         });
     }
 
-    public static LogsSwitchConfig getLogsSwitchConfig() {
+    /**
+     * Get the log switch config's values.
+     *
+     * @return
+     */
+    public static Map<String, Boolean> getLogsSwitchConfig() {
         return logsSwitchConfig;
-    }
-
-    public static class LogsSwitchConfig {
-        private Boolean logsSwitch;
-        private Boolean allLevelSwitch;
-        private Boolean traceLevelSwitch;
-        private Boolean debugLevelSwitch;
-        private Boolean infoLevelSwitch;
-        private Boolean warnLevelSwitch;
-        private Boolean errorLevelSwitch;
-        private Boolean fatalLevelSwitch;
-        private Boolean offLevelSwitch;
-
-        public Boolean getLogsSwitch() {
-            return logsSwitch;
-        }
-
-        public void setLogsSwitch(Boolean logsSwitch) {
-            this.logsSwitch = logsSwitch;
-        }
-
-        public Boolean getAllLevelSwitch() {
-            return allLevelSwitch;
-        }
-
-        public void setAllLevelSwitch(Boolean allLevelSwitch) {
-            this.allLevelSwitch = allLevelSwitch;
-        }
-
-        public Boolean getTraceLevelSwitch() {
-            return traceLevelSwitch;
-        }
-
-        public void setTraceLevelSwitch(Boolean traceLevelSwitch) {
-            this.traceLevelSwitch = traceLevelSwitch;
-        }
-
-        public Boolean getDebugLevelSwitch() {
-            return debugLevelSwitch;
-        }
-
-        public void setDebugLevelSwitch(Boolean debugLevelSwitch) {
-            this.debugLevelSwitch = debugLevelSwitch;
-        }
-
-        public Boolean getInfoLevelSwitch() {
-            return infoLevelSwitch;
-        }
-
-        public void setInfoLevelSwitch(Boolean infoLevelSwitch) {
-            this.infoLevelSwitch = infoLevelSwitch;
-        }
-
-        public Boolean getWarnLevelSwitch() {
-            return warnLevelSwitch;
-        }
-
-        public void setWarnLevelSwitch(Boolean warnLevelSwitch) {
-            this.warnLevelSwitch = warnLevelSwitch;
-        }
-
-        public Boolean getErrorLevelSwitch() {
-            return errorLevelSwitch;
-        }
-
-        public void setErrorLevelSwitch(Boolean errorLevelSwitch) {
-            this.errorLevelSwitch = errorLevelSwitch;
-        }
-
-        public Boolean getFatalLevelSwitch() {
-            return fatalLevelSwitch;
-        }
-
-        public void setFatalLevelSwitch(Boolean fatalLevelSwitch) {
-            this.fatalLevelSwitch = fatalLevelSwitch;
-        }
-
-        public Boolean getOffLevelSwitch() {
-            return offLevelSwitch;
-        }
-
-        public void setOffLevelSwitch(Boolean offLevelSwitch) {
-            this.offLevelSwitch = offLevelSwitch;
-        }
     }
 }
