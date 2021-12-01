@@ -24,8 +24,7 @@ import java.util.Optional;
  */
 public enum CapaLogLevel {
     /**
-     * Standard order of log priorities:
-     * ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF
+     * Standard order of log priorities:ALL,TRACE,DEBUG,INFO,WARN,ERROR,FATAL,OFF
      */
     ALL(1, "ALL"),
     TRACE(2, "TRACE"),
