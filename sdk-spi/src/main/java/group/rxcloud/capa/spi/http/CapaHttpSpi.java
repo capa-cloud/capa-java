@@ -150,13 +150,12 @@ public abstract class CapaHttpSpi extends CapaHttp {
      * @param rpcServiceOptions the rpc service options
      * @return the async completable future
      */
-    protected abstract <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(
-            String appId,
-            String method,
-            Object requestData,
-            String httpMethod,
-            Map<String, String> headers,
-            Map<String, List<String>> urlParameters,
-            TypeRef<T> type,
-            RpcServiceOptions rpcServiceOptions);
+    protected abstract <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(String appId,
+                                                                           String method,
+                                                                           Object requestData,
+                                                                           String httpMethod,
+                                                                           Map<String, String> headers,
+                                                                           Map<String, List<String>> urlParameters,
+                                                                           TypeRef<T> type,
+                                                                           RpcServiceOptions rpcServiceOptions);
 }

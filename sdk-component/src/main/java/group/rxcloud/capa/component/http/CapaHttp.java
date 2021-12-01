@@ -93,14 +93,13 @@ public abstract class CapaHttp implements AutoCloseable {
      * @param type          The Type needed as return for the call.
      * @return Asynchronous response
      */
-    public <T> Mono<HttpResponse<T>> invokeApi(
-            String httpMethod,
-            String[] pathSegments,
-            Map<String, List<String>> urlParameters,
-            Object requestData,
-            Map<String, String> headers,
-            Context context,
-            TypeRef<T> type) {
+    public <T> Mono<HttpResponse<T>> invokeApi(String httpMethod,
+                                               String[] pathSegments,
+                                               Map<String, List<String>> urlParameters,
+                                               Object requestData,
+                                               Map<String, String> headers,
+                                               Context context,
+                                               TypeRef<T> type) {
         // fromCallable() is needed so the invocation does not happen early, causing a hot mono.
         return Mono.fromCallable(() -> doInvokeApi(httpMethod, pathSegments, urlParameters, requestData, headers, context, type))
                 .flatMap(f -> Mono.fromFuture(f));
@@ -119,14 +118,13 @@ public abstract class CapaHttp implements AutoCloseable {
      * @param type          The Type needed as return for the call.
      * @return CompletableFuture for Response.
      */
-    protected abstract <T> CompletableFuture<HttpResponse<T>> doInvokeApi(
-            String httpMethod,
-            String[] pathSegments,
-            Map<String, List<String>> urlParameters,
-            Object requestData,
-            Map<String, String> headers,
-            Context context,
-            TypeRef<T> type);
+    protected abstract <T> CompletableFuture<HttpResponse<T>> doInvokeApi(String httpMethod,
+                                                                          String[] pathSegments,
+                                                                          Map<String, List<String>> urlParameters,
+                                                                          Object requestData,
+                                                                          Map<String, String> headers,
+                                                                          Context context,
+                                                                          TypeRef<T> type);
 
     /**
      * Shutdown call is not necessary for OkHttpClient.

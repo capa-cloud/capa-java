@@ -48,15 +48,14 @@ public class DemoCapaHttp extends CapaSerializeHttpSpi {
     }
 
     @Override
-    protected <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(
-            String appId,
-            String method,
-            Object requestData,
-            String httpMethod,
-            Map<String, String> headers,
-            Map<String, List<String>> urlParameters,
-            TypeRef<T> type,
-            RpcServiceOptions rpcServiceOptions) {
+    protected <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(String appId,
+                                                                  String method,
+                                                                  Object requestData,
+                                                                  String httpMethod,
+                                                                  Map<String, String> headers,
+                                                                  Map<String, List<String>> urlParameters,
+                                                                  TypeRef<T> type,
+                                                                  RpcServiceOptions rpcServiceOptions) {
         DemoRpcServiceOptions demoRpcServiceOptions = (DemoRpcServiceOptions) rpcServiceOptions;
         logger.info("[DemoCapaHttp.invokeSpiApi] rpcServiceOptions[{}]", demoRpcServiceOptions);
 
