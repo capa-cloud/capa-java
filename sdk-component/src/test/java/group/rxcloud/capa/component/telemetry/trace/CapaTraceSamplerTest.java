@@ -30,26 +30,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CapaTraceSamplerTest {
 
     @Test
-    public void getInstance() {
-        assertNotNull(CapaTraceSampler.getInstance());
-        CapaTraceSampler.getInstance().update(SamplerConfig.DEFAULT_CONFIG);
-        assertEquals(SamplingResult.recordAndSample(), CapaTraceSampler.getInstance().shouldSample(null, null, null, null, null, null));
+    public void testConfig() {
+        CapaTraceSampler sampler = new CapaTraceSampler(() -> SamplerConfig.DEFAULT_CONFIG);
+        assertEquals(SamplingResult.recordAndSample(), sampler.shouldSample(null, null, null, null, null, null));
+        sampler = new CapaTraceSampler(() -> null);
+        assertEquals(SamplingResult.recordAndSample(), sampler.shouldSample(null, null, null, null, null, null));
+        SamplerConfig config = new SamplerConfig();
+        config.setTraceEnable(false);
+        sampler = new CapaTraceSampler(() -> config);
+        assertEquals(SamplingResult.drop(), sampler.shouldSample(null, null, null, null, null, null));
+        config.setTraceEnable(true);
+        assertEquals(SamplingResult.recordAndSample(), sampler.shouldSample(null, null, null, null, null, null));
+    }
 
-        CapaTraceSampler.getInstance().update(null);
-        assertEquals(SamplingResult.recordAndSample(), CapaTraceSampler.getInstance().shouldSample(null, null, null, null, null, null));
-
-        SamplerConfig samplerConfig = new SamplerConfig();
-        samplerConfig.setTraceSample(false);
-        CapaTraceSampler.getInstance().update(samplerConfig);
-        assertEquals(SamplingResult.drop(), CapaTraceSampler.getInstance().shouldSample(null, null, null, null, null, null));
-
-
-        samplerConfig.setTraceSample(true);
-        CapaTraceSampler.getInstance().update(samplerConfig);
-        assertEquals(SamplingResult.recordAndSample(), CapaTraceSampler.getInstance().shouldSample(null, null, null, null, null, null));
-
-        CapaTraceSampler.getInstance().update(SamplerConfig.DEFAULT_CONFIG);
-
-        assertNotNull(CapaTraceSampler.getInstance().getDescription());
+    @Test
+    public void getDescription() {
+        assertNotNull(new CapaTraceSampler(() -> SamplerConfig.DEFAULT_CONFIG).getDescription());
     }
 }

@@ -129,7 +129,7 @@ public class CapaSpanBuilder implements SpanBuilder {
     public Span startSpan() {
         Span span = spanBuilder.startSpan();
         if (span instanceof ReadWriteSpan) {
-            return CapaWrapper.wrap(tracerName, version, schemaUrl, (ReadWriteSpan) span);
+            return CapaTracerWrapper.wrap(tracerName, version, schemaUrl, (ReadWriteSpan) span);
         }
         return span;
     }
