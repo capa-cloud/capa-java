@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.vavr.Function2;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +37,9 @@ import java.util.function.Supplier;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_PREFIX;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_PROPERTIES_SUFFIX;
-import static group.rxcloud.capa.infrastructure.Module.OBJECT_MAPPER;
+import static group.rxcloud.capa.infrastructure.InnerModule.FILE_CACHE_MAP;
+import static group.rxcloud.capa.infrastructure.InnerModule.loadCapaConfig;
+import static group.rxcloud.capa.infrastructure.InnerModule.loadCapaProperties;
 
 /**
  * Global properties for Capa's SDK, using Supplier so they are dynamically resolved.
@@ -65,15 +68,10 @@ public abstract class CapaProperties {
             = () -> DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS;
 
     /**
-     * Capa's properties cache map.
-     */
-    private static final Map<String, Object> PROPERTIES_MAP = new ConcurrentHashMap<>();
-
-    /**
-     * Capa's infrastructure properties.
+     * Capa's infrastructure properties supplier.
      */
     public static final Function<String, Properties> INFRASTRUCTURE_PROPERTIES_SUPPLIER
-            = (infrastructureDomain) -> (Properties) PROPERTIES_MAP.computeIfAbsent(infrastructureDomain,
+            = (infrastructureDomain) -> (Properties) FILE_CACHE_MAP.computeIfAbsent(infrastructureDomain,
             s -> {
                 final String fileName = CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX
                         + infrastructureDomain.toLowerCase()
@@ -82,10 +80,10 @@ public abstract class CapaProperties {
             });
 
     /**
-     * Capa's component properties.
+     * Capa's component properties supplier.
      */
     public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER
-            = (componentDomain) -> (Properties) PROPERTIES_MAP.computeIfAbsent(componentDomain,
+            = (componentDomain) -> (Properties) FILE_CACHE_MAP.computeIfAbsent(componentDomain,
             s -> {
                 final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX
                         + componentDomain.toLowerCase()
@@ -93,7 +91,26 @@ public abstract class CapaProperties {
                 return loadCapaProperties(fileName);
             });
 
-    private static Properties loadCapaProperties(final String fileName) {
+    /**
+     * Capa's config file supplier.
+     */
+    public static final Function2<String, Class, Object> CONFIG_FILE_SUPPLIER
+            = (fileName, clazz) -> FILE_CACHE_MAP.computeIfAbsent(fileName,
+            s -> loadCapaConfig(s, clazz));
+}
+
+interface InnerModule {
+
+    /**
+     * Capa's file cache map.
+     */
+    Map<String, Object> FILE_CACHE_MAP = new ConcurrentHashMap<>();
+
+    ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+    static Properties loadCapaProperties(final String fileName) {
         Objects.requireNonNull(fileName, "fileName not found.");
         try (InputStream in = CapaProperties.class.getResourceAsStream(fileName)) {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
@@ -105,7 +122,7 @@ public abstract class CapaProperties {
         }
     }
 
-    public static <T> T loadCapaConfig(final String fileName, Class<T> configClazz) {
+    static <T> T loadCapaConfig(final String fileName, Class<T> configClazz) {
         Objects.requireNonNull(fileName, "fileName not found.");
         try (InputStream in = configClazz.getResourceAsStream(fileName)) {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
@@ -116,11 +133,4 @@ public abstract class CapaProperties {
             throw new IllegalArgumentException(fileName + " file not found.");
         }
     }
-}
-
-interface Module {
-
-    ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 }

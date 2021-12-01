@@ -31,6 +31,7 @@
     <description>SDK infrastructure for Capa</description>
 
     <properties>
+        <vavr.version>0.10.4</vavr.version>
         <vrml.version>1.0.1-RELEASE</vrml.version>
         <grpc.version>1.39.0</grpc.version>
         <jackson.version>2.12.4</jackson.version>
@@ -70,6 +71,12 @@
             <groupId>com.kevinten</groupId>
             <artifactId>vrml-error</artifactId>
             <version>${vrml.version}</version>
+        </dependency>
+        <!-- vavr -->
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>${vavr.version}</version>
         </dependency>
 
         <!-- grpc -->

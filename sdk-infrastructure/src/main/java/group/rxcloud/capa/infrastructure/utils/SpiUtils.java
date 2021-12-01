@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Load class and create instance from config file.
+ * TODO move to {@link CapaProperties}
  */
 public final class SpiUtils {
 

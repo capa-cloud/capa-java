@@ -74,15 +74,31 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
                         requestData, e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
-                    "Request Type: " + requestData.getClass().getName());
+                    "Request Type: " + requestData.getClass().getName() + ", Error: " + e.getMessage());
         } catch (Exception e) {
             if (logger.isWarnEnabled()) {
                 logger.warn("[CapaSerializeHttpSpi] serialize rpc request[{}] error",
                         requestData, e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
-                    "Request Type: " + requestData.getClass().getName(), e);
+                    "Request Type: " + requestData.getClass().getName() + ", Error: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Gets request content type.
+     *
+     * @param headers the headers with custom content type
+     * @return the request content type
+     */
+    protected String getRequestContentType(Map<String, String> headers) {
+        if (headers != null) {
+            String contentType = headers.get(Metadata.CONTENT_TYPE);
+            if (contentType != null) {
+                return contentType;
+            }
+        }
+        return this.objectSerializer.getContentType();
     }
 
     /**
@@ -93,12 +109,12 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
      * @return the request body with byte[] serialize
      */
     protected RequestBody getRequestBodyWithSerialize(Object requestData, Map<String, String> headers) {
-        final String contentType = headers != null
-                ? headers.get(Metadata.CONTENT_TYPE)
-                : null;
+        final String contentType = getRequestContentType(headers);
+
         final MediaType mediaType = contentType == null
                 ? MEDIA_TYPE_APPLICATION_JSON
                 : MediaType.get(contentType);
+
         RequestBody body;
         if (requestData == null) {
             body = mediaType.equals(MEDIA_TYPE_APPLICATION_JSON)
@@ -128,6 +144,11 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
 
     /**
      * Http async call
+     *
+     * @param <T>     the type parameter
+     * @param request the request
+     * @param type    the type
+     * @return the completable future
      */
     protected <T> CompletableFuture<HttpResponse<T>> doAsyncInvoke0(Request request, TypeRef<T> type) {
         CompletableFuture<HttpResponse<byte[]>> future = new CompletableFuture<>();
@@ -149,7 +170,7 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
      * Gets response body with byte[] deserialize.
      *
      * @param <T>          the type parameter
-     * @param type         the type
+     * @param type         the response type
      * @param httpResponse the http response
      * @return the response body with byte[] deserialize
      */
@@ -166,14 +187,14 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
                         httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type, e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_RESPONSE_DESERIALIZE_ERROR,
-                    "Response Type: " + type, e);
+                    "Response Type: " + type.getType().getTypeName() + ", Error: " + e.getMessage(), e);
         } catch (Exception e) {
             if (logger.isWarnEnabled()) {
                 logger.warn("[CapaSerializeHttpSpi] deserialize rpc statusCode[{}] headers[{}] response[{}] type[{}] error",
                         httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type, e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_RESPONSE_DESERIALIZE_ERROR,
-                    "Response Type: " + type, e);
+                    "Response Type: " + type.getType().getTypeName() + ", Error: " + e.getMessage(), e);
         }
     }
 
