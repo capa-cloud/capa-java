@@ -29,13 +29,13 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public class CapaMeter implements Meter {
 
-    private final String meterName;
+    protected final String meterName;
 
-    private final String schemaUrl;
+    protected final String schemaUrl;
 
-    private final String version;
+    protected final String version;
 
-    private final Meter meter;
+    protected final Meter meter;
 
     public CapaMeter(String meterName, String schemaUrl, String version, Meter meter) {
         this.meterName = meterName;
