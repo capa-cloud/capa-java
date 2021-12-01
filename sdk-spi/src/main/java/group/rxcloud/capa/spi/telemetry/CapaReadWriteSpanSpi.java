@@ -24,10 +24,8 @@ import io.opentelemetry.sdk.trace.ReadWriteSpan;
  */
 public abstract class CapaReadWriteSpanSpi extends CapaReadWriteSpan {
 
-
     public CapaReadWriteSpanSpi(String tracerName, String version, String schemaUrl,
                                 ReadWriteSpan span) {
         super(tracerName, version, schemaUrl, span);
     }
-
 }

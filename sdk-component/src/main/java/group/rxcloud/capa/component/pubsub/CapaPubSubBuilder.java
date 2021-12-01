@@ -52,6 +52,7 @@ public class CapaPubSubBuilder {
      * @return Instance of {@link CapaPubSub} implementor
      */
     private CapaPubSub buildCapaPubSub() {
+        // TODO: 2021/11/30 build multi component
         return CapaClassLoader.loadComponentClassObj("pubsub", CapaPubSub.class);
     }
 }

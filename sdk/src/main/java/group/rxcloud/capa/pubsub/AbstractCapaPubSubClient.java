@@ -19,6 +19,7 @@ package group.rxcloud.capa.pubsub;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +28,13 @@ import java.util.Map;
  * @see CapaPubSubClientPubSub
  */
 public abstract class AbstractCapaPubSubClient implements CapaPubSubClient {
+
+    protected List<String> registryNames;
+
+    @Override
+    public List<String> registryNames() {
+        return registryNames;
+    }
 
     @Override
     public Mono<String> publishEvent(String pubsubName, String topicName, Object data) {

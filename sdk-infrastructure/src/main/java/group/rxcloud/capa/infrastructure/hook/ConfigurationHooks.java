@@ -28,7 +28,20 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The Mixer configuration hooks.
+ */
 public interface ConfigurationHooks extends ConfigurationRuntimes {
+
+    /**
+     * Registry Store Names.
+     */
+    List<String> registryStoreNames();
+
+    /**
+     * Default configuration appI.
+     */
+    String defaultConfigurationAppId();
 
     @Override
     default <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {

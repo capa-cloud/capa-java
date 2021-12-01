@@ -25,6 +25,9 @@ import io.opentelemetry.api.trace.TracerProvider;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelemetry {
 
     // noop as default.
@@ -52,7 +55,16 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
         instance = capaTelemetryClient;
     }
 
-   CapaTelemetryClientGlobal() {
+    protected List<String> registryNames;
+
+    @Override
+    public List<String> registryNames() {
+        return registryNames;
+    }
+
+    CapaTelemetryClientGlobal() {
+        this.registryNames = new ArrayList<>(1);
+        this.registryNames.add("opentelemetry");
     }
 
     @Override
@@ -106,7 +118,7 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
     public Mono<Tracer> buildTracer(String tracerName, String version, String schemaUrl) {
         return Mono.fromSupplier(() -> {
             return tracerProvider.tracerBuilder(tracerName).setInstrumentationVersion(version).setSchemaUrl(schemaUrl)
-                                 .build();
+                    .build();
         });
     }
 
@@ -114,7 +126,7 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
     public Mono<Meter> buildMeter(String meterName) {
         return Mono.fromSupplier(() -> {
             return meterProvider.meterBuilder(meterName)
-                                 .build();
+                    .build();
         });
     }
 
@@ -122,7 +134,7 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
     public Mono<Meter> buildMeter(String meterName, String version) {
         return Mono.fromSupplier(() -> {
             return meterProvider.meterBuilder(meterName).setInstrumentationVersion(version)
-                                 .build();
+                    .build();
         });
     }
 
@@ -130,7 +142,7 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
     public Mono<Meter> buildMeter(String meterName, String version, String schemaUrl) {
         return Mono.fromSupplier(() -> {
             return meterProvider.meterBuilder(meterName).setInstrumentationVersion(version).setSchemaUrl(schemaUrl)
-                                 .build();
+                    .build();
         });
     }
 

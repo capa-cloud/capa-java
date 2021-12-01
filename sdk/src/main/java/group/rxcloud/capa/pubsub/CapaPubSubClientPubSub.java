@@ -22,6 +22,8 @@ import group.rxcloud.capa.infrastructure.exceptions.CapaExceptions;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +46,13 @@ public class CapaPubSubClientPubSub extends AbstractCapaPubSubClient {
     public CapaPubSubClientPubSub(List<CapaPubSub> pubSubs) {
         if (pubSubs == null || pubSubs.isEmpty()) {
             this.pubSubs = new HashMap<>(2, 1);
+            this.registryNames = Collections.emptyList();
         } else {
             this.pubSubs = pubSubs.stream()
                     .collect(Collectors.toMap(
                             CapaPubSub::getPubSubName,
                             Function.identity()));
+            this.registryNames = new ArrayList<>(this.pubSubs.keySet());
         }
     }
 

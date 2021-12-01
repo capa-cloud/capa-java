@@ -81,6 +81,7 @@ public class CapaConfigStoreBuilder {
      * @return Instance of {@link CapaConfigStore} implementor
      */
     private CapaConfigStore buildCapaConfigStore() {
+        // TODO: 2021/11/30 build multi component
         // load spi capa config store impl
         return CapaClassLoader.loadComponentClassObj(
                 "configuration",

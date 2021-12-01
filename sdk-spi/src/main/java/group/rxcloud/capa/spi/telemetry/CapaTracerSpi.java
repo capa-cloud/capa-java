@@ -27,5 +27,4 @@ public abstract class CapaTracerSpi extends CapaTracer {
     public CapaTracerSpi(String tracerName, String version, String schemaUrl, Tracer tracer) {
         super(tracerName, version, schemaUrl, tracer);
     }
-
 }

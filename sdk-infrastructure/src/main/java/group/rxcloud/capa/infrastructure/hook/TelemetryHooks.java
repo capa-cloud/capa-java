@@ -22,6 +22,9 @@ import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import reactor.core.publisher.Mono;
 
+/**
+ * The Mixer telemetry hooks.
+ */
 public interface TelemetryHooks extends TelemetryRuntimes {
 
     @Override
