@@ -14,39 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.trace;
+package group.rxcloud.capa.component.telemetry.metrics;
 
-import io.opentelemetry.api.trace.SpanBuilder;
-import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.api.metrics.DoubleHistogram;
 
 /**
- * Tracer proxy.
  */
-public class CapaTracer implements Tracer {
+public abstract class CapaDoubleHistogram implements DoubleHistogram {
 
-    protected final String tracerName;
-    protected final String version;
+    protected final String meterName;
+
     protected final String schemaUrl;
-    protected final Tracer tracer;
 
-    public CapaTracer(String tracerName, String version, String schemaUrl, Tracer tracer) {
-        this.tracerName = tracerName;
-        this.version = version;
+    protected final String version;
+
+    protected final String name;
+
+    protected String description;
+
+    protected String unit;
+
+    public CapaDoubleHistogram(String meterName, String schemaUrl, String version, String name,
+                               String description,
+                               String unit) {
+        this.meterName = meterName;
         this.schemaUrl = schemaUrl;
-        this.tracer = tracer;
-    }
-
-    @Override
-    public SpanBuilder spanBuilder(String spanName) {
-        SpanBuilder builder = tracer.spanBuilder(spanName);
-        return CapaTracerWrapper.wrap(tracerName, version, schemaUrl, spanName, builder);
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public String getSchemaUrl() {
-        return schemaUrl;
+        this.version = version;
+        this.name = name;
+        this.description = description;
+        this.unit = unit;
     }
 }

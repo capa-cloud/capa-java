@@ -17,11 +17,9 @@
 package group.rxcloud.capa.component.telemetry.metrics;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
-import group.rxcloud.capa.component.telemetry.trace.CapaTraceSampler;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -31,30 +29,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CapaMetricsSamplerTest {
 
     @Test
-    public void getInstance() {
-        assertNotNull(CapaMetricsSampler.getInstance());
-        CapaMetricsSampler.getInstance().update(SamplerConfig.DEFAULT_CONFIG);
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1L, null, null));
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1.0, null, null));
-
-        CapaMetricsSampler.getInstance().update(null);
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1L, null, null));
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1.0, null, null));
-
-        SamplerConfig samplerConfig = new SamplerConfig();
-        samplerConfig.setMetricsSample(false);
-        CapaMetricsSampler.getInstance().update(samplerConfig);
-        assertFalse(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1L, null, null));
-        assertFalse(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1.0, null, null));
-
-
-        samplerConfig.setMetricsSample(true);
-        CapaMetricsSampler.getInstance().update(samplerConfig);
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1L, null, null));
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1.0, null, null));
-
-        CapaMetricsSampler.getInstance().update(SamplerConfig.DEFAULT_CONFIG);
-
-        assertNotNull(CapaTraceSampler.getInstance().getDescription());
+    public void testConfig() {
+        CapaMetricsSampler sampler = new CapaMetricsSampler(() -> SamplerConfig.DEFAULT_CONFIG);
+        assertTrue(sampler.shouldSampleMeasurement(1, null, null));
+        sampler = new CapaMetricsSampler(() -> null);
+        assertTrue(sampler.shouldSampleMeasurement(1.0, null, null));
+        SamplerConfig config = new SamplerConfig();
+        config.setMetricsEnable(false);
+        sampler = new CapaMetricsSampler(() -> config);
+        assertFalse(sampler.shouldSampleMeasurement(1, null, null));
+        config.setMetricsEnable(true);
+        assertTrue(sampler.shouldSampleMeasurement(1.0, null, null));
     }
+
 }

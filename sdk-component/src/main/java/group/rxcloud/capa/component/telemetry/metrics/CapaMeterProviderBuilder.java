@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Builder for capa metric provider.
@@ -47,7 +48,7 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
     /**
      * Sampler config.
      */
-    private SamplerConfig samplerConfig;
+    private Supplier<SamplerConfig> samplerConfig = SamplerConfig.DEFAULT_SUPPLIER;
 
     /**
      * Readers manually set.
@@ -61,11 +62,13 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
      * @param readerConfigs metrics reader configs.
      * @return metrics reader factories.
      */
-    private static List<MetricReaderFactory> bulidReaderFactories(List<MetricsReaderConfig> readerConfigs) {
+    private static List<MetricReaderFactory> bulidReaderFactories(List<MetricsReaderConfig> readerConfigs,
+                                                                  Supplier<SamplerConfig> samplerConfig) {
         List<MetricReaderFactory> factories = new ArrayList<>();
         for (MetricsReaderConfig config : readerConfigs) {
             MetricExporter exporter = SpiUtils
-                    .newInstanceWithConstructorCache(config.getExporterType(), MetricExporter.class);
+                    .newInstance(config.getExporterType(), CapaMetricsExporter.class, new Class[]{Supplier.class},
+                            new Object[]{samplerConfig}, false);
             if (exporter == null) {
                 throw new IllegalArgumentException(
                         "Metric Exporter is not configured. readerName = " + config.getName() + '.');
@@ -91,7 +94,7 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
     }
 
     @Override
-    public CapaMeterProviderBuilder setSamplerConfig(SamplerConfig samplerConfig) {
+    public CapaMeterProviderBuilder setSamplerConfig(Supplier<SamplerConfig> samplerConfig) {
         this.samplerConfig = samplerConfig;
         return this;
     }
@@ -133,26 +136,19 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
             return MeterProvider.noop();
         }
 
-        List<MetricReaderFactory> factories = bulidReaderFactories(metricsReaderConfigs);
+        List<MetricReaderFactory> factories = bulidReaderFactories(metricsReaderConfigs, samplerConfig);
 
-        initSampleConfig();
 
         SdkMeterProviderBuilder builder = SdkMeterProvider.builder()
-                                                          .setExemplarFilter(CapaMetricsSampler.getInstance()
-                                                                                               .update(samplerConfig));
+                                                          .setExemplarFilter(new CapaMetricsSampler(samplerConfig));
         factories.forEach(f -> builder.registerMetricReader(f));
-        return builder.build();
+        SdkMeterProvider provider = builder.build();
+        return new CapaMeterProvider(provider);
     }
 
     private void initMeterConfig() {
         if (meterConfigs == null) {
             meterConfigs = SpiUtils.loadConfigNullable(FILE_PATH, MeterConfig.class);
-        }
-    }
-
-    private void initSampleConfig() {
-        if (samplerConfig == null) {
-            samplerConfig = SamplerConfig.loadOrDefault();
         }
     }
 }

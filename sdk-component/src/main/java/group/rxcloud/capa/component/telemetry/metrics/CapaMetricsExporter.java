@@ -14,36 +14,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.telemetry;
+package group.rxcloud.capa.component.telemetry.metrics;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
-import group.rxcloud.capa.component.telemetry.metrics.CapaMetricsExporter;
 import io.opentelemetry.sdk.common.CompletableResultCode;
 import io.opentelemetry.sdk.metrics.data.MetricData;
+import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
 import java.util.Collection;
 import java.util.function.Supplier;
 
-public class MetricTestExporter extends CapaMetricsExporter {
+/**
+ *
+ */
+public abstract class CapaMetricsExporter implements MetricExporter {
 
-    public MetricTestExporter(
-            Supplier<SamplerConfig> samplerConfig) {
-        super(samplerConfig);
+    private Supplier<SamplerConfig> samplerConfig;
+
+    public CapaMetricsExporter(Supplier<SamplerConfig> samplerConfig) {
+        this.samplerConfig = samplerConfig;
     }
 
     @Override
-    protected CompletableResultCode doExport(Collection<MetricData> metrics) {
-        metrics.forEach(System.out::println);
-        return CompletableResultCode.ofSuccess();
+    public CompletableResultCode export(Collection<MetricData> metrics) {
+        SamplerConfig config = samplerConfig.get();
+        if (config != null && !config.isMetricsEnable()) {
+            return CompletableResultCode.ofSuccess();
+        }
+
+        return doExport(metrics);
     }
 
     @Override
-    protected CompletableResultCode doFlush() {
-        return CompletableResultCode.ofSuccess();
+    public CompletableResultCode flush() {
+        SamplerConfig config = samplerConfig.get();
+        if (config != null && !config.isMetricsEnable()) {
+            return CompletableResultCode.ofSuccess();
+        }
+
+        return doFlush();
     }
+
+    protected abstract CompletableResultCode doExport(Collection<MetricData> metrics);
+
+    protected abstract CompletableResultCode doFlush();
 
     @Override
     public CompletableResultCode shutdown() {
-        return CompletableResultCode.ofSuccess();
+        return null;
     }
 }

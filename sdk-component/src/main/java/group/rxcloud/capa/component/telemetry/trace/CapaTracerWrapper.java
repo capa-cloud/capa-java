@@ -27,13 +27,13 @@ import javax.annotation.Nullable;
 /**
  * Load capa implementation.
  */
-final class CapaWrapper {
+final class CapaTracerWrapper {
     
     static final String FILE_SUFFIX = "telemetry";
 
     static final boolean CACHE = true;
 
-    private CapaWrapper() {
+    private CapaTracerWrapper() {
     }
 
     @Nullable

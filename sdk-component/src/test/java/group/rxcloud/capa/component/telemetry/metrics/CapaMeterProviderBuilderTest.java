@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -48,8 +47,6 @@ public class CapaMeterProviderBuilderTest {
         currentGroup.enumerate(lstThreads);
 
         assertTrue(Arrays.stream(lstThreads).anyMatch(t -> t.getName().contains("my-reader")));
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1L, null, null));
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1.0, null, null));
     }
 
 
@@ -103,9 +100,6 @@ public class CapaMeterProviderBuilderTest {
 
         assertTrue(Arrays.stream(lstThreads).anyMatch(t -> t.getName().contains(readerConfigByInstance.getName())));
         assertTrue(Arrays.stream(lstThreads).anyMatch(t -> t.getName().contains(readerConfigByPath.getName())));
-
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1L, null, null));
-        assertTrue(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1.0, null, null));
     }
 
 
@@ -124,12 +118,12 @@ public class CapaMeterProviderBuilderTest {
         readerConfigByPath.setExporterType("group.rxcloud.capa.component.telemetry.metrics.TestMetricsExporter");
 
         SamplerConfig samplerConfig = new SamplerConfig();
-        samplerConfig.setMetricsSample(false);
+        samplerConfig.setMetricsEnable(false);
 
         MeterProvider meterProvider = new CapaMeterProviderBuilder()
                 .addMetricReaderConfig(readerConfigByPath)
                 .setMeterConfig(meterConfig)
-                .setSamplerConfig(samplerConfig)
+                .setSamplerConfig(() -> samplerConfig)
                 .buildMeterProvider();
 
         ThreadGroup currentGroup =
@@ -141,7 +135,5 @@ public class CapaMeterProviderBuilderTest {
         assertTrue(Arrays.stream(lstThreads).noneMatch(t -> t.getName().contains(readerConfigByInstance.getName())));
         assertTrue(Arrays.stream(lstThreads).anyMatch(t -> t.getName().contains(readerConfigByPath.getName())));
 
-        assertFalse(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1L, null, null));
-        assertFalse(CapaMetricsSampler.getInstance().shouldSampleMeasurement(1.0, null, null));
     }
 }

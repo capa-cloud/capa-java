@@ -44,6 +44,6 @@ public class CapaTracerProvider implements TracerProvider {
     @Override
     public TracerBuilder tracerBuilder(String instrumentationName) {
         TracerBuilder tracerBuilder = provider.tracerBuilder(instrumentationName);
-        return CapaWrapper.wrap(instrumentationName, tracerBuilder);
+        return CapaTracerWrapper.wrap(instrumentationName, tracerBuilder);
     }
 }
