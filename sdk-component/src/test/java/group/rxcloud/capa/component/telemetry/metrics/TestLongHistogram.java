@@ -16,43 +16,38 @@
  */
 package group.rxcloud.capa.component.telemetry.metrics;
 
-import io.opentelemetry.api.metrics.Meter;
-import io.opentelemetry.api.metrics.MeterBuilder;
+import io.opentelemetry.api.common.Attributes;
+import io.opentelemetry.api.metrics.BoundLongHistogram;
+import io.opentelemetry.context.Context;
 
 /**
- * Builder for capa meter.
+ * @author: chenyijiang
+ * @date: 2021/12/1 20:08
  */
-public class CapaMeterBuilder implements MeterBuilder {
+public class TestLongHistogram extends CapaLongHistogram{
 
-    private final MeterBuilder meterBuilder;
-
-    private final String name;
-
-    private String schemaUrl;
-
-    private String version;
-
-    public CapaMeterBuilder(String name, MeterBuilder builder) {
-        this.name = name;
-        meterBuilder = builder;
+    public TestLongHistogram(String meterName, String schemaUrl, String version, String name, String description,
+                             String unit) {
+        super(meterName, schemaUrl, version, name, description, unit);
     }
 
     @Override
-    public MeterBuilder setSchemaUrl(String schemaUrl) {
-        this.schemaUrl = schemaUrl;
-        meterBuilder.setSchemaUrl(schemaUrl);
-        return this;
+    public void record(long value) {
+
     }
 
     @Override
-    public MeterBuilder setInstrumentationVersion(String instrumentationVersion) {
-        version = instrumentationVersion;
-        meterBuilder.setInstrumentationVersion(instrumentationVersion);
-        return this;
+    public void record(long value, Attributes attributes) {
+
     }
 
     @Override
-    public Meter build() {
-        return CapaMeterWrapper.wrap(name, schemaUrl, version, meterBuilder.build());
+    public void record(long value, Attributes attributes, Context context) {
+
+    }
+
+    @Override
+    public BoundLongHistogram bind(Attributes attributes) {
+        return null;
     }
 }
