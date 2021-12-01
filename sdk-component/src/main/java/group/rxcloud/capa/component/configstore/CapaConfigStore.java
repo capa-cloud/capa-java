@@ -80,41 +80,41 @@ public abstract class CapaConfigStore implements AutoCloseable {
     /**
      * GetSpecificKeysValue get specific key value.
      *
-     * @param getRequest
-     * @param type
-     * @param <T>
-     * @return
+     * @param getRequest request
+     * @param type       response type
+     * @param <T>        type
+     * @return mono of response
      */
     public abstract <T> Mono<List<ConfigurationItem<T>>> get(GetRequest getRequest, TypeRef<T> type);
 
     /**
      * Subscribe the configurations updates.
      *
-     * @param subscribeReq
-     * @param type
-     * @param <T>
-     * @return
+     * @param subscribeReq request
+     * @param type         response type
+     * @param <T>          type
+     * @return flux of subscribe
      */
     public abstract <T> Flux<SubscribeResp<T>> subscribe(SubscribeReq subscribeReq, TypeRef<T> type);
 
     /**
      * StopSubscribe stop subs
      *
-     * @return
+     * @return result
      */
     public abstract String stopSubscribe();
 
     /**
      * GetDefaultGroup returns default group.This method will be invoked if a request doesn't specify the group field
      *
-     * @return
+     * @return default
      */
     public abstract String getDefaultGroup();
 
     /**
      * GetDefaultLabel returns default label
      *
-     * @return
+     * @return default
      */
     public abstract String getDefaultLabel();
 }

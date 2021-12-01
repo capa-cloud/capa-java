@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.log.agent;
+package group.rxcloud.capa.component.log.agent;
 
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.message.Message;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,10 +32,8 @@ class CapaLogbackAppenderAgentTest {
     @Test
     void testAppend() {
         CapaLogbackAppenderAgent.CapaLogbackAppender capaLogbackAppender = CapaLogbackAppenderAgent.buildCapaLogbackAppender();
-        LogEvent logEvent = Mockito.mock(LogEvent.class);
-        Message message = Mockito.mock(Message.class);
-        Mockito.when(logEvent.getMessage()).thenReturn(Mockito.mock(Message.class));
-        Mockito.when(message.getFormattedMessage()).thenReturn("TEST");
+        ILoggingEvent logEvent = Mockito.mock(ILoggingEvent.class);
+        Mockito.when(logEvent.getFormattedMessage()).thenReturn("TEST");
         capaLogbackAppender.appendLog(logEvent);
     }
 }

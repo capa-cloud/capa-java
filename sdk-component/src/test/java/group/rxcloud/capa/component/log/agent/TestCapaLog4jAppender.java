@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.log.agent;
+package group.rxcloud.capa.component.log.agent;
 
 import org.apache.logging.log4j.core.LogEvent;
 

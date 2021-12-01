@@ -108,7 +108,9 @@ public class CapaHttpBuilder {
         return CapaClassLoader.loadComponentClassObj(
                 "rpc",
                 CapaHttp.class,
-                new Class[]{OkHttpClient.class, CapaObjectSerializer.class},
-                new Object[]{OK_HTTP_CLIENT.get(), this.objectSerializer});
+                new Class[]{OkHttpClient.class,
+                        CapaObjectSerializer.class},
+                new Object[]{OK_HTTP_CLIENT.get(),
+                        this.objectSerializer});
     }
 }

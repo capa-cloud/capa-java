@@ -14,21 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.telemetry.log.agent;
-
-import org.apache.logging.log4j.core.LogEvent;
-
 /**
- * The capa logback appender used in tests only.
+ * Hooks design:
+ * TODO
  */
-public class TestCapaLogbackAppender implements CapaLogbackAppenderAgent.CapaLogbackAppender<LogEvent> {
-
-    public TestCapaLogbackAppender() {
-    }
-
-    @Override
-    public void appendLog(LogEvent event) {
-        System.out.println("test logback log and content is " + event.getMessage().getFormattedMessage());
-    }
-}
-
+package group.rxcloud.capa.infrastructure.hook;

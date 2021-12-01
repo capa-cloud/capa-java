@@ -19,6 +19,8 @@ package group.rxcloud.capa.rpc;
 import group.rxcloud.capa.component.http.CapaHttp;
 import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
+import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
+import group.rxcloud.capa.infrastructure.hook.TelemetryHooks;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.rpc.domain.InvokeMethodRequestBuilder;
@@ -193,7 +195,7 @@ public class CapaRpcClientBuilderTest {
     @Test
     public void testClose_FailWhenThrowException() {
 
-        capaRpcClientHttp = new CapaRpcClientHttp(new ExceptionCapaHttp(okHttpClient, defaultObjectSerializer));
+        capaRpcClientHttp = new CapaRpcClientHttp(new ExceptionCapaHttp(okHttpClient, defaultObjectSerializer, null, null));
 
         Assertions.assertThrows(CapaException.class, () -> {
             capaRpcClientHttp.close();
@@ -205,7 +207,8 @@ public class CapaRpcClientBuilderTest {
      */
     private class ExceptionCapaHttp extends CapaHttp {
 
-        public ExceptionCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer) {
+        public ExceptionCapaHttp(OkHttpClient httpClient, CapaObjectSerializer objectSerializer,
+                                 TelemetryHooks telemetryHooks, ConfigurationHooks configurationHooks) {
             super(httpClient, objectSerializer);
         }
 
