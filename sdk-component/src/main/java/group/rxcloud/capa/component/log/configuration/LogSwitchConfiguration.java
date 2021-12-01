@@ -83,7 +83,7 @@ public class LogSwitchConfiguration {
     /**
      * Get the log switch config's values.
      *
-     * @return
+     * @return the log switch config's values.
      */
     public static Map<String, Boolean> getLogsSwitchConfig() {
         return logsSwitchConfig;

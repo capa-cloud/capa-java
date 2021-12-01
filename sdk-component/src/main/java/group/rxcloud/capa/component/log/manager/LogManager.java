@@ -65,8 +65,15 @@ public class LogManager {
 
     /**
      * Whether logs can be output.
+     * If there is no corresponding configuration information or the switch of dynamic configuration log level is set to false,
+     * then only logs of info level and above will be output.
+     * <p>
+     * If the value of the dynamic configuration log level switch is true, only the log with the log level configured as true will be output.
+     * <p>
+     * If the log level is not in the {@link CapaLogLevel#values()}, the log is not output.
+     *
      * @param capaLogLevel
-     * @return
+     * @return If the log can be output, it is true, otherwise it is false.
      */
     public static Boolean whetherLogsCanBeOutput(CapaLogLevel capaLogLevel) {
         Map<String, Boolean> logsSwitchConfigs = LogSwitchConfiguration.getLogsSwitchConfig();
