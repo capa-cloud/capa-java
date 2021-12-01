@@ -35,5 +35,6 @@ public class DemoLog {
         }catch (Exception e){
             System.out.println();
         }
+
     }
 }
