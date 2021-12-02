@@ -17,18 +17,8 @@
   -->
 <configuration>
     <!--Log-->
-    <appender name="Log" class="group.rxcloud.capa.component.log.agent.CapaLogbackAppenderAgent">
+    <appender name="Log" class="group.rxcloud.capa.component.log.CapaLogbackAppenderAgent">
     </appender>
-
-    <logger name="com.ctrip.ibu.market.e2c" level="INFO" additivity="false">
-        <!--        <appender-ref ref="STDOUT"/>-->
-        <appender-ref ref="Log"/>
-    </logger>
-
-    <logger name="com.ctrip.ibu.telescope.mock.support" level="INFO" additivity="false">
-        <!--        <appender-ref ref="STDOUT"/>-->
-        <appender-ref ref="Log"/>
-    </logger>
 
     <root level="INFO">
         <appender-ref ref="Log"/>

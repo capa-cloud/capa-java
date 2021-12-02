@@ -32,6 +32,7 @@
 
     <properties>
         <log4j.version>2.14.1</log4j.version>
+        <logback.version>1.1.7</logback.version>
     </properties>
 
     <dependencies>
@@ -54,23 +55,25 @@
         </dependency>
 
         <!-- log4j2 and slf4j -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
+        <!-- logback -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4j.version}</version>
-            <scope>test</scope>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <!-- log4j-slf4j-impl and logback-classic cannot exist at the same time. -->
+            <optional>true</optional>
+            <version>${logback.version}</version>
         </dependency>
     </dependencies>
 

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.agent;
+package group.rxcloud.capa.component.log;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
@@ -27,7 +27,7 @@ public class TestCapaLogbackAppender implements CapaLogbackAppenderAgent.CapaLog
     }
 
     @Override
-    public void appendLog(ILoggingEvent event) {
+    public void append(ILoggingEvent event) {
         System.out.println("test logback log and content is " + event.getFormattedMessage());
     }
 }

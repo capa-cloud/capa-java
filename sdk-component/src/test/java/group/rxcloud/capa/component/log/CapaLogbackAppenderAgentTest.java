@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.agent;
+package group.rxcloud.capa.component.log;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +34,6 @@ class CapaLogbackAppenderAgentTest {
         CapaLogbackAppenderAgent.CapaLogbackAppender capaLogbackAppender = CapaLogbackAppenderAgent.buildCapaLogbackAppender();
         ILoggingEvent logEvent = Mockito.mock(ILoggingEvent.class);
         Mockito.when(logEvent.getFormattedMessage()).thenReturn("TEST");
-        capaLogbackAppender.appendLog(logEvent);
+        capaLogbackAppender.append(logEvent);
     }
 }

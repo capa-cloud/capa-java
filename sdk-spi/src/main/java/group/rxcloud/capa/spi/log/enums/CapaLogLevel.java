@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.enums;
+package group.rxcloud.capa.spi.log.enums;
 
 import java.util.Arrays;
 import java.util.Optional;

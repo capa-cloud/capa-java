@@ -16,10 +16,10 @@
  */
 package group.rxcloud.capa.spi.demo.log;
 
-import group.rxcloud.capa.component.log.agent.CapaLog4jAppenderAgent;
+import group.rxcloud.capa.spi.log.CapaLog4jAppenderSpi;
 import org.apache.logging.log4j.core.LogEvent;
 
-public class DemoLog4jAppender implements CapaLog4jAppenderAgent.CapaLog4jAppender {
+public class DemoLog4jAppender extends CapaLog4jAppenderSpi {
 
     @Override
     public void appendLog(LogEvent event) {
