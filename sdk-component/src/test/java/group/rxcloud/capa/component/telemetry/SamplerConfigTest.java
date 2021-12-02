@@ -14,29 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.telemetry;
+package group.rxcloud.capa.component.telemetry;
 
-import io.opentelemetry.api.GlobalOpenTelemetry;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * @author: chenyijiang
- * @date: 2021/11/26 14:12
+ * @date: 2021/12/2 12:33
  */
-public class CapaTelemetryClientGlobalTest {
+public class SamplerConfigTest {
 
     @Test
-    public void getOrCreate() {
-        CapaTelemetryClient client = new CapaTelemetryClientBuilder().build();
-        assertTrue(client instanceof CapaTelemetryClientGlobal);
-        assertNotNull(client.getContextPropagators());
-        assertNotNull(((CapaTelemetryClientGlobal) client).getPropagators());
-        assertNotNull(((CapaTelemetryClientGlobal) client).getMeterProvider());
-        assertNotNull(((CapaTelemetryClientGlobal) client).getTracerProvider());
-        assertNotNull(GlobalOpenTelemetry.get());
+    public void isMetricsEnable() {
+        assertFalse(SamplerConfig.DEFAULT_SUPPLIER.get().isMetricsEnable());
+    }
+
+    @Test
+    public void isTraceEnable() {
+        assertFalse(SamplerConfig.DEFAULT_SUPPLIER.get().isTraceEnable());
     }
 }

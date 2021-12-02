@@ -16,7 +16,6 @@
  */
 package group.rxcloud.capa.telemetry;
 
-import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.metrics.MeterProvider;
@@ -31,29 +30,11 @@ import java.util.List;
 public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelemetry {
 
     // noop as default.
-    private static volatile CapaTelemetryClientGlobal instance;
-
     private TracerProvider tracerProvider = TracerProvider.noop();
 
     private MeterProvider meterProvider = MeterProvider.noop();
 
     private ContextPropagators contextPropagators = ContextPropagators.noop();
-
-    public static CapaTelemetryClientGlobal getOrCreate() {
-        if (instance == null) {
-            synchronized (CapaTelemetryClientGlobal.class) {
-                if (instance == null) {
-                    instance = (CapaTelemetryClientGlobal) new CapaTelemetryClientBuilder().build();
-                    GlobalOpenTelemetry.set(instance);
-                }
-            }
-        }
-        return instance;
-    }
-
-    static void set(CapaTelemetryClientGlobal capaTelemetryClient) {
-        instance = capaTelemetryClient;
-    }
 
     protected List<String> registryNames;
 
