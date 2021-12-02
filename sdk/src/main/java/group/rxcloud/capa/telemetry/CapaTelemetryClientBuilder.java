@@ -81,7 +81,6 @@ public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings
         return this;
     }
 
-
     @Override
     public CapaTelemetryClientBuilder setMeterConfig(MeterConfig config) {
         meterProviderBuilder.setMeterConfig(config);
@@ -115,5 +114,4 @@ public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings
 
         return client;
     }
-
 }

@@ -23,6 +23,7 @@ import java.util.Optional;
  * Capa log level.
  */
 public enum CapaLogLevel {
+
     /**
      * Standard order of log priorities:ALL,TRACE,DEBUG,INFO,WARN,ERROR,FATAL,OFF
      */
@@ -45,9 +46,6 @@ public enum CapaLogLevel {
 
     /**
      * Convert logLevelArg to {@link CapaLogLevel}
-     *
-     * @param logLevelArg
-     * @return
      */
     public static Optional<CapaLogLevel> toCapaLogLevel(String logLevelArg) {
         return Arrays.stream(CapaLogLevel.values())
@@ -57,8 +55,6 @@ public enum CapaLogLevel {
 
     /**
      * Get level.
-     *
-     * @return
      */
     public int getLevel() {
         return level;

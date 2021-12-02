@@ -16,8 +16,8 @@
  */
 package group.rxcloud.capa.component.telemetry;
 
+import group.rxcloud.capa.component.CapaTelemetryProperties;
 import group.rxcloud.capa.component.telemetry.metrics.CapaMeterProviderBuilder;
-import group.rxcloud.capa.infrastructure.CapaProperties;
 import group.rxcloud.capa.infrastructure.hook.MergedPropertiesConfig;
 import group.rxcloud.capa.infrastructure.hook.Mixer;
 import org.slf4j.Logger;
@@ -45,46 +45,40 @@ public class SamplerConfig implements Serializable {
 
     private static final transient Logger log = LoggerFactory.getLogger(CapaMeterProviderBuilder.class);
 
-    public static transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> {
-        return CONFIG;
-    };
+    public static transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> CONFIG;
 
     static {
         Mixer.configurationHooksNullable().ifPresent(hooks -> {
-
             String fileName = "capa-component-telemetry-sample.properties";
-
-            String suffix = "telemetry-common";
-
             try {
-                MergedPropertiesConfig config = new MergedPropertiesConfig(fileName, hooks
-                        .defaultConfigurationAppId(),
-                        CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(suffix).getProperty("appId"));
+                // TODO: 2021/12/3 Move this to SPI module.
+                // TODO: 2021/12/3 And use Configuration extension api to get merged file.
+                MergedPropertiesConfig config = new MergedPropertiesConfig(
+                        fileName,
+                        hooks.defaultConfigurationAppId(),
+                        CapaTelemetryProperties.Settings.getCenterConfigAppId());
                 String metricKey = "metricsEnable";
                 String traceKey = "traceEnable";
                 SamplerConfig dynamicConfig = new SamplerConfig() {
                     @Override
                     public Boolean isMetricsEnable() {
                         return !config.containsKey(metricKey) || Boolean.TRUE.toString()
-                                                                             .equalsIgnoreCase(config.get(metricKey));
+                                .equalsIgnoreCase(config.get(metricKey));
                     }
 
                     @Override
                     public Boolean isTraceEnable() {
                         return !config.containsKey(traceKey) || Boolean.TRUE.toString()
-                                                                            .equalsIgnoreCase(config.get(traceKey));
+                                .equalsIgnoreCase(config.get(traceKey));
                     }
                 };
 
-                DEFAULT_SUPPLIER = () -> {
-                    return dynamicConfig;
-                };
+                DEFAULT_SUPPLIER = () -> dynamicConfig;
             } catch (Throwable throwable) {
                 log.warn("Fail to load global telemetry config. Dynamic global config is disabled for capa telemetry.",
                         throwable);
             }
         });
-
     }
 
     private Boolean metricsEnable;

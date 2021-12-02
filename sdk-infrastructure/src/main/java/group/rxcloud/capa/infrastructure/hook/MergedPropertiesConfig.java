@@ -28,7 +28,12 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 
 /**
  * Config provider to merge multiple properties file which takes the input order as their priority.
+ * <p>
+ *
+ * TODO: 2021/12/3 This should not in infrastructure layer.
+ * TODO: 2021/12/3 Use Configuration extension api to get merged file.
  */
+@Deprecated
 public class MergedPropertiesConfig {
 
     private final String fileName;
@@ -58,7 +63,7 @@ public class MergedPropertiesConfig {
         return merged.get(key);
     }
 
-    public Map<String, String> getMerged(){
+    public Map<String, String> getMerged() {
         return merged;
     }
 
@@ -74,15 +79,15 @@ public class MergedPropertiesConfig {
                 "",
                 TypeRef.get(Properties.class));
 
-
+        // FIXME: 2021/12/3 random callback?
         configFlux.subscribe(resp -> {
-            if (!resp.getItems().isEmpty()) {
-                properties.set(index, resp.getItems().get(0).getContent());
-            } else {
-                properties.set(index, null);
-            }
-
             synchronized (lock) {
+                if (!resp.getItems().isEmpty()) {
+                    properties.set(index, resp.getItems().get(0).getContent());
+                } else {
+                    properties.set(index, null);
+                }
+
                 Map<String, String> merged = new HashMap<>();
                 for (int i = 0; i < properties.length(); i++) {
                     Properties item = properties.get(i);

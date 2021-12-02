@@ -70,7 +70,6 @@ public class LogManager {
      * <p>
      * If the log level is not in the {@link CapaLogLevel#values()}, the log is not output.
      *
-     * @param capaLogLevel
      * @return If the log can be output, it is true, otherwise it is false.
      */
     public static Boolean whetherLogsCanOutput(CapaLogLevel capaLogLevel) {
@@ -118,7 +117,6 @@ public class LogManager {
     /**
      * Logs of the {@link CapaLogLevel#INFO} level or higher are normally output, but logs of the {@link CapaLogLevel#INFO} level lower are not output.
      *
-     * @param capaLogLevel
      * @return whether the capaLogLevel's priority is equal or more then {@link CapaLogLevel#INFO}.
      */
     private static Boolean isLogsLevelClosedWithDefault(CapaLogLevel capaLogLevel) {

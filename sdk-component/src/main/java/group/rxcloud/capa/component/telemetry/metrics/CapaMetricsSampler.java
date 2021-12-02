@@ -56,5 +56,4 @@ public class CapaMetricsSampler implements ExemplarFilter {
 
         return ExemplarFilter.alwaysSample();
     }
-
 }

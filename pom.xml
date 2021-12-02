@@ -23,7 +23,7 @@
     <groupId>group.rxcloud</groupId>
     <artifactId>capa-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.8-alpha-2</version>
+    <version>1.0.8.RELEASE</version>
     <name>capa-sdk-parent</name>
     <description>SDK for Capa.</description>
     <url>https://github.com/reactivegroup</url>
@@ -81,14 +81,17 @@
         <java.version>8</java.version>
         <file.encoding>UTF-8</file.encoding>
         <maven.version>3.8.1</maven.version>
-        <cloud-runtimes.version>1.0.9.RELEASE</cloud-runtimes.version>
+        <cloud-runtimes.version>1.0.10.RELEASE</cloud-runtimes.version>
         <reactor-core.version>3.3.22.RELEASE</reactor-core.version>
         <slf4j.version>1.7.21</slf4j.version>
+        <grpc.version>1.39.0</grpc.version>
+        <jackson.version>2.12.4</jackson.version>
         <open.telemetry.version>1.9.0</open.telemetry.version>
         <open.telemetry.version.alpha>1.9.0-alpha</open.telemetry.version.alpha>
-
         <junit.version>5.3.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
+        <powermock.version>2.0.2</powermock.version>
+
         <checkstyle.version>3.1.2</checkstyle.version>
         <apache.rat.version>0.13</apache.rat.version>
         <cobertura.maven.version>2.7</cobertura.maven.version>
@@ -141,7 +144,6 @@
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor-core.version}</version>
-                <optional>true</optional>
             </dependency>
 
             <!-- slf4j -->
@@ -149,6 +151,20 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- serialize -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- grpc -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
             </dependency>
 
             <!-- open-telemetry-api -->
@@ -174,6 +190,12 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito-core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-reflect</artifactId>
+                <version>${powermock.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -352,7 +374,7 @@
                         <format>html</format>
                         <format>xml</format>
                     </formats>
-                    <check />
+                    <check/>
                 </configuration>
             </plugin>
             <plugin>

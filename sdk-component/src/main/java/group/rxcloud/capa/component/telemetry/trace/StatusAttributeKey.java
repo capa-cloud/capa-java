@@ -36,7 +36,6 @@ public final class StatusAttributeKey implements AttributeKey<String> {
         this.key = key;
     }
 
-
     @Override
     public String getKey() {
         return key.getKey();

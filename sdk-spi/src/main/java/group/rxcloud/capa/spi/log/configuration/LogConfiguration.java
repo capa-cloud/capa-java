@@ -16,14 +16,13 @@
  */
 package group.rxcloud.capa.spi.log.configuration;
 
-import group.rxcloud.capa.infrastructure.CapaProperties;
+import group.rxcloud.capa.component.CapaLogProperties;
 import group.rxcloud.capa.infrastructure.hook.MergedPropertiesConfig;
 import group.rxcloud.capa.infrastructure.hook.Mixer;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.api.metrics.Meter;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
@@ -31,22 +30,24 @@ import java.util.Optional;
  * Log switch configuration
  */
 public class LogConfiguration {
+
     /**
      * Log switch config file name.
      */
-    private static final String LOG_CONFIGURATION_COMMON_FILE_NAME = "log-configuration.properties";
+    private static final String LOG_CONFIGURATION_COMMON_FILE_NAME = "capa-component-log-configuration.properties";
     private static MergedPropertiesConfig mergedPropertiesConfig;
 
     static {
         Mixer.configurationHooksNullable().ifPresent(hooks -> {
-            String suffix = "log-common";
+            // TODO: 2021/12/3 Use Configuration extension api to get merged file.
             try {
-                mergedPropertiesConfig = new MergedPropertiesConfig(LOG_CONFIGURATION_COMMON_FILE_NAME,
+                mergedPropertiesConfig = new MergedPropertiesConfig(
+                        LOG_CONFIGURATION_COMMON_FILE_NAME,
                         hooks.defaultConfigurationAppId(),
-                        CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(suffix).getProperty("appId"));
+                        CapaLogProperties.Settings.getCenterConfigAppId());
             } catch (Throwable throwable) {
                 Mixer.telemetryHooksNullable().ifPresent(telemetryHooks -> {
-                    Meter meter = telemetryHooks.buildMeter("CloudWatchLogs").block();
+                    Meter meter = telemetryHooks.buildMeter("LogsConfiguration").block();
                     LongCounter longCounter = meter.counterBuilder("LogsError").build();
                     Optional<LongCounter> longCounterOptional = Optional.ofNullable(longCounter);
                     longCounterOptional.ifPresent(counter -> {
@@ -60,8 +61,9 @@ public class LogConfiguration {
 
     public static boolean containsKey(String key) {
         try {
-            return mergedPropertiesConfig != null && mergedPropertiesConfig.containsKey(key);
-        } finally {
+            return mergedPropertiesConfig != null
+                    && mergedPropertiesConfig.containsKey(key);
+        } catch (Exception e) {
             return false;
         }
     }
@@ -69,10 +71,10 @@ public class LogConfiguration {
     public static String get(String key) {
         try {
             return mergedPropertiesConfig == null
-                    ? StringUtils.EMPTY
+                    ? ""
                     : mergedPropertiesConfig.get(key);
-        } finally {
-            return StringUtils.EMPTY;
+        } catch (Exception e) {
+            return "";
         }
     }
 }

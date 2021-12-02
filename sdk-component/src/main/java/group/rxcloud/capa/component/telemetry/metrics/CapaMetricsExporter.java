@@ -58,5 +58,4 @@ public abstract class CapaMetricsExporter implements MetricExporter {
     protected abstract CompletableResultCode doExport(Collection<MetricData> metrics);
 
     protected abstract CompletableResultCode doFlush();
-
 }

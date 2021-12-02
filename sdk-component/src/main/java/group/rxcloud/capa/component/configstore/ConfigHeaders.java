@@ -14,4 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa;
+package group.rxcloud.capa.component.configstore;
+
+/**
+ * Common headers for config store.
+ */
+public class ConfigHeaders {
+
+    public static final String CAPA_CONFIG_EXTENSION = "capa-config-extension";
+
+    /**
+     * Config extension mode.
+     */
+    public enum Extension {
+
+        /**
+         * Multi appId will be merge random.
+         */
+        MERGE("0"),
+        /**
+         * The first appId is child config file,
+         * and will override the other appId.
+         */
+        EXTEND("1"),
+        ;
+
+        private final String mode;
+
+        Extension(String mode) {
+            this.mode = mode;
+        }
+
+        public String getMode() {
+            return mode;
+        }
+    }
+}

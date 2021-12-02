@@ -23,7 +23,7 @@
     <parent>
         <artifactId>capa-parent</artifactId>
         <groupId>group.rxcloud</groupId>
-        <version>1.0.8-alpha-2</version>
+        <version>1.0.8.RELEASE</version>
     </parent>
 
     <artifactId>capa-sdk-spi</artifactId>
@@ -40,18 +40,6 @@
         <dependency>
             <groupId>group.rxcloud</groupId>
             <artifactId>capa-sdk</artifactId>
-        </dependency>
-
-        <!-- unit test -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!-- log4j2 and slf4j -->
@@ -71,9 +59,21 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
             <!-- log4j-slf4j-impl and logback-classic cannot exist at the same time. -->
             <optional>true</optional>
-            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- unit test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
