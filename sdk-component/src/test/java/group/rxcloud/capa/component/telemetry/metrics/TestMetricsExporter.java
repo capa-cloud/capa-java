@@ -16,26 +16,32 @@
  */
 package group.rxcloud.capa.component.telemetry.metrics;
 
+import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.sdk.common.CompletableResultCode;
 import io.opentelemetry.sdk.metrics.data.MetricData;
-import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
 import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * @author: chenyijiang
  * @date: 2021/11/25 17:04
  */
-public class TestMetricsExporter implements MetricExporter {
+public class TestMetricsExporter extends CapaMetricsExporter {
+
+    public TestMetricsExporter(
+            Supplier<SamplerConfig> samplerConfig) {
+        super(samplerConfig);
+    }
 
     @Override
-    public CompletableResultCode export(Collection<MetricData> metrics) {
+    public CompletableResultCode doExport(Collection<MetricData> metrics) {
         metrics.forEach(System.out::println);
         return CompletableResultCode.ofSuccess();
     }
 
     @Override
-    public CompletableResultCode flush() {
+    public CompletableResultCode doFlush() {
         return CompletableResultCode.ofSuccess();
     }
 

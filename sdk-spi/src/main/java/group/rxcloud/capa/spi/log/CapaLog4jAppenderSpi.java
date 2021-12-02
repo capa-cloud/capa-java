@@ -14,17 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.agent;
+package group.rxcloud.capa.spi.log;
 
+import group.rxcloud.capa.component.log.CapaLog4jAppenderAgent;
+import group.rxcloud.capa.spi.log.enums.CapaLogLevel;
+import group.rxcloud.capa.spi.log.manager.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
 
-/**
- * The capa log4j appender used in tests only.
- */
-public class TestCapaLog4jAppender implements CapaLog4jAppenderAgent.CapaLog4jAppender {
+import java.util.Optional;
+
+public abstract class CapaLog4jAppenderSpi implements CapaLog4jAppenderAgent.CapaLog4jAppender {
 
     @Override
-    public void appendLog(LogEvent event) {
-        System.out.println("test log log4j and content is " + event.getMessage().getFormattedMessage());
+    public void append(LogEvent event) {
+        if (event != null && event.getLevel()!= null) {
+            Optional<CapaLogLevel> capaLogLevel = CapaLogLevel.toCapaLogLevel(event.getLevel().name());
+            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanOutput(capaLogLevel.get())) {
+                this.appendLog(event);
+            }
+        }
     }
+
+    protected abstract void appendLog(LogEvent event);
 }

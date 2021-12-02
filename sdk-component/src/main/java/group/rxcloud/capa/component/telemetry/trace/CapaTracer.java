@@ -39,7 +39,7 @@ public class CapaTracer implements Tracer {
     @Override
     public SpanBuilder spanBuilder(String spanName) {
         SpanBuilder builder = tracer.spanBuilder(spanName);
-        return CapaWrapper.wrap(tracerName, version, schemaUrl, spanName, builder);
+        return CapaTracerWrapper.wrap(tracerName, version, schemaUrl, spanName, builder);
     }
 
     public String getVersion() {

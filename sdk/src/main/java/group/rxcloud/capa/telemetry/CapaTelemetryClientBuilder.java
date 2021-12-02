@@ -32,6 +32,8 @@ import io.opentelemetry.context.propagation.TextMapPropagator;
 import io.opentelemetry.sdk.trace.IdGenerator;
 import io.opentelemetry.sdk.trace.SpanProcessor;
 
+import java.util.function.Supplier;
+
 /**
  * A builder for the {@link CapaTelemetryClient}
  */
@@ -79,7 +81,6 @@ public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings
         return this;
     }
 
-
     @Override
     public CapaTelemetryClientBuilder setMeterConfig(MeterConfig config) {
         meterProviderBuilder.setMeterConfig(config);
@@ -93,7 +94,7 @@ public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings
     }
 
     @Override
-    public CapaTelemetryClientBuilder setSamplerConfig(SamplerConfig samplerConfig) {
+    public CapaTelemetryClientBuilder setSamplerConfig(Supplier<SamplerConfig> samplerConfig) {
         meterProviderBuilder.setSamplerConfig(samplerConfig);
         tracerProviderBuilder.setSamplerConfig(samplerConfig);
         return this;
@@ -113,5 +114,4 @@ public class CapaTelemetryClientBuilder implements CapaContextPropagatorSettings
 
         return client;
     }
-
 }

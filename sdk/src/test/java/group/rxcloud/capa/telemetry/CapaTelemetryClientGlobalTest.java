@@ -31,13 +31,12 @@ public class CapaTelemetryClientGlobalTest {
 
     @Test
     public void getOrCreate() {
-        CapaTelemetryClient client = CapaTelemetryClientGlobal.getOrCreate();
+        CapaTelemetryClient client = new CapaTelemetryClientBuilder().build();
         assertTrue(client instanceof CapaTelemetryClientGlobal);
         assertNotNull(client.getContextPropagators());
         assertNotNull(((CapaTelemetryClientGlobal) client).getPropagators());
         assertNotNull(((CapaTelemetryClientGlobal) client).getMeterProvider());
         assertNotNull(((CapaTelemetryClientGlobal) client).getTracerProvider());
         assertNotNull(GlobalOpenTelemetry.get());
-        assertEquals(client, CapaTelemetryClientGlobal.getOrCreate());
     }
 }

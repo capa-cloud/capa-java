@@ -16,7 +16,6 @@
  */
 package group.rxcloud.capa.telemetry;
 
-import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.metrics.MeterProvider;
@@ -31,29 +30,11 @@ import java.util.List;
 public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelemetry {
 
     // noop as default.
-    private static volatile CapaTelemetryClientGlobal instance;
-
     private TracerProvider tracerProvider = TracerProvider.noop();
 
     private MeterProvider meterProvider = MeterProvider.noop();
 
     private ContextPropagators contextPropagators = ContextPropagators.noop();
-
-    public static CapaTelemetryClientGlobal getOrCreate() {
-        if (instance == null) {
-            synchronized (CapaTelemetryClientGlobal.class) {
-                if (instance == null) {
-                    instance = (CapaTelemetryClientGlobal) new CapaTelemetryClientBuilder().build();
-                    GlobalOpenTelemetry.set(instance);
-                }
-            }
-        }
-        return instance;
-    }
-
-    static void set(CapaTelemetryClientGlobal capaTelemetryClient) {
-        instance = capaTelemetryClient;
-    }
 
     protected List<String> registryNames;
 
@@ -91,16 +72,14 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
 
     @Override
     public Mono<Tracer> buildTracer(String tracerName) {
-        return Mono.fromSupplier(() -> {
-            return tracerProvider.tracerBuilder(tracerName).build();
-        });
+        return Mono.fromSupplier(() ->
+                tracerProvider.tracerBuilder(tracerName)
+                        .build());
     }
 
     @Override
     public Mono<ContextPropagators> getContextPropagators() {
-        return Mono.fromSupplier(() -> {
-            return contextPropagators;
-        });
+        return Mono.fromSupplier(() -> contextPropagators);
     }
 
     void setContextPropagators(ContextPropagators contextPropagators) {
@@ -109,41 +88,43 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
 
     @Override
     public Mono<Tracer> buildTracer(String tracerName, String version) {
-        return Mono.fromSupplier(() -> {
-            return tracerProvider.tracerBuilder(tracerName).setInstrumentationVersion(version).build();
-        });
+        return Mono.fromSupplier(() ->
+                tracerProvider.tracerBuilder(tracerName)
+                        .setInstrumentationVersion(version)
+                        .build());
     }
 
     @Override
     public Mono<Tracer> buildTracer(String tracerName, String version, String schemaUrl) {
-        return Mono.fromSupplier(() -> {
-            return tracerProvider.tracerBuilder(tracerName).setInstrumentationVersion(version).setSchemaUrl(schemaUrl)
-                    .build();
-        });
+        return Mono.fromSupplier(() ->
+                tracerProvider.tracerBuilder(tracerName)
+                        .setInstrumentationVersion(version)
+                        .setSchemaUrl(schemaUrl)
+                        .build());
     }
 
     @Override
     public Mono<Meter> buildMeter(String meterName) {
-        return Mono.fromSupplier(() -> {
-            return meterProvider.meterBuilder(meterName)
-                    .build();
-        });
+        return Mono.fromSupplier(() ->
+                meterProvider.meterBuilder(meterName)
+                        .build());
     }
 
     @Override
     public Mono<Meter> buildMeter(String meterName, String version) {
-        return Mono.fromSupplier(() -> {
-            return meterProvider.meterBuilder(meterName).setInstrumentationVersion(version)
-                    .build();
-        });
+        return Mono.fromSupplier(() ->
+                meterProvider.meterBuilder(meterName)
+                        .setInstrumentationVersion(version)
+                        .build());
     }
 
     @Override
     public Mono<Meter> buildMeter(String meterName, String version, String schemaUrl) {
-        return Mono.fromSupplier(() -> {
-            return meterProvider.meterBuilder(meterName).setInstrumentationVersion(version).setSchemaUrl(schemaUrl)
-                    .build();
-        });
+        return Mono.fromSupplier(() ->
+                meterProvider.meterBuilder(meterName)
+                        .setInstrumentationVersion(version)
+                        .setSchemaUrl(schemaUrl)
+                        .build());
     }
 
     @Override

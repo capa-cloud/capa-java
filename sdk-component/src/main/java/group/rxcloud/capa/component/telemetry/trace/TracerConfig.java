@@ -77,5 +77,4 @@ public class TracerConfig implements Serializable {
     public void setProcessors(List<String> processors) {
         this.processors = processors;
     }
-
 }

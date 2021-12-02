@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.agent;
+package group.rxcloud.capa.component.log;
 
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
 import org.apache.logging.log4j.core.Appender;
@@ -63,7 +63,7 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
                                   Filter filter,
                                   Layout<? extends Serializable> layout,
                                   boolean ignoreExceptions) {
-        super(name, filter, layout, ignoreExceptions);
+        super(name, filter, layout, ignoreExceptions, null);
     }
 
     /**
@@ -97,7 +97,7 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
-        logAppender.appendLog(event);
+        logAppender.append(event);
     }
 
     /**
@@ -110,6 +110,6 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
          *
          * @param event The log event.
          */
-        void appendLog(LogEvent event);
+        void append(LogEvent event);
     }
 }

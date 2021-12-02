@@ -16,66 +16,88 @@
  */
 package group.rxcloud.capa.component.telemetry;
 
-import group.rxcloud.capa.infrastructure.utils.SpiUtils;
+import group.rxcloud.capa.component.CapaTelemetryProperties;
+import group.rxcloud.capa.component.telemetry.metrics.CapaMeterProviderBuilder;
+import group.rxcloud.capa.infrastructure.hook.MergedPropertiesConfig;
+import group.rxcloud.capa.infrastructure.hook.Mixer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * Sampler config.
  */
 public class SamplerConfig implements Serializable {
 
-    public static final String FILE_PATH = "/capa-sample.properties";
-
     /**
      * Sample all data as default.
      */
-    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig();
+    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig() {{
+        setTraceEnable(true);
+        setMetricsEnable(true);
+    }};
+
+    public static final transient SamplerConfig CONFIG = new SamplerConfig();
 
     private static final long serialVersionUID = -2113523925814197551L;
 
-    private boolean metricsSample = true;
+    private static final transient Logger log = LoggerFactory.getLogger(CapaMeterProviderBuilder.class);
 
-    private boolean traceSample = true;
+    public static transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> CONFIG;
 
-    private boolean logSample = true;
+    static {
+        Mixer.configurationHooksNullable().ifPresent(hooks -> {
+            String fileName = "capa-component-telemetry-sample.properties";
+            try {
+                // TODO: 2021/12/3 Move this to SPI module.
+                // TODO: 2021/12/3 And use Configuration extension api to get merged file.
+                MergedPropertiesConfig config = new MergedPropertiesConfig(
+                        fileName,
+                        hooks.defaultConfigurationAppId(),
+                        CapaTelemetryProperties.Settings.getCenterConfigAppId());
+                String metricKey = "metricsEnable";
+                String traceKey = "traceEnable";
+                SamplerConfig dynamicConfig = new SamplerConfig() {
+                    @Override
+                    public Boolean isMetricsEnable() {
+                        return !config.containsKey(metricKey) || Boolean.TRUE.toString()
+                                .equalsIgnoreCase(config.get(metricKey));
+                    }
 
-    public boolean isMetricsSample() {
-        return metricsSample;
+                    @Override
+                    public Boolean isTraceEnable() {
+                        return !config.containsKey(traceKey) || Boolean.TRUE.toString()
+                                .equalsIgnoreCase(config.get(traceKey));
+                    }
+                };
+
+                DEFAULT_SUPPLIER = () -> dynamicConfig;
+            } catch (Throwable throwable) {
+                log.warn("Fail to load global telemetry config. Dynamic global config is disabled for capa telemetry.",
+                        throwable);
+            }
+        });
     }
 
-    public void setMetricsSample(boolean metricsSample) {
-        this.metricsSample = metricsSample;
+    private Boolean metricsEnable;
+
+    private Boolean traceEnable;
+
+    public Boolean isMetricsEnable() {
+        return metricsEnable == null ? DEFAULT_CONFIG.metricsEnable : metricsEnable;
     }
 
-    public boolean isTraceSample() {
-        return traceSample;
+    public void setMetricsEnable(boolean metricsEnable) {
+        this.metricsEnable = metricsEnable;
     }
 
-    public void setTraceSample(boolean traceSample) {
-        this.traceSample = traceSample;
+    public Boolean isTraceEnable() {
+        return traceEnable == null ? DEFAULT_CONFIG.traceEnable : traceEnable;
     }
 
-    public boolean isLogSample() {
-        return logSample;
-    }
-
-    public void setLogSample(boolean logSample) {
-        this.logSample = logSample;
-    }
-
-    public static SamplerConfig loadOrDefault() {
-        Properties properties = SpiUtils.loadPropertiesNullable(FILE_PATH);
-        if (properties == null) {
-            return DEFAULT_CONFIG;
-        }
-
-        SamplerConfig result = new SamplerConfig();
-        result.setMetricsSample(Boolean.valueOf(properties.getProperty("metricsSample", Boolean.TRUE.toString())));
-        result.setTraceSample(Boolean.valueOf(properties.getProperty("traceSample", Boolean.TRUE.toString())));
-        result.setLogSample(Boolean.valueOf(properties.getProperty("logSample", Boolean.TRUE.toString())));
-
-        return result;
+    public void setTraceEnable(boolean traceEnable) {
+        this.traceEnable = traceEnable;
     }
 }
