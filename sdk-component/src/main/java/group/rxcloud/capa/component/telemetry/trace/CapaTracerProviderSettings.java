@@ -27,8 +27,7 @@ import java.util.function.Supplier;
  */
 public interface CapaTracerProviderSettings {
 
-    // FIXME: 2021/11/28 change to capa-component-telemetry-tracer.json
-    String FILE_PATH = "/capa-tracer.json";
+    String FILE_PATH = "/capa-component-telemetry-tracer.json";
 
     /**
      * Replace the whole config for the meter.

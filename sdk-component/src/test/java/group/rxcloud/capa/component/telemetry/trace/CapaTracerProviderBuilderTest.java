@@ -116,6 +116,7 @@ public class CapaTracerProviderBuilderTest {
     @Test
     public void buildFromTraceConfig() {
         CapaTracerProvider provider = new CapaTracerProviderBuilder()
+                .setSamplerConfig(() -> SamplerConfig.DEFAULT_CONFIG)
                 .buildTracerProvider();
 
         Span span = provider.tracerBuilder("test")

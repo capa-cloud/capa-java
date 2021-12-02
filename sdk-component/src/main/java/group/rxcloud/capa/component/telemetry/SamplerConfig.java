@@ -16,19 +16,20 @@
  */
 package group.rxcloud.capa.component.telemetry;
 
+import com.google.common.collect.Lists;
 import group.rxcloud.capa.component.telemetry.metrics.CapaMeterProviderBuilder;
 import group.rxcloud.capa.infrastructure.CapaProperties;
 import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
 import group.rxcloud.capa.infrastructure.hook.Mixer;
-import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
+import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationResp;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -36,58 +37,88 @@ import java.util.function.Supplier;
  */
 public class SamplerConfig implements Serializable {
 
-    public static final transient String FILE_PATH = "capa-sample.properties";
+    private static final long serialVersionUID = -2113523925814197551L;
+
+    public static final transient String FILE_PATH = "capa-component-telemetry-sample.properties";
+
+    public static final transient String COMMON_FILE_SUFFIX = "telemetry-common";
 
     /**
      * Sample all data as default.
      */
-    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig();
+    public static final transient SamplerConfig DEFAULT_CONFIG = new SamplerConfig() {{
+        setTraceEnable(true);
+        setMetricsEnable(true);
+    }};
+
+    public static final transient SamplerConfig CONFIG = new SamplerConfig();
+
+    public static final transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> {
+        return CONFIG;
+    };
 
     private static final transient Logger log = LoggerFactory.getLogger(CapaMeterProviderBuilder.class);
 
-    public static final transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> {
-        try {
-            String storeName = Optional.ofNullable(CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("configuration")
-                                                                                               .getProperty(
-                                                                                                       "CONFIGURATION_COMPONENT_STORE_NAME"))
-                                       .orElse("UN_CONFIGURED_STORE_CONFIG_NAME");
-            Optional<ConfigurationHooks> hooksOptional = Mixer.configurationHooksNullable();
-            if (hooksOptional.isPresent()) {
-                List<ConfigurationItem<SamplerConfig>> config = hooksOptional.get().getConfiguration(storeName,
-                        null,
-                        Collections.singletonList(FILE_PATH),
-                        null,
-                        "",
-                        "",
-                        TypeRef.get(SamplerConfig.class)).block();
-                if (!config.isEmpty()) {
-                    SamplerConfig item = config.get(0).getContent();
-                    return item == null ? DEFAULT_CONFIG : item;
+
+    static {
+        Mixer.configurationHooksNullable().ifPresent(hooks -> {
+            try {
+                subscribeConfiguration(hooks, hooks.defaultConfigurationAppId(), true);
+            } catch (Throwable throwable) {
+                log.warn("Fail to load global telemetry config. Dynamic global config is disabled for capa telemetry.",
+                        throwable);
+            }
+            try {
+                subscribeConfiguration(hooks,
+                        CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(COMMON_FILE_SUFFIX).getProperty("appId"),
+                        false);
+            } catch (Throwable throwable) {
+                log.warn("Fail to load global telemetry config. Dynamic global config is disabled for capa telemetry.",
+                        throwable);
+            }
+        });
+
+    }
+
+    private Boolean metricsEnable;
+
+    private Boolean traceEnable;
+
+    private static void subscribeConfiguration(ConfigurationHooks configurationHooks, String appId, boolean prior) {
+        String storeName = configurationHooks.registryStoreNames().get(0);
+        Flux<SubConfigurationResp<SamplerConfig>> configFlux = configurationHooks.subscribeConfiguration(
+                storeName,
+                appId,
+                Lists.newArrayList(FILE_PATH),
+                null,
+                StringUtils.EMPTY,
+                StringUtils.EMPTY,
+                TypeRef.get(SamplerConfig.class));
+        configFlux.subscribe(resp -> {
+            if (CollectionUtils.isNotEmpty(resp.getItems())) {
+                SamplerConfig config = resp.getItems().get(0).getContent();
+                if (config != null) {
+                    if (config.metricsEnable != null && (prior || CONFIG.metricsEnable == null)) {
+                        CONFIG.metricsEnable = config.metricsEnable;
+                    }
+                    if (config.traceEnable != null && (prior || CONFIG.traceEnable == null)) {
+                        CONFIG.traceEnable = config.traceEnable;
+                    }
                 }
             }
-        } catch (Throwable throwable) {
-            log.warn("Fail to load config item. Dynamic config is disabled for capa telemetry.", throwable);
-        }
+        });
+    }
 
-        return DEFAULT_CONFIG;
-    };
-
-    private static final long serialVersionUID = -2113523925814197551L;
-
-    private boolean metricsEnable = true;
-
-    private boolean traceEnable = true;
-
-    public boolean isMetricsEnable() {
-        return metricsEnable;
+    public Boolean isMetricsEnable() {
+        return metricsEnable == null ? DEFAULT_CONFIG.metricsEnable : metricsEnable;
     }
 
     public void setMetricsEnable(boolean metricsEnable) {
         this.metricsEnable = metricsEnable;
     }
 
-    public boolean isTraceEnable() {
-        return traceEnable;
+    public Boolean isTraceEnable() {
+        return traceEnable == null ? DEFAULT_CONFIG.traceEnable : traceEnable;
     }
 
     public void setTraceEnable(boolean traceEnable) {
