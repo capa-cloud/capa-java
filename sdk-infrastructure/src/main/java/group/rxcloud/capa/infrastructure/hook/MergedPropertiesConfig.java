@@ -58,6 +58,10 @@ public class MergedPropertiesConfig {
         return merged.get(key);
     }
 
+    public Map<String, String> getMerged(){
+        return merged;
+    }
+
     private void subscribeConfigurationByAppId(ConfigurationHooks configurationHooks, String appId, int index) {
         String storeName = configurationHooks.registryStoreNames().get(0);
 

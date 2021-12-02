@@ -15,12 +15,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<configuration>
-    <!--Log-->
-    <appender name="Log" class="group.rxcloud.capa.component.log.CapaLogbackAppenderAgent">
-    </appender>
-
-    <root level="INFO">
-        <appender-ref ref="Log"/>
-    </root>
-</configuration>
+<Configuration status="DEBUG">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <CapaLog4jAppender name="log"/>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="log"/>
+        </Root>
+    </Loggers>
+</Configuration>

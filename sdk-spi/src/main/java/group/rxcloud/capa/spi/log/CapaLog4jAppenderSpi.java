@@ -13,7 +13,7 @@ public abstract class CapaLog4jAppenderSpi implements CapaLog4jAppenderAgent.Cap
     public void append(LogEvent event) {
         if (event != null && event.getLevel()!= null) {
             Optional<CapaLogLevel> capaLogLevel = CapaLogLevel.toCapaLogLevel(event.getLevel().name());
-            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanBeOutput(capaLogLevel.get())) {
+            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanOutput(capaLogLevel.get())) {
                 this.appendLog(event);
             }
         }

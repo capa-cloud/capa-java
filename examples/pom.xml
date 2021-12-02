@@ -61,17 +61,17 @@
             </exclusions>
         </dependency>
         <!-- slf4j -->
-       <!-- <dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.version}</version>
-        </dependency>-->
+        </dependency>
         <!-- logback -->
-         <dependency>
+         <!--<dependency>
              <groupId>ch.qos.logback</groupId>
              <artifactId>logback-classic</artifactId>
              <version>${logback.version}</version>
-         </dependency>
+         </dependency>-->
         <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>

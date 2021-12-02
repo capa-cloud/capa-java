@@ -15,8 +15,8 @@ public abstract class CapaLogbackAppenderSpi extends UnsynchronizedAppenderBase<
     public void append(ILoggingEvent event) {
         if (event != null && event.getLevel() != null) {
             Optional<CapaLogLevel> capaLogLevel = CapaLogLevel.toCapaLogLevel(event.getLevel().levelStr);
-            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanBeOutput(capaLogLevel.get())) {
-                this.append(event);
+            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanOutput(capaLogLevel.get())) {
+                this.appendLog(event);
             }
         }
     }

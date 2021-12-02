@@ -63,7 +63,7 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
                                   Filter filter,
                                   Layout<? extends Serializable> layout,
                                   boolean ignoreExceptions) {
-        super(name, filter, layout, ignoreExceptions);
+        super(name, filter, layout, ignoreExceptions, null);
     }
 
     /**
@@ -98,12 +98,6 @@ public class CapaLog4jAppenderAgent extends AbstractAppender {
     @Override
     public void append(LogEvent event) {
         logAppender.append(event);
-       /* if (event != null && event.getLevel() != null) {
-            Optional<CapaLogLevel> capaLogLevel = CapaLogLevel.toCapaLogLevel(event.getLevel().name());
-            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanBeOutput(capaLogLevel.get())) {
-                logAppender.appendLog(event);
-            }
-        }*/
     }
 
     /**

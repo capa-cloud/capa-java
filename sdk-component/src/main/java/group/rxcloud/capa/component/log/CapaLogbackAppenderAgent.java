@@ -61,12 +61,6 @@ public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggin
     @Override
     protected void append(ILoggingEvent event) {
         logbackAppender.append(event);
-       /* if (event != null && event.getLevel() != null) {
-            Optional<CapaLogLevel> capaLogLevel = CapaLogLevel.toCapaLogLevel(event.getLevel().levelStr);
-            if (capaLogLevel.isPresent() && LogManager.whetherLogsCanBeOutput(capaLogLevel.get())) {
-                logbackAppender.append(event);
-            }
-        }*/
     }
 
     /**
