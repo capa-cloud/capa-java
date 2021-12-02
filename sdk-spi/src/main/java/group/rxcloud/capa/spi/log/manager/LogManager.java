@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.manager;
+package group.rxcloud.capa.spi.log.manager;
 
-import group.rxcloud.capa.component.log.configuration.LogSwitchConfiguration;
-import group.rxcloud.capa.component.log.enums.CapaLogLevel;
+import group.rxcloud.capa.spi.log.configuration.LogSwitchConfiguration;
+import group.rxcloud.capa.spi.log.enums.CapaLogLevel;
 
 import java.util.Map;
 

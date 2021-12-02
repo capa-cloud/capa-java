@@ -14,21 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.agent;
+package group.rxcloud.capa.component.log;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
- * The capa logback appender used in tests only.
+ * The capa log4j appender used in tests only.
  */
-public class TestCapaLogbackAppender implements CapaLogbackAppenderAgent.CapaLogbackAppender {
-
-    public TestCapaLogbackAppender() {
-    }
+public class TestCapaLog4jAppender implements CapaLog4jAppenderAgent.CapaLog4jAppender {
 
     @Override
-    public void appendLog(ILoggingEvent event) {
-        System.out.println("test logback log and content is " + event.getFormattedMessage());
+    public void append(LogEvent event) {
+        System.out.println("test log log4j and content is " + event.getMessage().getFormattedMessage());
     }
 }
-

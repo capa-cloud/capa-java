@@ -17,7 +17,7 @@
 package group.rxcloud.capa.spi.demo.log;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import group.rxcloud.capa.component.log.agent.CapaLogbackAppenderAgent;
+import group.rxcloud.capa.component.log.CapaLogbackAppenderAgent;
 
 public class DemoLogbackAppender implements CapaLogbackAppenderAgent.CapaLogbackAppender {
 
@@ -25,7 +25,7 @@ public class DemoLogbackAppender implements CapaLogbackAppenderAgent.CapaLogback
     }
 
     @Override
-    public void appendLog(ILoggingEvent event) {
+    public void append(ILoggingEvent event) {
         System.out.println("Test logback log and content is " + event.getFormattedMessage());
     }
 }

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.component.log.configuration;
+package group.rxcloud.capa.spi.log.configuration;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
