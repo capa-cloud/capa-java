@@ -27,6 +27,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author: chenyijiang
@@ -34,8 +35,8 @@ import java.util.Map;
  */
 public class TestMixerProvider implements Mixer.MixerProvider {
 
-    SamplerConfig app = new SamplerConfig() {{setMetricsEnable(false);}};
-    SamplerConfig global = new SamplerConfig() {{setTraceEnable(false); setMetricsEnable(true);}};
+    Properties app = new Properties() {{put("metricsEnable", false);}};
+    Properties global = new Properties() {{put("traceEnable", false); put("metricsEnable", true);}};
 
 
     private ConfigurationHooks configurationHooks = new ConfigurationHooks() {
@@ -52,7 +53,7 @@ public class TestMixerProvider implements Mixer.MixerProvider {
         @Override
         public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, String label, TypeRef<T> type) {
 
-            if (type.getType() == SamplerConfig.class) {
+            if (type.getType() == Properties.class) {
                 if ("123".equals(appId)) {
                     return Flux.just(getSubscribeResponse(global));
                 }
@@ -65,7 +66,7 @@ public class TestMixerProvider implements Mixer.MixerProvider {
         }
     };
 
-    private <T> SubConfigurationResp<T> getSubscribeResponse(SamplerConfig samplerConfig) {
+    private <T> SubConfigurationResp<T> getSubscribeResponse(Properties samplerConfig) {
         SubConfigurationResp<T> subConfigurationResp = new SubConfigurationResp<>();
         ConfigurationItem item = new ConfigurationItem();
         item.setContent(samplerConfig);
