@@ -25,9 +25,9 @@ import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationRes
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Flux;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author: chenyijiang
@@ -35,8 +35,8 @@ import java.util.Properties;
  */
 public class TestMixerProvider implements Mixer.MixerProvider {
 
-    Properties app = new Properties() {{put("metricsEnable", false);}};
-    Properties global = new Properties() {{put("traceEnable", false); put("metricsEnable", true);}};
+    Map<String, String> app = new HashMap() {{put("metricsEnable", false);}};
+    Map<String, String>  global = new HashMap() {{put("traceEnable", false); put("metricsEnable", true);}};
 
 
     private ConfigurationHooks configurationHooks = new ConfigurationHooks() {
@@ -53,7 +53,7 @@ public class TestMixerProvider implements Mixer.MixerProvider {
         @Override
         public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, String label, TypeRef<T> type) {
 
-            if (type.getType() == Properties.class) {
+            if (type.getType() == Map.class) {
                 if ("123".equals(appId)) {
                     return Flux.just(getSubscribeResponse(global));
                 }
@@ -66,7 +66,7 @@ public class TestMixerProvider implements Mixer.MixerProvider {
         }
     };
 
-    private <T> SubConfigurationResp<T> getSubscribeResponse(Properties samplerConfig) {
+    private <T> SubConfigurationResp<T> getSubscribeResponse(Map samplerConfig) {
         SubConfigurationResp<T> subConfigurationResp = new SubConfigurationResp<>();
         ConfigurationItem item = new ConfigurationItem();
         item.setContent(samplerConfig);
