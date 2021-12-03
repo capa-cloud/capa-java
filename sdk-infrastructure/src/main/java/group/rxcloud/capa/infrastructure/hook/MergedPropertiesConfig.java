@@ -18,12 +18,13 @@ package group.rxcloud.capa.infrastructure.hook;
 
 import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationResp;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 /**
@@ -36,9 +37,11 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 @Deprecated
 public class MergedPropertiesConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(MergedPropertiesConfig.class);
+
     private final String fileName;
 
-    private final AtomicReferenceArray<Properties> properties;
+    private final AtomicReferenceArray<Map> properties;
 
     private final Object lock = new Object();
 
@@ -50,7 +53,12 @@ public class MergedPropertiesConfig {
         merged = new HashMap<>();
         Mixer.configurationHooksNullable().ifPresent(hooks -> {
             for (int i = 0; i < appIds.length; i++) {
-                subscribeConfigurationByAppId(hooks, appIds[i], i);
+                try {
+                    subscribeConfigurationByAppId(hooks, appIds[i], i);
+                } catch (Throwable throwable) {
+                    log.warn("Fail to subscribe config for app id " + appIds[i] + ", index " + i, throwable);
+                }
+
             }
         });
     }
@@ -70,14 +78,14 @@ public class MergedPropertiesConfig {
     private void subscribeConfigurationByAppId(ConfigurationHooks configurationHooks, String appId, int index) {
         String storeName = configurationHooks.registryStoreNames().get(0);
 
-        Flux<SubConfigurationResp<Properties>> configFlux = configurationHooks.subscribeConfiguration(
+        Flux<SubConfigurationResp<Map>> configFlux = configurationHooks.subscribeConfiguration(
                 storeName,
                 appId,
                 Collections.singletonList(fileName),
                 null,
                 "",
                 "",
-                TypeRef.get(Properties.class));
+                TypeRef.get(Map.class));
 
         // FIXME: 2021/12/3 random callback?
         configFlux.subscribe(resp -> {
@@ -90,7 +98,7 @@ public class MergedPropertiesConfig {
 
                 Map<String, String> merged = new HashMap<>();
                 for (int i = 0; i < properties.length(); i++) {
-                    Properties item = properties.get(i);
+                    Map item = properties.get(i);
                     if (item != null) {
                         item.forEach((k, v) -> merged.putIfAbsent(String.valueOf(k), String.valueOf(v)));
                     }
