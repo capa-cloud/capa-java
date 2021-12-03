@@ -114,7 +114,7 @@ public final class SpiUtils {
             }
             return null;
         } catch (Throwable e) {
-            log.warn("Fail to load " + type.getName() + " instance from spi config file.", e);
+            log.info("Fail to load " + type.getName() + " instance from spi config file.");
         }
         return null;
     }
