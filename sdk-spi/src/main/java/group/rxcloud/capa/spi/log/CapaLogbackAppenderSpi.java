@@ -38,4 +38,9 @@ public abstract class CapaLogbackAppenderSpi extends UnsynchronizedAppenderBase<
     }
 
     protected abstract void appendLog(ILoggingEvent event);
+
+    @Override
+    public void doStart() {
+        // do nothing
+    }
 }

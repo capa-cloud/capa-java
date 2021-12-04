@@ -24,7 +24,6 @@ import group.rxcloud.capa.infrastructure.CapaClassLoader;
  * The agent of the logback impl.
  */
 public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggingEvent> {
-
     /**
      * The log component type.
      */
@@ -53,6 +52,12 @@ public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggin
                 CapaLogbackAppender.class);
     }
 
+    @Override
+    public void start() {
+        logbackAppender.doStart();
+        super.start();
+    }
+
     /**
      * Deal with the log.
      *
@@ -74,6 +79,12 @@ public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggin
          * @param event The log event.
          */
         void append(ILoggingEvent event);
+
+        /**
+         *
+         Do some initialization operations when the appender starts.
+         */
+        void doStart();
     }
 }
 
