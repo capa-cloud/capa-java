@@ -30,5 +30,10 @@ public class TestCapaLogbackAppender implements CapaLogbackAppenderAgent.CapaLog
     public void append(ILoggingEvent event) {
         System.out.println("test logback log and content is " + event.getFormattedMessage());
     }
+
+    @Override
+    public void doStart() {
+        System.out.println("Init config...");
+    }
 }
 

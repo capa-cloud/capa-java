@@ -28,4 +28,9 @@ public class DemoLogbackAppender extends CapaLogbackAppenderSpi {
     public void appendLog(ILoggingEvent event) {
         System.out.println("Test logback log and content is " + event.getFormattedMessage());
     }
+
+    @Override
+    public void doStart() {
+        System.out.println("Init config...");
+    }
 }
