@@ -17,6 +17,7 @@
 package group.rxcloud.capa.infrastructure.hook;
 
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import io.vavr.Lazy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,15 +31,15 @@ public abstract class Mixer {
 
     private static final Logger logger = LoggerFactory.getLogger(Mixer.class);
 
-    private static ConfigurationHooks configurationHooks;
-    private static TelemetryHooks telemetryHooks;
+    private static Lazy<ConfigurationHooks> configurationHooks;
+    private static Lazy<TelemetryHooks> telemetryHooks;
 
     static {
         try {
             MixerProvider mixerProvider = CapaClassLoader.loadInfrastructureClassObj("mixer", MixerProvider.class);
             if (mixerProvider != null) {
-                registerConfigurationHooks(mixerProvider.provideConfigurationHooks());
-                registerTelemetryHooks(mixerProvider.provideTelemetryHooks());
+                registerConfigurationHooks(Lazy.of(mixerProvider::provideConfigurationHooks));
+                registerTelemetryHooks(Lazy.of(mixerProvider::provideTelemetryHooks));
             }
         } catch (Exception e) {
             logger.info("[CapaMixer] load empty mixer. expected error: ", e);
@@ -70,7 +71,7 @@ public abstract class Mixer {
      *
      * @param configurationHooks the configuration hooks
      */
-    private static void registerConfigurationHooks(ConfigurationHooks configurationHooks) {
+    private static void registerConfigurationHooks(Lazy<ConfigurationHooks> configurationHooks) {
         Mixer.configurationHooks = configurationHooks;
     }
 
@@ -79,7 +80,7 @@ public abstract class Mixer {
      *
      * @param telemetryHooks the telemetry hooks
      */
-    private static void registerTelemetryHooks(TelemetryHooks telemetryHooks) {
+    private static void registerTelemetryHooks(Lazy<TelemetryHooks> telemetryHooks) {
         Mixer.telemetryHooks = telemetryHooks;
     }
 
@@ -90,7 +91,9 @@ public abstract class Mixer {
      */
     @Nullable
     public static ConfigurationHooks configurationHooks() {
-        return configurationHooks;
+        return configurationHooks != null
+                ? configurationHooks.get()
+                : null;
     }
 
     /**
@@ -99,7 +102,7 @@ public abstract class Mixer {
      * @return the configuration hooks
      */
     public static Optional<ConfigurationHooks> configurationHooksNullable() {
-        return Optional.ofNullable(configurationHooks);
+        return Optional.ofNullable(configurationHooks.get());
     }
 
     /**
@@ -109,7 +112,9 @@ public abstract class Mixer {
      */
     @Nullable
     public static TelemetryHooks telemetryHooks() {
-        return telemetryHooks;
+        return telemetryHooks != null
+                ? telemetryHooks.get()
+                : null;
     }
 
     /**
@@ -118,6 +123,6 @@ public abstract class Mixer {
      * @return the telemetry hooks
      */
     public static Optional<TelemetryHooks> telemetryHooksNullable() {
-        return Optional.ofNullable(telemetryHooks);
+        return Optional.ofNullable(telemetryHooks.get());
     }
 }
