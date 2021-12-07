@@ -83,6 +83,4 @@ public class TestMixerProvider implements Mixer.MixerProvider {
     public TelemetryHooks provideTelemetryHooks() {
         return null;
     }
-
-
 }
