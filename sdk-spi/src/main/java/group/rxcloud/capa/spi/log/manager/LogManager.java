@@ -78,37 +78,37 @@ public class LogManager {
         }
         switch (capaLogLevel) {
             case ALL:
-                return !LogConfiguration.containsKey(ALL_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(ALL_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(ALL_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(ALL_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             case TRACE:
-                return !LogConfiguration.containsKey(TRACE_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(TRACE_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(TRACE_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(TRACE_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             case DEBUG:
-                return !LogConfiguration.containsKey(DEBUG_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(DEBUG_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(DEBUG_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(DEBUG_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             case INFO:
-                return !LogConfiguration.containsKey(INFO_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(INFO_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(INFO_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(INFO_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             case WARN:
-                return !LogConfiguration.containsKey(WARN_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(WARN_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(WARN_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(WARN_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             case ERROR:
-                return !LogConfiguration.containsKey(ERROR_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(ERROR_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(ERROR_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(ERROR_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             case FATAL:
-                return !LogConfiguration.containsKey(FATAL_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(FATAL_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(FATAL_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(FATAL_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             case OFF:
-                return !LogConfiguration.containsKey(OFF_LEVEL_SWITCH_NAME)
-                        ? Boolean.FALSE
-                        : Boolean.parseBoolean(LogConfiguration.get(OFF_LEVEL_SWITCH_NAME));
+                return LogConfiguration.containsKey(OFF_LEVEL_SWITCH_NAME)
+                        ? Boolean.parseBoolean(LogConfiguration.get(OFF_LEVEL_SWITCH_NAME))
+                        : Boolean.FALSE;
             default:
                 return Boolean.FALSE;
         }
