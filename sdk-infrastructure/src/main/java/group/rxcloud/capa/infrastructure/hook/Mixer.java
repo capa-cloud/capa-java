@@ -102,7 +102,9 @@ public abstract class Mixer {
      * @return the configuration hooks
      */
     public static Optional<ConfigurationHooks> configurationHooksNullable() {
-        return Optional.ofNullable(configurationHooks.get());
+        return Optional.ofNullable(configurationHooks != null
+                ? configurationHooks.get()
+                : null);
     }
 
     /**
@@ -123,6 +125,8 @@ public abstract class Mixer {
      * @return the telemetry hooks
      */
     public static Optional<TelemetryHooks> telemetryHooksNullable() {
-        return Optional.ofNullable(telemetryHooks.get());
+        return Optional.ofNullable(telemetryHooks != null
+                ? telemetryHooks.get()
+                : null);
     }
 }
