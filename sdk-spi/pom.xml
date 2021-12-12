@@ -23,7 +23,7 @@
     <parent>
         <artifactId>capa-parent</artifactId>
         <groupId>group.rxcloud</groupId>
-        <version>1.10.10.RELEASE</version>
+        <version>1.10.11.RELEASE</version>
     </parent>
 
     <artifactId>capa-sdk-spi</artifactId>
@@ -31,7 +31,7 @@
     <name>capa-sdk-spi</name>
 
     <properties>
-        <log4j.version>2.14.1</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <logback.version>1.2.3</logback.version>
     </properties>
 

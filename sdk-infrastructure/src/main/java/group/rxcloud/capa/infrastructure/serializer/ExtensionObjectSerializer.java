@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat;
 /**
  * Serializes and deserializes an internal object.
  */
-public class ObjectSerializer {
+public abstract class ExtensionObjectSerializer extends AbstractObjectSerializer {
 
     /**
      * Shared Json serializer/deserializer as per Jackson's documentation.
@@ -44,7 +44,7 @@ public class ObjectSerializer {
     /**
      * Default constructor to avoid class from being instantiated outside package but still inherited.
      */
-    protected ObjectSerializer() {
+    protected ExtensionObjectSerializer() {
     }
 
     /**
@@ -55,33 +55,31 @@ public class ObjectSerializer {
     }
 
     /**
-     * Serializes a given state object into byte array.
+     * Serializes a given object into byte array.
      *
-     * @param state State object to be serialized.
+     * @param o object to be serialized.
      * @return Array of bytes[] with the serialized content.
-     * @throws IOException In case state cannot be serialized.
+     * @throws IOException In case o cannot be serialized.
      */
-    public byte[] serialize(Object state) throws IOException {
-        if (state == null) {
+    @Override
+    public byte[] doSerialize(Object o) throws IOException {
+        if (o == null) {
             return null;
         }
-
-        if (state.getClass() == Void.class) {
+        if (o.getClass() == Void.class) {
             return null;
         }
-
         // Have this check here to be consistent with deserialization (see deserialize() method below).
-        if (state instanceof byte[]) {
-            return (byte[]) state;
+        if (o instanceof byte[]) {
+            return (byte[]) o;
         }
-
         // Proto buffer class is serialized directly.
-        if (state instanceof MessageLite) {
-            return ((MessageLite) state).toByteArray();
+        if (o instanceof MessageLite) {
+            return ((MessageLite) o).toByteArray();
         }
 
         // Not string, not primitive, so it is a complex type: we use JSON for that.
-        return getObjectMapper().writeValueAsBytes(state);
+        return getObjectMapper().writeValueAsBytes(o);
     }
 
     /**
@@ -93,8 +91,9 @@ public class ObjectSerializer {
      * @return Object of type T.
      * @throws IOException In case content cannot be deserialized.
      */
-    public <T> T deserialize(byte[] content, TypeRef<T> type) throws IOException {
-        return deserialize(content, getObjectMapper().constructType(type.getType()));
+    @Override
+    public <T> T doDeserialize(byte[] content, TypeRef<T> type) throws IOException {
+        return doDeserialize(content, getObjectMapper().constructType(type.getType()));
     }
 
     /**
@@ -106,11 +105,11 @@ public class ObjectSerializer {
      * @return Object of type T.
      * @throws IOException In case content cannot be deserialized.
      */
-    public <T> T deserialize(byte[] content, Class<T> clazz) throws IOException {
-        return deserialize(content, getObjectMapper().constructType(clazz));
+    public <T> T doDeserialize(byte[] content, Class<T> clazz) throws IOException {
+        return doDeserialize(content, getObjectMapper().constructType(clazz));
     }
 
-    private <T> T deserialize(byte[] content, JavaType javaType) throws IOException {
+    private <T> T doDeserialize(byte[] content, JavaType javaType) throws IOException {
         if ((javaType == null) || javaType.isTypeOrSubTypeOf(Void.class)) {
             return null;
         }

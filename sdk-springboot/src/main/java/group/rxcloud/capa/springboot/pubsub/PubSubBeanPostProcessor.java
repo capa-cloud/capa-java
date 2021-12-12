@@ -19,11 +19,12 @@ package group.rxcloud.capa.springboot.pubsub;
 import com.kevinten.vrml.core.beans.SpringContextConfigurator;
 import com.kevinten.vrml.core.serialization.Serialization;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
+import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
-import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
 import group.rxcloud.capa.pubsub.Topic;
 import group.rxcloud.capa.pubsub.domain.TopicEventRequest;
 import group.rxcloud.capa.pubsub.domain.TopicSubscription;
+import group.rxcloud.cloudruntimes.utils.TypeRef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -49,7 +50,7 @@ public class PubSubBeanPostProcessor implements BeanPostProcessor {
     private static final Logger logger = LoggerFactory.getLogger(PubSubBeanPostProcessor.class);
 
     private final EmbeddedValueResolver embeddedValueResolver;
-    private final ObjectSerializer serializer;
+    private final CapaObjectSerializer serializer;
 
     PubSubBeanPostProcessor(ConfigurableBeanFactory beanFactory) {
         embeddedValueResolver = new EmbeddedValueResolver(beanFactory);
@@ -84,7 +85,7 @@ public class PubSubBeanPostProcessor implements BeanPostProcessor {
      * @param clazz      Controller class where {@link Topic} is expected.
      * @param serializer json serializer
      */
-    private static void subscribeToTopics(Class clazz, EmbeddedValueResolver embeddedValueResolver, ObjectSerializer serializer) {
+    private static void subscribeToTopics(Class clazz, EmbeddedValueResolver embeddedValueResolver, CapaObjectSerializer serializer) {
         if (clazz == null) {
             return;
         }
@@ -152,12 +153,12 @@ public class PubSubBeanPostProcessor implements BeanPostProcessor {
         }
     }
 
-    private static Map<String, String> resolveMetadataMap(ObjectSerializer serializer, String metadata) {
+    private static Map<String, String> resolveMetadataMap(CapaObjectSerializer serializer, String metadata) {
         Map<String, String> metadataMap = Collections.emptyMap();
         if (!StringUtils.isEmpty(metadata)) {
             byte[] metadataBytes = metadata.getBytes(StandardCharsets.UTF_8);
             try {
-                metadataMap = serializer.deserialize(metadataBytes, Map.class);
+                metadataMap = serializer.deserialize(metadataBytes, TypeRef.get(Map.class));
             } catch (Exception e) {
                 if (logger.isErrorEnabled()) {
                     logger.error("[PubSub.@Topic.subscribe] illegal metadata[{}]",

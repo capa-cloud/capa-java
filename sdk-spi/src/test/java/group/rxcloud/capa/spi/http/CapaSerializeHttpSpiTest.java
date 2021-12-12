@@ -21,7 +21,7 @@ import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
-import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
+import group.rxcloud.capa.infrastructure.serializer.ExtensionObjectSerializer;
 import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.Headers;
@@ -223,7 +223,7 @@ public class CapaSerializeHttpSpiTest {
     /**
      * serializer/deserializer for request/response objects used in tests only
      */
-    private class TestRuntimeExceptionObjectSerializer extends ObjectSerializer implements CapaObjectSerializer {
+    private class TestRuntimeExceptionObjectSerializer extends ExtensionObjectSerializer implements CapaObjectSerializer {
 
         /**
          * {@inheritDoc}
@@ -254,7 +254,7 @@ public class CapaSerializeHttpSpiTest {
     /**
      * serializer/deserializer for request/response objects used in tests only
      */
-    private class TestIOExceptionObjectSerializer extends ObjectSerializer implements CapaObjectSerializer {
+    private class TestIOExceptionObjectSerializer extends ExtensionObjectSerializer implements CapaObjectSerializer {
 
         /**
          * {@inheritDoc}

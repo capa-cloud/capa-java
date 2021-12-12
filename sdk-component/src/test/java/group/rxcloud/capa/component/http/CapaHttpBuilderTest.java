@@ -18,7 +18,7 @@ package group.rxcloud.capa.component.http;
 
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
-import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
+import group.rxcloud.capa.infrastructure.serializer.ExtensionObjectSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +53,7 @@ public class CapaHttpBuilderTest {
     /**
      * serializer/deserializer for request/response objects used in tests only
      */
-    private class TestObjectSerializer extends ObjectSerializer implements CapaObjectSerializer {
+    private class TestObjectSerializer extends ExtensionObjectSerializer implements CapaObjectSerializer {
 
         /**
          * {@inheritDoc}

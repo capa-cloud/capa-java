@@ -16,37 +16,50 @@
  */
 package group.rxcloud.capa.infrastructure.serializer;
 
-
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 
 import java.io.IOException;
 
-/**
- * Default serializer/deserializer for request/response objects.
- */
-public class DefaultObjectSerializer extends ExtensionObjectSerializer implements CapaObjectSerializer {
+public abstract class AbstractObjectSerializer implements CapaObjectSerializer {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public byte[] serialize(Object o) throws IOException {
-        return super.serialize(o);
+        if (o == null) {
+            return null;
+        }
+        if (o instanceof byte[]) {
+            return (byte[]) o;
+        }
+        if (o instanceof String) {
+            return ((String) o).getBytes();
+        }
+
+        return doSerialize(o);
     }
+
+    protected abstract byte[] doSerialize(Object o) throws IOException;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public <T> T deserialize(byte[] data, TypeRef<T> type) throws IOException {
-        return super.deserialize(data, type);
+        Class<T> clazz = (Class<T>) type.getType();
+        if (data == null) {
+            return null;
+        }
+        if (clazz == byte[].class) {
+            return (T) data;
+        }
+        if (clazz == String.class) {
+            return (T) new String(data);
+        }
+
+        return doDeserialize(data, type);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getContentType() {
-        return "application/json";
-    }
+    protected abstract <T> T doDeserialize(byte[] data, TypeRef<T> type) throws IOException;
 }
