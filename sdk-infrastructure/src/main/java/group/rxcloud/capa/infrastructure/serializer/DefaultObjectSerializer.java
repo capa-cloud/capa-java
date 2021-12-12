@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Default serializer/deserializer for request/response objects.
  */
-public class DefaultObjectSerializer extends ObjectSerializer implements CapaObjectSerializer {
+public class DefaultObjectSerializer extends ExtensionObjectSerializer implements CapaObjectSerializer {
 
     /**
      * {@inheritDoc}

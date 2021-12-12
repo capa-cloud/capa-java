@@ -17,12 +17,12 @@
 package group.rxcloud.capa.component.configstore;
 
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
-import group.rxcloud.capa.infrastructure.serializer.ObjectSerializer;
+import group.rxcloud.capa.infrastructure.serializer.ExtensionObjectSerializer;
 
 /**
  * serializer/deserializer for request/response objects used in tests only
  */
-public class TestObjectSerializer extends ObjectSerializer implements CapaObjectSerializer {
+public class TestObjectSerializer extends ExtensionObjectSerializer implements CapaObjectSerializer {
 
     /**
      * {@inheritDoc}
