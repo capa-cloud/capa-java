@@ -49,7 +49,7 @@ public class SamplerConfig implements Serializable {
 
     static {
         Mixer.configurationHooksNullable().ifPresent(hooks -> {
-            String fileName = "capa-component-telemetry-sample.properties";
+            String fileName = "capa-component-telemetry-sampling.properties";
             try {
                 // TODO: 2021/12/3 Move this to SPI module.
                 // TODO: 2021/12/3 And use Configuration extension api to get merged file.
