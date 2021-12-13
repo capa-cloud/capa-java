@@ -86,7 +86,7 @@ public class CapaContextPropagatorBuilderTest {
             }
         });
 
-        assertEquals(2, TestPropagator.getCalled());
+        assertEquals(5, TestPropagator.getCalled());
     }
 
 
