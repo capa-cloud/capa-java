@@ -16,7 +16,10 @@
  */
 package group.rxcloud.capa.component.telemetry.context;
 
-import io.opentelemetry.context.propagation.ContextPropagators;
+import io.opentelemetry.context.propagation.TextMapPropagator;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Load default context propagator.
@@ -31,7 +34,7 @@ public interface ContextPropagatorLoader {
      *
      * @return default context propagator.
      */
-    default ContextPropagators load() {
-        return ContextPropagators.noop();
+    default List<TextMapPropagator> load() {
+        return Collections.emptyList();
     }
 }

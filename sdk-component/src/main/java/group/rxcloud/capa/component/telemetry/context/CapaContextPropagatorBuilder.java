@@ -61,28 +61,34 @@ public class CapaContextPropagatorBuilder implements CapaContextPropagatorSettin
      * @return context propagators.
      */
     public ContextPropagators buildContextPropagators() {
-        if (contextPropagatorsInstance != null && !contextPropagatorsInstance.isEmpty()) {
-            return ContextPropagators
-                    .create(TextMapPropagator.composite(contextPropagatorsInstance.toArray(new TextMapPropagator[0])));
-        }
-
+        List<TextMapPropagator> propagators = new ArrayList<>();
         initContextConfig();
         if (contextConfig != null) {
             List<String> types = contextConfig.getContextPropagators();
             if (types != null && !types.isEmpty()) {
-                return ContextPropagators
-                        .create(TextMapPropagator.composite(types.stream()
-                                                                 .map(path -> SpiUtils
-                                                                         .newInstanceWithConstructorCache(path, TextMapPropagator.class))
-                                                                 .toArray(TextMapPropagator[]::new)));
+                types.stream()
+                     .map(path -> SpiUtils
+                             .newInstanceWithConstructorCache(path, TextMapPropagator.class))
+                     .forEach(propagator -> propagators.add(propagator));
             }
         }
 
-        ContextPropagatorLoader loader = SpiUtils.loadFromSpiComponentFileNullable(ContextPropagatorLoader.class, "telemetry");
-        if (loader == null) {
-            loader = ContextPropagatorLoader.DEFAULT;
+        if (contextPropagatorsInstance != null && !contextPropagatorsInstance.isEmpty()) {
+            propagators.addAll(contextPropagatorsInstance);
         }
-        return loader.load();
+
+        ContextPropagatorLoader loader = SpiUtils.loadFromSpiComponentFileNullable(ContextPropagatorLoader.class, "telemetry");
+        if (loader != null) {
+            List<TextMapPropagator> loaded = loader.load();
+            if (loaded != null) {
+                propagators.addAll(loaded);
+            }
+        }
+
+        if (propagators.isEmpty()) {
+            return ContextPropagators.noop();
+        }
+        return ContextPropagators.create(TextMapPropagator.composite(propagators.toArray(new TextMapPropagator[0])));
     }
 
     private void initContextConfig() {
