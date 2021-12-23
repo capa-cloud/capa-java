@@ -23,13 +23,22 @@ import group.rxcloud.capa.infrastructure.CapaClassLoader;
  */
 public abstract class CapaSpiProperties {
 
+    private static volatile CapaSpiOptionsLoader instance;
+
     /**
      * Gets default options loader.
      *
      * @return the default options loader
      */
     public static CapaSpiOptionsLoader getSpiOptionsLoader() {
+        if (instance == null) {
+            synchronized (CapaSpiProperties.class) {
+                if (instance == null) {
+                    instance = CapaClassLoader.loadComponentClassObj("rpc-common", CapaSpiOptionsLoader.class);
+                }
+            }
+        }
         // load spi rpc impl
-        return CapaClassLoader.loadComponentClassObj("rpc-common", CapaSpiOptionsLoader.class);
+        return instance;
     }
 }
