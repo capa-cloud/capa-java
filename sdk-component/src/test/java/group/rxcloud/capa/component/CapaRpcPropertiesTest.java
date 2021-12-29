@@ -14,19 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure;
+package group.rxcloud.capa.component;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Properties;
-
-public class CapaPropertiesTest {
+public class CapaRpcPropertiesTest {
 
     @Test
-    public void testGetComponentProperties_Success() {
-        Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("rpc");
-        String value = properties.getProperty("key");
-        Assertions.assertEquals("value", value);
+    public void testGetApiProtocol_Success() {
+        String apiProtocol = CapaRpcProperties.Settings.getApiProtocol();
+        Assertions.assertEquals("HTTP", apiProtocol);
+    }
+
+    @Test
+    public void testGetHttpClientReadTimeoutSeconds_Success() {
+        Integer httpClientReadTimeoutSeconds = CapaRpcProperties.Settings.getHttpClientReadTimeoutSeconds();
+        Assertions.assertEquals(60, httpClientReadTimeoutSeconds.intValue());
     }
 }

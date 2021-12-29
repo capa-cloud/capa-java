@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PluginLoaderTest {
 
@@ -28,7 +28,7 @@ public class PluginLoaderTest {
     public void loadPluginImpl_spi() {
         Optional<Plugin> pluginOp = PluginLoader.loadPluginImpl(Plugin.class);
         Plugin plugin = pluginOp.get();
-        assertNotEquals(plugin.sayHello(), "hello");
+        assertEquals(plugin.sayHello(), "hello");
     }
 
     @Test
@@ -39,6 +39,6 @@ public class PluginLoaderTest {
                 return "hhh";
             }
         });
-        assertNotEquals(plugin.sayHello(), "hello");
+        assertEquals(plugin.sayHello(), "hello");
     }
 }
