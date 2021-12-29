@@ -18,6 +18,8 @@ package group.rxcloud.capa.spi.http;
 
 import group.rxcloud.capa.component.http.CapaHttp;
 import group.rxcloud.capa.component.http.HttpResponse;
+import group.rxcloud.capa.infrastructure.exceptions.CapaErrorContext;
+import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.spi.http.config.CapaSpiOptionsLoader;
 import group.rxcloud.capa.spi.http.config.CapaSpiProperties;
@@ -63,16 +65,16 @@ public abstract class CapaHttpSpi extends CapaHttp {
                                                                  TypeRef<T> type) {
         if (logger.isDebugEnabled()) {
             if (httpMethod != null) {
-                logger.debug("[CapaHttpSpi] invoke rpc httpMethod[{}]", httpMethod);
+                logger.debug("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke rpc httpMethod[{}]", httpMethod);
             }
             if (urlParameters != null && !urlParameters.isEmpty()) {
-                logger.debug("[CapaHttpSpi] invoke rpc urlParameters[{}]", urlParameters);
+                logger.debug("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke rpc urlParameters[{}]", urlParameters);
             }
             if (headers != null && !headers.isEmpty()) {
-                logger.debug("[CapaHttpSpi] invoke rpc headers[{}}]", headers);
+                logger.debug("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke rpc headers[{}}]", headers);
             }
             if (context != null) {
-                logger.debug("[CapaHttpSpi] invoke rpc context[{}]", context);
+                logger.debug("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke rpc context[{}]", context);
             }
         }
 
@@ -84,7 +86,7 @@ public abstract class CapaHttpSpi extends CapaHttp {
         final String _method = pathSegments[3];
         final String method = pathSegments[4];
         if (logger.isDebugEnabled()) {
-            logger.debug("[CapaHttpSpi] invoke rpc url_path[/version={}/{}/appId={}/{}/methodName={}]",
+            logger.debug("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke rpc url_path[/version={}/{}/appId={}/{}/methodName={}]",
                     version, _invoke, appId, _method, method);
         }
 
@@ -92,37 +94,24 @@ public abstract class CapaHttpSpi extends CapaHttp {
         RpcServiceOptions rpcServiceOptions = getRpcServiceOptions(appId);
         Objects.requireNonNull(rpcServiceOptions, "rpcServiceOptions");
         if (logger.isDebugEnabled()) {
-            logger.debug("[CapaHttpSpi] invoke rpc options[{}]",
+            logger.debug("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke rpc options[{}]",
                     rpcServiceOptions);
         }
 
-        // spi invoke
-        CompletableFuture<HttpResponse<T>> invokeSpiApi =
-                invokeSpiApi(appId, method, requestData, httpMethod, headers, urlParameters, type, rpcServiceOptions);
-        invokeSpiApi.whenComplete((tHttpResponse, throwable) -> {
-            if (throwable != null) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("[CapaHttpSpi] invoke rpc response error",
-                            throwable);
-                }
-                return;
+        try {
+            // spi invoke
+            CompletableFuture<HttpResponse<T>> invokeSpiApi = invokeSpiApi(
+                    appId, method, requestData, httpMethod, headers, urlParameters, type, rpcServiceOptions);
+            invokeSpiApi.whenComplete(this::callbackLog);
+            return invokeSpiApi;
+        } catch (CapaException e) {
+            throw e;
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke error, un-catch throwable is: ", e);
             }
-            if (tHttpResponse == null) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("[CapaHttpSpi] invoke rpc response empty[{}]",
-                            tHttpResponse);
-                }
-                return;
-            }
-            final int responseStatusCode = tHttpResponse.getStatusCode();
-            final Map<String, String> responseHeaders = tHttpResponse.getHeaders();
-            final T responseBody = tHttpResponse.getBody();
-            if (logger.isDebugEnabled()) {
-                logger.debug("[CapaHttpSpi] invoke rpc response code[{}] headers[{}] body[{}]",
-                        responseStatusCode, responseHeaders, responseBody);
-            }
-        });
-        return invokeSpiApi;
+            throw new CapaException(CapaErrorContext.SYSTEM_ERROR, e);
+        }
     }
 
     /**
@@ -134,6 +123,35 @@ public abstract class CapaHttpSpi extends CapaHttp {
     protected RpcServiceOptions getRpcServiceOptions(String appId) {
         CapaSpiOptionsLoader capaSpiOptionsLoader = CapaSpiProperties.getSpiOptionsLoader();
         return capaSpiOptionsLoader.loadRpcServiceOptions(appId);
+    }
+
+    private <T> void callbackLog(HttpResponse<T> tHttpResponse, Throwable throwable) {
+        if (throwable != null) {
+            if (throwable instanceof CapaException) {
+                return;
+            }
+            // un-catch throwable
+            else {
+                if (logger.isErrorEnabled()) {
+                    logger.error("[Capa.Rpc.Client.http.callback] [CapaHttpSpi] invoke rpc response error",
+                            throwable);
+                }
+                return;
+            }
+        }
+        if (tHttpResponse == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("[Capa.Rpc.Client.http.callback] [CapaHttpSpi] invoke rpc response empty.");
+            }
+            return;
+        }
+        final int responseStatusCode = tHttpResponse.getStatusCode();
+        final Map<String, String> responseHeaders = tHttpResponse.getHeaders();
+        final T responseBody = tHttpResponse.getBody();
+        if (logger.isDebugEnabled()) {
+            logger.debug("[Capa.Rpc.Client.http.callback] [CapaHttpSpi] invoke rpc response code[{}] headers[{}] body[{}]",
+                    responseStatusCode, responseHeaders, responseBody);
+        }
     }
 
     /**

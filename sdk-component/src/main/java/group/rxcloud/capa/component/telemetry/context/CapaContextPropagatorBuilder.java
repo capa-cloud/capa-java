@@ -67,8 +67,7 @@ public class CapaContextPropagatorBuilder implements CapaContextPropagatorSettin
             List<String> types = contextConfig.getContextPropagators();
             if (types != null && !types.isEmpty()) {
                 types.stream()
-                     .map(path -> SpiUtils
-                             .newInstanceWithConstructorCache(path, TextMapPropagator.class))
+                     .map(path -> SpiUtils.newInstanceWithConstructorCache(path, TextMapPropagator.class))
                      .forEach(propagator -> propagators.add(propagator));
             }
         }
