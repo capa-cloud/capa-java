@@ -86,7 +86,7 @@ public class CapaSerializeHttpSpiTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("content-type", "application/json");
 
-        RequestBody requestBody = capaSerializeHttpSpi.getRequestBodyWithSerialize("Object", headers);
+        RequestBody requestBody = capaSerializeHttpSpi.getRequestBodyWithSerialize("Object", "application/json");
         String type = requestBody.contentType().type();
         String subtype = requestBody.contentType().subtype();
         Assertions.assertEquals("application", type);

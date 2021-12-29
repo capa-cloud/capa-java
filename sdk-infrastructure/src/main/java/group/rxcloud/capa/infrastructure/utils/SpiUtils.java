@@ -40,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Load class and create instance from config file.
  * TODO move to {@link CapaProperties}
  */
+@Deprecated
 public final class SpiUtils {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()

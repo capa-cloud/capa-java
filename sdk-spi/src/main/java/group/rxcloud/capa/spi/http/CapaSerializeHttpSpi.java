@@ -16,7 +16,6 @@
  */
 package group.rxcloud.capa.spi.http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.exceptions.CapaErrorContext;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
@@ -38,9 +37,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
+import static group.rxcloud.cloudruntimes.domain.core.invocation.Metadata.ACCEPT;
 
 /**
  * The Capa http spi with default serializer process.
@@ -60,29 +65,52 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
     }
 
     /**
-     * Gets request serialization format.
-     *
-     * @param requestData the request data
-     * @return the request with byte[] serialize
+     * HTTP invoke facade.
      */
-    protected byte[] getRequestWithSerialize(Object requestData) {
-        try {
-            return objectSerializer.serialize(requestData);
-        } catch (IOException e) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("[CapaSerializeHttpSpi] serialize rpc request[{}] io error",
-                        requestData, e);
-            }
-            throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
-                    "Request Type: " + requestData.getClass().getName() + ", Error: " + e.getMessage());
-        } catch (Exception e) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("[CapaSerializeHttpSpi] serialize rpc request[{}] error",
-                        requestData, e);
-            }
-            throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
-                    "Request Type: " + requestData.getClass().getName() + ", Error: " + e.getMessage(), e);
+    protected <T> CompletableFuture<HttpResponse<T>> invokeHttpFacade(String url,
+                                                                      Object requestData,
+                                                                      String httpMethod,
+                                                                      Map<String, String> headers,
+                                                                      Map<String, List<String>> urlParameters,
+                                                                      TypeRef<T> type) {
+        // get http header: content-type
+        final String contentType = getRequestContentType(headers);
+
+        // generate http request body
+        RequestBody body = getRequestBodyWithSerialize(requestData, contentType);
+
+        // get http header: accept
+        getRequestAcceptType(headers, body);
+
+        // generate http headers
+        Headers header = getRequestHeaderWithParams(headers);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("[Capa.Rpc.Client.http] [CapaSerializeHttpSpi] final request url[{}] header[{}] httpMethod[{}]",
+                    url, header, httpMethod);
         }
+
+        // make http request
+        Request request = new Request.Builder()
+                .url(url)
+                .headers(header)
+                .method(httpMethod, body)
+                .build();
+
+        CompletableFuture<HttpResponse<T>> asyncInvoke0 = doAsyncInvoke0(request, type);
+        asyncInvoke0.exceptionally(throwable -> {
+            if (throwable instanceof CapaException) {
+                throw (CapaException) throwable;
+            }
+            // un-catch throwable
+            else {
+                if (logger.isErrorEnabled()) {
+                    logger.error("[Capa.Rpc.Client.http.callback] [CapaSerializeHttpSpi] async invoke error, un-catch throwable is: ", throwable);
+                }
+                throw new CapaException(CapaErrorContext.SYSTEM_ERROR, throwable);
+            }
+        });
+        return asyncInvoke0;
     }
 
     /**
@@ -105,12 +133,9 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
      * Gets request body with byte[] serialize.
      *
      * @param requestData the request data
-     * @param headers     the headers
      * @return the request body with byte[] serialize
      */
-    protected RequestBody getRequestBodyWithSerialize(Object requestData, Map<String, String> headers) {
-        final String contentType = getRequestContentType(headers);
-
+    protected RequestBody getRequestBodyWithSerialize(Object requestData, String contentType) {
         final MediaType mediaType = contentType == null
                 ? MEDIA_TYPE_APPLICATION_JSON
                 : MediaType.get(contentType);
@@ -124,7 +149,63 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
             byte[] serializedRequestBody = getRequestWithSerialize(requestData);
             body = RequestBody.Companion.create(serializedRequestBody, mediaType);
         }
+
         return body;
+    }
+
+    /**
+     * Gets request serialization format.
+     *
+     * @param requestData the request data
+     * @return the request with byte[] serialize
+     */
+    protected byte[] getRequestWithSerialize(Object requestData) {
+        try {
+            return objectSerializer.serialize(requestData);
+        } catch (IOException e) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("[Capa.Rpc.Client.http] [CapaSerializeHttpSpi] serialize rpc request[{}] io error",
+                        requestData, e);
+            }
+            throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
+                    "Request Type: " + requestData.getClass().getName() + ", IO Error: " + e.getMessage());
+        } catch (Exception e) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("[Capa.Rpc.Client.http] [CapaSerializeHttpSpi] serialize rpc request[{}] error",
+                        requestData, e);
+            }
+            throw new CapaException(CapaErrorContext.PARAMETER_RPC_REQUEST_SERIALIZE_ERROR,
+                    "Request Type: " + requestData.getClass().getName() + ", Error: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Gets request accept type.
+     *
+     * @param headers the headers with custom value
+     * @param body    request body
+     */
+    protected void getRequestAcceptType(Map<String, String> headers, RequestBody body) {
+        final List<String> accepts = new ArrayList<>(3);
+        // 1. set user accept header
+        final String userAcceptValue = headers.get(ACCEPT);
+        if (userAcceptValue != null && userAcceptValue.length() > 0) {
+            accepts.add(userAcceptValue);
+        }
+        // 2. set accept header same with content-type
+        if (body.contentType() != null) {
+            final String contentType = Objects.requireNonNull(body.contentType()).toString();
+            if (contentType.length() > 0) {
+                accepts.add(contentType);
+            }
+        }
+        // 3. add */* at last
+        accepts.add("*/*");
+
+        final String acceptStr = accepts.stream()
+                .distinct()
+                .collect(Collectors.joining(","));
+        headers.put(ACCEPT, acceptStr);
     }
 
     /**
@@ -183,15 +264,15 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
             return new HttpResponse<>(responseObject, httpResponseHeaders, httpResponseStatusCode);
         } catch (IOException e) {
             if (logger.isWarnEnabled()) {
-                logger.warn("[CapaSerializeHttpSpi] deserialize rpc statusCode[{}] headers[{}] response[{}] type[{}] io error",
-                        httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type, e);
+                logger.warn("[Capa.Rpc.Client.http.callback] [CapaSerializeHttpSpi] deserialize response statusCode[{}] headers[{}] response[{}] type[{}] io error",
+                        httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type.getType().getTypeName(), e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_RESPONSE_DESERIALIZE_ERROR,
-                    "Response Type: " + type.getType().getTypeName() + ", Error: " + e.getMessage(), e);
+                    "Response Type: " + type.getType().getTypeName() + ", IO Error: " + e.getMessage(), e);
         } catch (Exception e) {
             if (logger.isWarnEnabled()) {
-                logger.warn("[CapaSerializeHttpSpi] deserialize rpc statusCode[{}] headers[{}] response[{}] type[{}] error",
-                        httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type, e);
+                logger.warn("[Capa.Rpc.Client.http.callback] [CapaSerializeHttpSpi] deserialize response statusCode[{}] headers[{}] response[{}] type[{}] error",
+                        httpResponseStatusCode, httpResponseHeaders, httpResponseBody, type.getType().getTypeName(), e);
             }
             throw new CapaException(CapaErrorContext.PARAMETER_RPC_RESPONSE_DESERIALIZE_ERROR,
                     "Response Type: " + type.getType().getTypeName() + ", Error: " + e.getMessage(), e);
@@ -207,11 +288,6 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
          * Empty input or output.
          */
         private static final byte[] EMPTY_BYTES = new byte[0];
-
-        /**
-         * JSON Object Mapper.
-         */
-        private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
         private final transient CompletableFuture<HttpResponse<byte[]>> future;
 
@@ -250,23 +326,6 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
             future.complete(httpResponse);
         }
 
-        private void onResponseError(Response response, byte[] bodyBytes) {
-            try {
-                CapaException error = parseCapaError(bodyBytes);
-                if (error != null) {
-                    if (error.getErrorCodeContext() != null) {
-                        future.completeExceptionally(new CapaException(error.getErrorCodeContext(),
-                                "HTTP status code: " + response.code()));
-                        return;
-                    }
-                }
-                future.completeExceptionally(new CapaException(CapaErrorContext.DEPENDENT_SERVICE_ERROR,
-                        "HTTP status code: " + response.code()));
-            } catch (CapaException e) {
-                future.completeExceptionally(e);
-            }
-        }
-
         private static byte[] getBodyBytesOrEmptyArray(Response response) throws IOException {
             ResponseBody body = response.body();
             if (body != null) {
@@ -275,24 +334,39 @@ public abstract class CapaSerializeHttpSpi extends CapaHttpSpi {
             return EMPTY_BYTES;
         }
 
+        private void onResponseError(Response response, byte[] bodyBytes) {
+            try {
+                String error = parseCapaError(bodyBytes);
+                if (logger.isWarnEnabled()) {
+                    logger.warn("[Capa.Rpc.Client.http.callback] [FutureCallback.onResponseError] response statusCode[{}], errorMsg[{}]",
+                            response.code(), error);
+                }
+                CapaException capaException = new CapaException(CapaErrorContext.DEPENDENT_SERVICE_ERROR,
+                        "HTTP status code: " + response.code() + ", error message: " + error);
+                future.completeExceptionally(capaException);
+            } catch (CapaException e) {
+                future.completeExceptionally(e);
+            }
+        }
+
         /**
          * Tries to parse an error from Capa response body.
          *
-         * @param json Response body from Capa remote.
-         * @return CapaError or null if could not parse.
+         * @param bytes Response body from Capa remote.
+         * @return ErrorMsg or null if could not parse.
          */
-        private static CapaException parseCapaError(byte[] json) {
-            if ((json == null) || (json.length == 0)) {
+        private static String parseCapaError(byte[] bytes) {
+            if ((bytes == null) || (bytes.length == 0)) {
                 return null;
             }
             try {
-                return OBJECT_MAPPER.readValue(json, CapaException.class);
-            } catch (IOException e) {
-                String errorMessage = new String(json, StandardCharsets.UTF_8);
-                throw new CapaException(CapaErrorContext.DEPENDENT_SERVICE_ERROR, errorMessage, e);
+                return new String(bytes, StandardCharsets.UTF_8);
             } catch (Exception e) {
-                String errorMessage = new String(json, StandardCharsets.UTF_8);
-                throw new CapaException(CapaErrorContext.SYSTEM_ERROR, errorMessage, e);
+                if (logger.isErrorEnabled()) {
+                    logger.error("[Capa.Rpc.Client.http.callback] [FutureCallback.parseCapaError] bytes[{}] parse error",
+                            bytes, e);
+                }
+                throw new CapaException(CapaErrorContext.SYSTEM_ERROR, e);
             }
         }
     }
