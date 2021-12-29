@@ -27,18 +27,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_COMPONENT_PROPERTIES_PREFIX;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX;
 import static group.rxcloud.capa.infrastructure.CapaConstants.Properties.CAPA_PROPERTIES_SUFFIX;
 import static group.rxcloud.capa.infrastructure.InnerModule.FILE_CACHE_MAP;
 import static group.rxcloud.capa.infrastructure.InnerModule.loadCapaConfig;
+import static group.rxcloud.capa.infrastructure.InnerModule.loadCapaFileByJavaSpi;
 import static group.rxcloud.capa.infrastructure.InnerModule.loadCapaProperties;
 
 /**
@@ -47,25 +49,16 @@ import static group.rxcloud.capa.infrastructure.InnerModule.loadCapaProperties;
 public abstract class CapaProperties {
 
     /**
-     * Capa's default use of HTTP.
+     * Capa's component properties supplier.
      */
-    private static final Supplier<String> DEFAULT_API_PROTOCOL = () -> "HTTP";
-
-    /**
-     * Determines if Capa client will use HTTP or Other client.
-     */
-    public static final Supplier<String> API_PROTOCOL = DEFAULT_API_PROTOCOL;
-
-    /**
-     * Capa's default timeout in seconds for HTTP client reads.
-     */
-    private static final Integer DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS = 60;
-
-    /**
-     * Capa's timeout in seconds for HTTP client reads.
-     */
-    public static final Supplier<Integer> HTTP_CLIENT_READ_TIMEOUT_SECONDS
-            = () -> DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS;
+    public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER
+            = (componentDomain) -> (Properties) FILE_CACHE_MAP.computeIfAbsent(componentDomain,
+            s -> {
+                final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX
+                        + componentDomain.toLowerCase()
+                        + CAPA_PROPERTIES_SUFFIX;
+                return loadCapaProperties(fileName);
+            });
 
     /**
      * Capa's infrastructure properties supplier.
@@ -80,16 +73,11 @@ public abstract class CapaProperties {
             });
 
     /**
-     * Capa's component properties supplier.
+     * Capa's plugin properties supplier.
      */
-    public static final Function<String, Properties> COMPONENT_PROPERTIES_SUPPLIER
-            = (componentDomain) -> (Properties) FILE_CACHE_MAP.computeIfAbsent(componentDomain,
-            s -> {
-                final String fileName = CAPA_COMPONENT_PROPERTIES_PREFIX
-                        + componentDomain.toLowerCase()
-                        + CAPA_PROPERTIES_SUFFIX;
-                return loadCapaProperties(fileName);
-            });
+    public static final Function<Class, Object> PLUGIN_PROPERTIES_SUPPLIER
+            = (clazz) -> FILE_CACHE_MAP.computeIfAbsent(clazz.getName(),
+            s -> loadCapaFileByJavaSpi(clazz));
 
     /**
      * Capa's config file supplier.
@@ -118,19 +106,32 @@ interface InnerModule {
             properties.load(inputStreamReader);
             return properties;
         } catch (IOException e) {
-            throw new IllegalArgumentException(fileName + " file not found.");
+            throw new IllegalArgumentException(fileName + " file not found.", e);
         }
     }
 
     static <T> T loadCapaConfig(final String fileName, Class<T> configClazz) {
         Objects.requireNonNull(fileName, "fileName not found.");
-        try (InputStream in = configClazz.getResourceAsStream(fileName)) {
+        try (InputStream in = CapaProperties.class.getResourceAsStream(fileName)) {
             InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
             return OBJECT_MAPPER.readValue(inputStreamReader, configClazz);
         } catch (JsonParseException | JsonMappingException e) {
-            throw new IllegalArgumentException(fileName + " file not load.");
+            throw new IllegalArgumentException(fileName + " file not load.", e);
         } catch (IOException e) {
-            throw new IllegalArgumentException(fileName + " file not found.");
+            throw new IllegalArgumentException(fileName + " file not found.", e);
+        }
+    }
+
+    static <T> T loadCapaFileByJavaSpi(Class<T> configClazz) {
+        try {
+            ServiceLoader<T> loader = ServiceLoader.load(configClazz);
+            Iterator<T> iterator = loader.iterator();
+            if (!iterator.hasNext()) {
+                return null;
+            }
+            return iterator.next();
+        } catch (Exception e) {
+            throw new IllegalArgumentException(configClazz.getName() + " spi file not found.", e);
         }
     }
 }

@@ -24,18 +24,6 @@ import java.util.Properties;
 public class CapaPropertiesTest {
 
     @Test
-    public void testGetApiProtocol_Success() {
-        String apiProtocol = CapaProperties.API_PROTOCOL.get();
-        Assertions.assertEquals("HTTP", apiProtocol);
-    }
-
-    @Test
-    public void testGetHttpClientReadTimeoutSeconds_Success() {
-        Integer httpClientReadTimeoutSeconds = CapaProperties.HTTP_CLIENT_READ_TIMEOUT_SECONDS.get();
-        Assertions.assertEquals(60, httpClientReadTimeoutSeconds.intValue());
-    }
-
-    @Test
     public void testGetComponentProperties_Success() {
         Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("rpc");
         String value = properties.getProperty("key");

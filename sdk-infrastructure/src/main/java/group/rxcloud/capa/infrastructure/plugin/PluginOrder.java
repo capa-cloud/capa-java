@@ -14,26 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.telemetry;
-
-import group.rxcloud.capa.component.telemetry.trace.CapaReadWriteSpan;
-import io.opentelemetry.sdk.trace.ReadWriteSpan;
+package group.rxcloud.capa.infrastructure.plugin;
 
 /**
- * SPI Capa read write span.
+ * TODO: 2021/12/29 currently only support one plugin.
  */
-public abstract class CapaReadWriteSpanSpi extends CapaReadWriteSpan {
+public @interface PluginOrder {
 
-    /**
-     * Instantiates a new Capa read write span spi.
-     *
-     * @param tracerName the tracer name
-     * @param version    the version
-     * @param schemaUrl  the schema url
-     * @param span       the span
-     */
-    public CapaReadWriteSpanSpi(String tracerName, String version, String schemaUrl,
-                                ReadWriteSpan span) {
-        super(tracerName, version, schemaUrl, span);
-    }
+    int order() default 0;
 }

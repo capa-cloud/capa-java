@@ -23,6 +23,11 @@ import group.rxcloud.capa.infrastructure.CapaClassLoader;
  */
 public abstract class CapaSpiProperties {
 
+    /**
+     * Static lock object.
+     */
+    private static final Object LOCK = new Object();
+
     private static volatile CapaSpiOptionsLoader instance;
 
     /**
@@ -32,7 +37,7 @@ public abstract class CapaSpiProperties {
      */
     public static CapaSpiOptionsLoader getSpiOptionsLoader() {
         if (instance == null) {
-            synchronized (CapaSpiProperties.class) {
+            synchronized (LOCK) {
                 if (instance == null) {
                     instance = CapaClassLoader.loadComponentClassObj("rpc-common", CapaSpiOptionsLoader.class);
                 }

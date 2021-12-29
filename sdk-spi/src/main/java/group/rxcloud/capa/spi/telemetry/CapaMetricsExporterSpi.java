@@ -22,10 +22,15 @@ import group.rxcloud.capa.component.telemetry.metrics.CapaMetricsExporter;
 import java.util.function.Supplier;
 
 /**
- *
+ * The Capa metrics exporter spi.
  */
 public abstract class CapaMetricsExporterSpi extends CapaMetricsExporter {
 
+    /**
+     * Instantiates a new Capa metrics exporter spi.
+     *
+     * @param samplerConfig the sampler config
+     */
     public CapaMetricsExporterSpi(Supplier<SamplerConfig> samplerConfig) {
         super(samplerConfig);
     }

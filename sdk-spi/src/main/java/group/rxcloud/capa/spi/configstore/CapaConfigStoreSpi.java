@@ -50,7 +50,7 @@ public abstract class CapaConfigStoreSpi extends CapaConfigStore {
     @Override
     public <T> Mono<List<ConfigurationItem<T>>> get(GetRequest getRequest, TypeRef<T> type) {
         if (logger.isDebugEnabled()) {
-            logger.debug("[CapaConfigStoreSpi] get config request[{}]", getRequest);
+            logger.debug("[Capa.Config] [CapaConfigStoreSpi] get config request[{}]", getRequest);
         }
         final String appId = getRequest.getAppId();
         final String group = getRequest.getGroup();
@@ -84,7 +84,7 @@ public abstract class CapaConfigStoreSpi extends CapaConfigStore {
     @Override
     public <T> Flux<SubscribeResp<T>> subscribe(SubscribeReq subscribeReq, TypeRef<T> type) {
         if (logger.isDebugEnabled()) {
-            logger.debug("[CapaConfigStoreSpi] subscribe config request[{}]", subscribeReq);
+            logger.debug("[Capa.Config] [CapaConfigStoreSpi] subscribe config request[{}]", subscribeReq);
         }
         final String appId = subscribeReq.getAppId();
         final String group = subscribeReq.getGroup();

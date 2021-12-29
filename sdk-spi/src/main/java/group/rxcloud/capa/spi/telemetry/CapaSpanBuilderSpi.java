@@ -24,6 +24,15 @@ import io.opentelemetry.api.trace.SpanBuilder;
  */
 public abstract class CapaSpanBuilderSpi extends CapaSpanBuilder {
 
+    /**
+     * Instantiates a new Capa span builder spi.
+     *
+     * @param tracerName  the tracer name
+     * @param version     the version
+     * @param schemaUrl   the schema url
+     * @param spanName    the span name
+     * @param spanBuilder the span builder
+     */
     public CapaSpanBuilderSpi(String tracerName, String version, String schemaUrl, String spanName,
                               SpanBuilder spanBuilder) {
         super(tracerName, version, schemaUrl, spanName, spanBuilder);

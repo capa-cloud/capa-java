@@ -19,9 +19,20 @@ package group.rxcloud.capa.spi.telemetry;
 import group.rxcloud.capa.component.telemetry.metrics.CapaLongHistogram;
 
 /**
+ * The Capa long histogram spi.
  */
 public abstract class CapaLongHistogramSpi extends CapaLongHistogram {
 
+    /**
+     * Instantiates a new Capa long histogram spi.
+     *
+     * @param meterName   the meter name
+     * @param schemaUrl   the schema url
+     * @param version     the version
+     * @param name        the name
+     * @param description the description
+     * @param unit        the unit
+     */
     public CapaLongHistogramSpi(String meterName, String schemaUrl, String version, String name, String description,
                                 String unit) {
         super(meterName, schemaUrl, version, name, description, unit);

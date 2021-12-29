@@ -14,26 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.telemetry;
+package group.rxcloud.capa.component;
 
-import group.rxcloud.capa.component.telemetry.trace.CapaReadWriteSpan;
-import io.opentelemetry.sdk.trace.ReadWriteSpan;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-/**
- * SPI Capa read write span.
- */
-public abstract class CapaReadWriteSpanSpi extends CapaReadWriteSpan {
+public class CapaRpcPropertiesTest {
 
-    /**
-     * Instantiates a new Capa read write span spi.
-     *
-     * @param tracerName the tracer name
-     * @param version    the version
-     * @param schemaUrl  the schema url
-     * @param span       the span
-     */
-    public CapaReadWriteSpanSpi(String tracerName, String version, String schemaUrl,
-                                ReadWriteSpan span) {
-        super(tracerName, version, schemaUrl, span);
+    @Test
+    public void testGetApiProtocol_Success() {
+        String apiProtocol = CapaRpcProperties.Settings.getApiProtocol();
+        Assertions.assertEquals("HTTP", apiProtocol);
+    }
+
+    @Test
+    public void testGetHttpClientReadTimeoutSeconds_Success() {
+        Integer httpClientReadTimeoutSeconds = CapaRpcProperties.Settings.getHttpClientReadTimeoutSeconds();
+        Assertions.assertEquals(60, httpClientReadTimeoutSeconds.intValue());
     }
 }
