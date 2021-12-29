@@ -27,13 +27,13 @@ interface CapaConstants {
     interface Properties {
 
         /**
-         * The {@code infrastructure} properties prefix.
-         */
-        String CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX = "/capa-infrastructure-";
-        /**
          * The {@code component} properties prefix.
          */
         String CAPA_COMPONENT_PROPERTIES_PREFIX = "/capa-component-";
+        /**
+         * The {@code infrastructure} properties prefix.
+         */
+        String CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX = "/capa-infrastructure-";
 
         /**
          * The properties suffix.

@@ -24,6 +24,14 @@ import io.opentelemetry.api.metrics.Meter;
  */
 public abstract class CapaMeterSpi extends CapaMeter {
 
+    /**
+     * Instantiates a new Capa meter spi.
+     *
+     * @param meterName the meter name
+     * @param schemaUrl the schema url
+     * @param version   the version
+     * @param meter     the meter
+     */
     public CapaMeterSpi(String meterName, String schemaUrl, String version, Meter meter) {
         super(meterName, schemaUrl, version, meter);
     }

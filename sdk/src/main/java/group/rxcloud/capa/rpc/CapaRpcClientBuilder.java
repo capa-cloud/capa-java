@@ -17,8 +17,8 @@
 package group.rxcloud.capa.rpc;
 
 
+import group.rxcloud.capa.component.CapaRpcProperties;
 import group.rxcloud.capa.component.http.CapaHttpBuilder;
-import group.rxcloud.capa.infrastructure.CapaProperties;
 
 import java.util.function.Supplier;
 
@@ -55,7 +55,7 @@ public class CapaRpcClientBuilder {
      * Creates a constructor for {@link CapaRpcClient}.
      */
     public CapaRpcClientBuilder(CapaHttpBuilder httpBuilder) {
-        this.apiProtocol = CapaApiProtocol.parseProtocol(CapaProperties.API_PROTOCOL.get());
+        this.apiProtocol = CapaApiProtocol.parseProtocol(CapaRpcProperties.Settings.getApiProtocol());
         this.httpBuilder = httpBuilder;
     }
 

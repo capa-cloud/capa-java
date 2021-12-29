@@ -17,8 +17,8 @@
 package group.rxcloud.capa.component.http;
 
 
+import group.rxcloud.capa.component.CapaRpcProperties;
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
-import group.rxcloud.capa.infrastructure.CapaProperties;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import okhttp3.OkHttpClient;
@@ -96,7 +96,7 @@ public class CapaHttpBuilder {
                 if (OK_HTTP_CLIENT.get() == null) {
                     OkHttpClient.Builder builder = new OkHttpClient.Builder();
                     // read timeout property
-                    Duration readTimeout = Duration.ofSeconds(CapaProperties.HTTP_CLIENT_READ_TIMEOUT_SECONDS.get());
+                    Duration readTimeout = Duration.ofSeconds(CapaRpcProperties.Settings.getHttpClientReadTimeoutSeconds());
                     builder.readTimeout(readTimeout);
                     OkHttpClient okHttpClient = builder.build();
                     OK_HTTP_CLIENT.set(okHttpClient);

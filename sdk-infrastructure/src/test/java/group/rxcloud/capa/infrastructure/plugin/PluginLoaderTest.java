@@ -14,26 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.telemetry;
+package group.rxcloud.capa.infrastructure.plugin;
 
-import group.rxcloud.capa.component.telemetry.trace.CapaReadWriteSpan;
-import io.opentelemetry.sdk.trace.ReadWriteSpan;
+import org.junit.jupiter.api.Test;
 
-/**
- * SPI Capa read write span.
- */
-public abstract class CapaReadWriteSpanSpi extends CapaReadWriteSpan {
+import java.util.Optional;
 
-    /**
-     * Instantiates a new Capa read write span spi.
-     *
-     * @param tracerName the tracer name
-     * @param version    the version
-     * @param schemaUrl  the schema url
-     * @param span       the span
-     */
-    public CapaReadWriteSpanSpi(String tracerName, String version, String schemaUrl,
-                                ReadWriteSpan span) {
-        super(tracerName, version, schemaUrl, span);
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+public class PluginLoaderTest {
+
+    @Test
+    public void loadPluginImpl_spi() {
+        Optional<Plugin> pluginOp = PluginLoader.loadPluginImpl(Plugin.class);
+        Plugin plugin = pluginOp.get();
+        assertNotEquals(plugin.sayHello(), "hello");
+    }
+
+    @Test
+    public void loadPluginImpl_default() {
+        Plugin plugin = PluginLoader.loadPluginImpl(Plugin.class, () -> new Plugin() {
+            @Override
+            public String sayHello() {
+                return "hhh";
+            }
+        });
+        assertNotEquals(plugin.sayHello(), "hello");
     }
 }

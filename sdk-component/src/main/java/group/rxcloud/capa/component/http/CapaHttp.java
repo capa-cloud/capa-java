@@ -107,6 +107,7 @@ public abstract class CapaHttp implements AutoCloseable {
 
     /**
      * Invokes an API that returns a {@code <T>} payload.
+     * FIXME: expose {@code Mono}, not {@code CompletableFuture}
      *
      * @param <T>           The Type of the return.
      * @param httpMethod    HTTP httpMethod.

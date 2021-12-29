@@ -22,5 +22,4 @@ import group.rxcloud.capa.component.telemetry.context.CapaContextAsyncWrapper;
  * SPI Capa context async wrapper.
  */
 public abstract class CapaContextAsyncWrapperSpi implements CapaContextAsyncWrapper {
-
 }

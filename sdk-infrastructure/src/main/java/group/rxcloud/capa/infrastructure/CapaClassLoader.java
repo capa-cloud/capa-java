@@ -81,6 +81,20 @@ public final class CapaClassLoader {
         return loadClassObj(implClassPath, parameterTypes, initargs);
     }
 
+    /**
+     * Load plugin class obj.
+     *
+     * @param <T>        the target class type
+     * @param superClazz the interface class type
+     * @return the target plugin class obj
+     */
+    public static <T> T loadPluginClassObj(Class<T> superClazz) {
+        Object pluginImpl = CapaProperties.PLUGIN_PROPERTIES_SUPPLIER.apply(superClazz);
+        return (T) pluginImpl;
+    }
+
+    // -- Private
+
     private static <T> T loadClassObj(String classPath, Class<?>[] parameterTypes, Object[] initargs) {
         try {
             Class<T> aClass = (Class<T>) Class.forName(classPath);

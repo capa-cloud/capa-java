@@ -24,6 +24,12 @@ import io.opentelemetry.api.trace.TracerBuilder;
  */
 public abstract class CapaTracerBuilderSpi extends CapaTracerBuilder {
 
+    /**
+     * Instantiates a new Capa tracer builder spi.
+     *
+     * @param tracerName the tracer name
+     * @param builder    the builder
+     */
     public CapaTracerBuilderSpi(String tracerName, TracerBuilder builder) {
         super(tracerName, builder);
     }

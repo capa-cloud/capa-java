@@ -24,6 +24,14 @@ import io.opentelemetry.api.trace.Tracer;
  */
 public abstract class CapaTracerSpi extends CapaTracer {
 
+    /**
+     * Instantiates a new Capa tracer spi.
+     *
+     * @param tracerName the tracer name
+     * @param version    the version
+     * @param schemaUrl  the schema url
+     * @param tracer     the tracer
+     */
     public CapaTracerSpi(String tracerName, String version, String schemaUrl, Tracer tracer) {
         super(tracerName, version, schemaUrl, tracer);
     }

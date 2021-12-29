@@ -19,9 +19,20 @@ package group.rxcloud.capa.spi.telemetry;
 import group.rxcloud.capa.component.telemetry.metrics.CapaDoubleHistogram;
 
 /**
+ * The Capa double histogram spi.
  */
 public abstract class CapaDoubleHistogramSpi extends CapaDoubleHistogram {
 
+    /**
+     * Instantiates a new Capa double histogram spi.
+     *
+     * @param meterName   the meter name
+     * @param schemaUrl   the schema url
+     * @param version     the version
+     * @param name        the name
+     * @param description the description
+     * @param unit        the unit
+     */
     public CapaDoubleHistogramSpi(String meterName, String schemaUrl, String version, String name, String description, String unit) {
         super(meterName, schemaUrl, version, name, description, unit);
     }
