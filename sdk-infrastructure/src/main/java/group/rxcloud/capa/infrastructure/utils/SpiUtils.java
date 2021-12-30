@@ -21,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import group.rxcloud.capa.infrastructure.CapaProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,8 +47,6 @@ public final class SpiUtils {
 
     private static final Map<String, Constructor> CACHE = new ConcurrentHashMap<>();
 
-    private static final Logger log = LoggerFactory.getLogger(SpiUtils.class);
-
     private SpiUtils() {
     }
 
@@ -59,44 +55,10 @@ public final class SpiUtils {
             if (in != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
                 return OBJECT_MAPPER.readValue(inputStreamReader, configType);
-            } else {
-                log.warn(path + " file not found.");
             }
         } catch (IOException e) {
-            log.warn(path + " config file not found.", e);
         }
         return null;
-    }
-
-    public static Properties loadPropertiesNullable(String path) {
-        try (InputStream in = SpiUtils.class.getResourceAsStream(path)) {
-            if (in != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-                Properties properties = new Properties();
-                properties.load(inputStreamReader);
-                return properties;
-            } else {
-                log.warn(path + " file not found.");
-            }
-        } catch (IOException e) {
-            log.warn(path + " file not found.", e);
-        }
-        return null;
-    }
-
-    public static Properties loadProperties(String path) {
-        try (InputStream in = SpiUtils.class.getResourceAsStream(path)) {
-            if (in != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-                Properties properties = new Properties();
-                properties.load(inputStreamReader);
-                return properties;
-            } else {
-                throw new IllegalArgumentException(path + " file not found.");
-            }
-        } catch (IOException e) {
-            throw new IllegalArgumentException(path + " file not found.", e);
-        }
     }
 
     @Nullable
@@ -115,7 +77,6 @@ public final class SpiUtils {
             }
             return null;
         } catch (Throwable e) {
-            log.info("Fail to load " + type.getName() + " instance from spi config file.");
         }
         return null;
     }
