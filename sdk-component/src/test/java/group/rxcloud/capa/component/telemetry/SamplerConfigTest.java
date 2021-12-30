@@ -19,11 +19,14 @@ package group.rxcloud.capa.component.telemetry;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author: chenyijiang
  * @date: 2021/12/2 12:33
  */
+
 public class SamplerConfigTest {
 
     @Test
@@ -34,5 +37,13 @@ public class SamplerConfigTest {
     @Test
     public void isTraceEnable() {
         assertFalse(SamplerConfig.DEFAULT_SUPPLIER.get().isTraceEnable());
+    }
+    @Test
+    public void configurationWeakDependency() {
+        for (int i = 0; i < 6; i++) {
+            SamplerConfig config = SamplerConfig.DEFAULT_SUPPLIER.get();
+            assertNotNull(config);
+            assertNotEquals(SamplerConfig.DEFAULT_CONFIG, config);
+        }
     }
 }

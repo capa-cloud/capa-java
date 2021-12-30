@@ -19,7 +19,6 @@ package group.rxcloud.capa.infrastructure.utils;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,30 +38,6 @@ public class SpiUtilsTest {
         assertNull(SpiUtils.loadConfigNullable("/config.json", Integer.class));
     }
 
-    @Test
-    public void loadPropertiesNullable() {
-        Properties properties = SpiUtils.loadPropertiesNullable("/config.properties");
-        assertEquals("aaa", properties.getProperty("str"));
-
-        assertNull(SpiUtils.loadPropertiesNullable("lalala"));
-    }
-
-    @Test
-    public void loadProperties() {
-        Properties properties = SpiUtils.loadProperties("/config.properties");
-        assertEquals("aaa", properties.getProperty("str"));
-    }
-
-    @Test
-    public void loadPropertiesFail() {
-        Throwable t = null;
-        try {
-            Properties properties = SpiUtils.loadProperties("aaaa");
-        } catch (Throwable throwable) {
-            t = throwable;
-        }
-        assertNotNull(t);
-    }
     @Test
     public void loadFromSpiComponentFileNullable() {
         MyInterface myInterface = SpiUtils.loadFromSpiComponentFileNullable(MyInterface.class, "test");
