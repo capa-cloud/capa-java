@@ -16,18 +16,7 @@
  */
 package group.rxcloud.capa.component.telemetry;
 
-import group.rxcloud.capa.component.CapaTelemetryProperties;
-import group.rxcloud.capa.component.telemetry.metrics.CapaMeterProviderBuilder;
-import group.rxcloud.capa.infrastructure.hook.ConfigurationHooks;
-import group.rxcloud.capa.infrastructure.hook.MergedPropertiesConfig;
-import group.rxcloud.capa.infrastructure.hook.Mixer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -43,76 +32,11 @@ public class SamplerConfig implements Serializable {
         setMetricsEnable(true);
     }};
 
-    public static final transient AtomicReference<SamplerConfig> REMOTE_CONFIG = new AtomicReference<>();
-
-    private static final int MAX_REMOTE_INIT_RETRY = 5;
-
-    private static final transient AtomicInteger CONFIG_INIT = new AtomicInteger(0);
-
-    private static final long serialVersionUID = -2113523925814197551L;
-
-    private static final transient Logger log = LoggerFactory.getLogger(CapaMeterProviderBuilder.class);
-
-    public static final transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> {
-        if (CONFIG_INIT.get() < MAX_REMOTE_INIT_RETRY) {
-            synchronized (CONFIG_INIT) {
-                if (CONFIG_INIT.getAndIncrement() <= MAX_REMOTE_INIT_RETRY) {
-                    if (tryInitRemoteConfig()) {
-                        CONFIG_INIT.set(MAX_REMOTE_INIT_RETRY);
-                    }
-                }
-            }
-        }
-
-        SamplerConfig config = REMOTE_CONFIG.get();
-        if (config == null) {
-            config = DEFAULT_CONFIG;
-        }
-        return config;
-    };
+    public static final transient Supplier<SamplerConfig> DEFAULT_SUPPLIER = () -> DEFAULT_CONFIG;
 
     private Boolean metricsEnable;
 
     private Boolean traceEnable;
-
-    private static boolean tryInitRemoteConfig() {
-        Optional<ConfigurationHooks> hooksOpt = Mixer.configurationHooksNullable();
-        if (hooksOpt.isPresent()) {
-            ConfigurationHooks hooks = hooksOpt.get();
-            String fileName = "capa-component-telemetry-sampling.properties";
-            try {
-                // TODO: 2021/12/3 Move this to SPI module.
-                // TODO: 2021/12/3 And use Configuration extension api to get merged file.
-                MergedPropertiesConfig config = new MergedPropertiesConfig(
-                        fileName,
-                        hooks.defaultConfigurationAppId(),
-                        CapaTelemetryProperties.Settings.getCenterConfigAppId());
-                String metricKey = "metricsEnable";
-                String traceKey = "traceEnable";
-                SamplerConfig dynamicConfig = new SamplerConfig() {
-                    @Override
-                    public Boolean isMetricsEnable() {
-                        return !config.containsKey(metricKey) || Boolean.TRUE.toString()
-                                                                             .equalsIgnoreCase(config.get(metricKey));
-                    }
-
-                    @Override
-                    public Boolean isTraceEnable() {
-                        return !config.containsKey(traceKey) || Boolean.TRUE.toString()
-                                                                            .equalsIgnoreCase(config.get(traceKey));
-                    }
-                };
-
-                REMOTE_CONFIG.set(dynamicConfig);
-
-                return true;
-            } catch (Throwable throwable) {
-                log.info("Fail to load global telemetry config. Dynamic global config is disabled for capa telemetry.",
-                        throwable);
-            }
-        }
-        return false;
-    }
 
     public Boolean isMetricsEnable() {
         return metricsEnable == null ? DEFAULT_SUPPLIER.get().metricsEnable : metricsEnable;

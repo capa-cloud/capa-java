@@ -18,9 +18,9 @@ package group.rxcloud.capa.component.telemetry;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author: chenyijiang
@@ -31,19 +31,20 @@ public class SamplerConfigTest {
 
     @Test
     public void isMetricsEnable() {
-        assertFalse(SamplerConfig.DEFAULT_SUPPLIER.get().isMetricsEnable());
+        assertTrue(SamplerConfig.DEFAULT_SUPPLIER.get().isMetricsEnable());
     }
 
     @Test
     public void isTraceEnable() {
-        assertFalse(SamplerConfig.DEFAULT_SUPPLIER.get().isTraceEnable());
+        assertTrue(SamplerConfig.DEFAULT_SUPPLIER.get().isTraceEnable());
     }
+
     @Test
     public void configurationWeakDependency() {
         for (int i = 0; i < 6; i++) {
             SamplerConfig config = SamplerConfig.DEFAULT_SUPPLIER.get();
             assertNotNull(config);
-            assertNotEquals(SamplerConfig.DEFAULT_CONFIG, config);
+            assertEquals(SamplerConfig.DEFAULT_CONFIG, config);
         }
     }
 }
