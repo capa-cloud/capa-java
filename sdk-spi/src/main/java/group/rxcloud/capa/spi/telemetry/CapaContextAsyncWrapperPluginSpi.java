@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.spi.telemetry;
 
-package group.rxcloud.capa.spi.http.config;
-
+import group.rxcloud.capa.component.telemetry.context.CapaContextAsyncWrapperPlugin;
 
 /**
- * RPC service options. Define for AppId.
+ * SPI Capa context async wrapper.
  */
-public interface RpcServiceOptions {
+public abstract class CapaContextAsyncWrapperPluginSpi implements CapaContextAsyncWrapperPlugin {
 }

@@ -27,43 +27,43 @@ import java.util.concurrent.ScheduledExecutorService;
  * @author: chenyijiang
  * @date: 2021/11/25 20:55
  */
-public class TestCapaContextAsyncWrapper implements CapaContextAsyncWrapper {
+public class TestCapaContextAsyncWrapperPlugin extends CapaContextAsyncWrapperPlugin.CapaContextAsyncWrapperDefault {
 
     private static Set<Class> called = new HashSet<>();
 
     @Override
     public Runnable wrap(Runnable runnable) {
         called.add(Runnable.class);
-        return CapaContextAsyncWrapper.super.wrap(runnable);
+        return super.wrap(runnable);
     }
 
     @Override
     public <T> Callable<T> wrap(Callable<T> callable) {
         called.add(Callable.class);
-        return CapaContextAsyncWrapper.super.wrap(callable);
+        return super.wrap(callable);
     }
 
     @Override
     public Executor wrap(Executor executor) {
         called.add(Executor.class);
-        return CapaContextAsyncWrapper.super.wrap(executor);
+        return super.wrap(executor);
     }
 
     @Override
     public ExecutorService wrap(ExecutorService executor) {
         called.add(ExecutorService.class);
-        return CapaContextAsyncWrapper.super.wrap(executor);
+        return super.wrap(executor);
     }
 
     @Override
     public ScheduledExecutorService wrap(ScheduledExecutorService executor) {
         called.add(ScheduledExecutorService.class);
-        return CapaContextAsyncWrapper.super.wrap(executor);
+        return super.wrap(executor);
     }
 
     @Override
     public String getTraceId() {
-        return CapaContextAsyncWrapper.super.getTraceId();
+        return super.getTraceId();
     }
 
     public static boolean called(Class type) {

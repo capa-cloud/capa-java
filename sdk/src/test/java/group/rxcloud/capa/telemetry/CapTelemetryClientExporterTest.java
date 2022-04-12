@@ -19,7 +19,6 @@ package group.rxcloud.capa.telemetry;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,16 +26,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author: chenyijiang
  * @date: 2021/11/26 14:12
  */
-public class CapaTelemetryClientGlobalTest {
+public class CapTelemetryClientExporterTest {
 
     @Test
     public void getOrCreate() {
         CapaTelemetryClient client = new CapaTelemetryClientBuilder().build();
-        assertTrue(client instanceof CapaTelemetryClientGlobal);
+        assertTrue(client instanceof CapTelemetryClientExporter);
         assertNotNull(client.getContextPropagators());
-        assertNotNull(((CapaTelemetryClientGlobal) client).getPropagators());
-        assertNotNull(((CapaTelemetryClientGlobal) client).getMeterProvider());
-        assertNotNull(((CapaTelemetryClientGlobal) client).getTracerProvider());
+        assertNotNull(((CapTelemetryClientExporter) client).getPropagators());
+        assertNotNull(((CapTelemetryClientExporter) client).getMeterProvider());
+        assertNotNull(((CapTelemetryClientExporter) client).getTracerProvider());
         assertNotNull(GlobalOpenTelemetry.get());
     }
 }

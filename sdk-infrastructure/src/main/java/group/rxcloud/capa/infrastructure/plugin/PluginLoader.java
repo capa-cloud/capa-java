@@ -18,6 +18,8 @@ package group.rxcloud.capa.infrastructure.plugin;
 
 import group.rxcloud.capa.infrastructure.CapaClassLoader;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,13 +30,13 @@ import java.util.function.Supplier;
  */
 public final class PluginLoader {
 
-    private static final Map<Class, Object> pluginImplCache;
+    private static final Map<Class, List> pluginImplCache;
 
     static {
         pluginImplCache = new ConcurrentHashMap<>();
     }
 
-    public static Map<Class, Object> getPluginImplCache() {
+    public static Map<Class, List> getPluginImplCache() {
         return pluginImplCache;
     }
 
@@ -46,9 +48,25 @@ public final class PluginLoader {
      * @return the optional of plugin impl
      */
     public static <T> Optional<T> loadPluginImpl(Class<T> pluginSuperClazz) {
-        Object o = pluginImplCache.computeIfAbsent(pluginSuperClazz,
-                aClass -> CapaClassLoader.loadPluginClassObj(pluginSuperClazz));
-        return Optional.ofNullable((T) o);
+        List<T> list = pluginImplCache.computeIfAbsent(pluginSuperClazz,
+                aClass -> CapaClassLoader.loadPluginClassObjs(pluginSuperClazz));
+        if (list == null || list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(list.get(0));
+    }
+
+    /**
+     * Load plugin impls by java spi.
+     *
+     * @param <T>              the plugin interface type
+     * @param pluginSuperClazz the plugin interface class
+     * @return the optional of plugin impls
+     */
+    public static <T> Optional<List<T>> loadPluginImpls(Class<T> pluginSuperClazz) {
+        List<T> list = pluginImplCache.computeIfAbsent(pluginSuperClazz,
+                aClass -> CapaClassLoader.loadPluginClassObjs(pluginSuperClazz));
+        return Optional.ofNullable(list);
     }
 
     /**
@@ -60,14 +78,14 @@ public final class PluginLoader {
      * @return the plugin impl
      */
     public static <T> T loadPluginImpl(Class<T> pluginSuperClazz, Supplier<T> defaultPluginObj) {
-        Object o = pluginImplCache.computeIfAbsent(pluginSuperClazz,
+        List list = pluginImplCache.computeIfAbsent(pluginSuperClazz,
                 aClass -> {
-                    T pluginClassObj = CapaClassLoader.loadPluginClassObj(pluginSuperClazz);
-                    if (pluginClassObj != null) {
-                        return pluginClassObj;
+                    Optional<T> t = loadPluginImpl(pluginSuperClazz);
+                    if (t.isPresent()) {
+                        return Collections.singletonList(t.get());
                     }
-                    return defaultPluginObj.get();
+                    return Collections.singletonList(defaultPluginObj.get());
                 });
-        return (T) o;
+        return (T) list.get(0);
     }
 }

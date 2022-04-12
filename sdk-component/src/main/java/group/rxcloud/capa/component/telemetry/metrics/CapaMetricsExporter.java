@@ -22,14 +22,14 @@ import io.opentelemetry.sdk.metrics.data.MetricData;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-/**
- *
- */
 public abstract class CapaMetricsExporter implements MetricExporter {
 
+    private String name;
     private Supplier<SamplerConfig> samplerConfig;
+    private long exportIntervalMillis = TimeUnit.MINUTES.toMillis(1L);
 
     public CapaMetricsExporter(Supplier<SamplerConfig> samplerConfig) {
         this.samplerConfig = samplerConfig;
@@ -58,4 +58,16 @@ public abstract class CapaMetricsExporter implements MetricExporter {
     protected abstract CompletableResultCode doExport(Collection<MetricData> metrics);
 
     protected abstract CompletableResultCode doFlush();
+
+    public String getName() {
+        return name;
+    }
+
+    public Supplier<SamplerConfig> getSamplerConfig() {
+        return samplerConfig;
+    }
+
+    public long getExportIntervalMillis() {
+        return exportIntervalMillis;
+    }
 }

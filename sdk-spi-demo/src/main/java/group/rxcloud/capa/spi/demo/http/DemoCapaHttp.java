@@ -18,9 +18,7 @@ package group.rxcloud.capa.spi.demo.http;
 
 import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
-import group.rxcloud.capa.spi.demo.http.config.DemoRpcServiceOptions;
 import group.rxcloud.capa.spi.http.CapaSerializeHttpSpi;
-import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
@@ -54,11 +52,7 @@ public class DemoCapaHttp extends CapaSerializeHttpSpi {
                                                                   String httpMethod,
                                                                   Map<String, String> headers,
                                                                   Map<String, List<String>> urlParameters,
-                                                                  TypeRef<T> type,
-                                                                  RpcServiceOptions rpcServiceOptions) {
-        DemoRpcServiceOptions demoRpcServiceOptions = (DemoRpcServiceOptions) rpcServiceOptions;
-        logger.info("[DemoCapaHttp.invokeSpiApi] rpcServiceOptions[{}]", demoRpcServiceOptions);
-
+                                                                  TypeRef<T> type) {
         return CompletableFuture.supplyAsync(
                 () -> {
                     logger.info("[DemoCapaHttp.invokeSpiApi] supplyAsync[{}]", System.currentTimeMillis());

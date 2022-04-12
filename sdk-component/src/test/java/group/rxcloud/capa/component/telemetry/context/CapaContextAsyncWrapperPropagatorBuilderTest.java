@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author: chenyijiang
  * @date: 2021/11/25 21:03
  */
-public class CapaContextPropagatorBuilderTest {
+public class CapaContextAsyncWrapperPropagatorBuilderTest {
 
     @Test
     public void setContextConfig() {

@@ -26,7 +26,6 @@ public interface CapaEnvironment {
      * <pre>
      * + AWS
      * + ALIBABA
-     * + CTRIP
      * </pre>
      *
      * @return the deploy cloud name

@@ -24,8 +24,6 @@ import io.opentelemetry.api.metrics.Meter;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-/**
- */
 @NotThreadSafe
 public class CapaMeter implements Meter {
 

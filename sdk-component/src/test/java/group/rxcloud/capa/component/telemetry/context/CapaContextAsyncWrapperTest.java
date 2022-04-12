@@ -32,37 +32,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author: chenyijiang
  * @date: 2021/11/25 20:53
  */
-public class CapaContextTest {
+public class CapaContextAsyncWrapperTest {
 
     @Test
     public void taskWrapping() {
-        CapaContext.taskWrapping(new Runnable() {
+        CapaContextAsyncWrapper.taskWrapping(new Runnable() {
             @Override
             public void run() {
 
             }
         });
-        assertTrue(TestCapaContextAsyncWrapper.called(Runnable.class));
-        CapaContext.taskWrapping(new Callable<Boolean>() {
+        assertTrue(TestCapaContextAsyncWrapperPlugin.called(Runnable.class));
+        CapaContextAsyncWrapper.taskWrapping(new Callable<Boolean>() {
 
             @Override
             public Boolean call() throws Exception {
                 return true;
             }
         });
-        assertTrue(TestCapaContextAsyncWrapper.called(Callable.class));
-        CapaContext.taskWrapping(Executors.newSingleThreadExecutor());
-        assertTrue(TestCapaContextAsyncWrapper.called(ExecutorService.class));
-        CapaContext.taskWrapping(new Executor() {
+        assertTrue(TestCapaContextAsyncWrapperPlugin.called(Callable.class));
+        CapaContextAsyncWrapper.taskWrapping(Executors.newSingleThreadExecutor());
+        assertTrue(TestCapaContextAsyncWrapperPlugin.called(ExecutorService.class));
+        CapaContextAsyncWrapper.taskWrapping(new Executor() {
             @Override
             public void execute(@NotNull Runnable command) {
 
             }
         });
-        assertTrue(TestCapaContextAsyncWrapper.called(Executor.class));
-        CapaContext.taskWrapping(Executors.newScheduledThreadPool(1));
-        assertTrue(TestCapaContextAsyncWrapper.called(ScheduledExecutorService.class));
+        assertTrue(TestCapaContextAsyncWrapperPlugin.called(Executor.class));
+        CapaContextAsyncWrapper.taskWrapping(Executors.newScheduledThreadPool(1));
+        assertTrue(TestCapaContextAsyncWrapperPlugin.called(ScheduledExecutorService.class));
 
-        assertNotNull(CapaContext.getTraceId());
+        assertNotNull(CapaContextAsyncWrapper.getTraceId());
     }
 }

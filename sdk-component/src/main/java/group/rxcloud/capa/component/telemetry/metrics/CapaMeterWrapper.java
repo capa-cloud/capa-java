@@ -39,12 +39,7 @@ final class CapaMeterWrapper {
         if (meter instanceof CapaMeter) {
             return (CapaMeter) meter;
         }
-        CapaMeter result = SpiUtils.loadFromSpiComponentFileNullable(CapaMeter.class,
-                new Class[]{String.class, String.class, String.class, Meter.class},
-                new Object[]{meterName, schemaUrl, version, meter}, FILE_SUFFIX, CACHE);
-        if (result == null) {
-            result = new CapaMeter(meterName, schemaUrl, version, meter);
-        }
+        CapaMeter result = new CapaMeter(meterName, schemaUrl, version, meter);
         return result;
     }
 

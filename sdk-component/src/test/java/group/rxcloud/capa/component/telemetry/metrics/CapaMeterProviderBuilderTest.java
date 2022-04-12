@@ -54,7 +54,7 @@ public class CapaMeterProviderBuilderTest {
     public void buildWithEmptyConfig() {
 
         MeterProvider meterProvider = new CapaMeterProviderBuilder()
-                .setMeterConfig(new MeterConfig())
+                .setMeterConfig(new MeterConfigLoader())
                 .buildMeterProvider();
 
         assertTrue(meterProvider instanceof NoopMeterProvider);
@@ -105,12 +105,12 @@ public class CapaMeterProviderBuilderTest {
 
     @Test
     public void setMeterConfig() {
-        MeterConfig meterConfig = new MeterConfig();
+        MeterConfigLoader meterConfigLoader = new MeterConfigLoader();
         MetricsReaderConfig readerConfigByInstance = new MetricsReaderConfig();
         readerConfigByInstance.setName("reader_a3");
         readerConfigByInstance.setExportInterval(2, TimeUnit.SECONDS);
         readerConfigByInstance.setExporterType(TestMetricsExporter.class.getName());
-        meterConfig.setReaders(Lists.newArrayList(readerConfigByInstance));
+        meterConfigLoader.setReaders(Lists.newArrayList(readerConfigByInstance));
 
         MetricsReaderConfig readerConfigByPath = new MetricsReaderConfig();
         readerConfigByPath.setName("reader_b3");
@@ -122,7 +122,7 @@ public class CapaMeterProviderBuilderTest {
 
         MeterProvider meterProvider = new CapaMeterProviderBuilder()
                 .addMetricReaderConfig(readerConfigByPath)
-                .setMeterConfig(meterConfig)
+                .setMeterConfig(meterConfigLoader)
                 .setSamplerConfig(() -> samplerConfig)
                 .buildMeterProvider();
 

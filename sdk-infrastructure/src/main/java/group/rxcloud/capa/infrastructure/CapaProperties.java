@@ -27,7 +27,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -73,10 +76,10 @@ public abstract class CapaProperties {
             });
 
     /**
-     * Capa's plugin properties supplier.
+     * Capa's plugins properties supplier.
      */
-    public static final Function<Class, Object> PLUGIN_PROPERTIES_SUPPLIER
-            = (clazz) -> FILE_CACHE_MAP.computeIfAbsent(clazz.getName(),
+    public static final Function<Class, List> PLUGINS_PROPERTIES_SUPPLIER
+            = (clazz) -> (List) FILE_CACHE_MAP.computeIfAbsent(clazz.getName(),
             s -> loadCapaFileByJavaSpi(clazz));
 
     /**
@@ -122,14 +125,19 @@ interface InnerModule {
         }
     }
 
-    static <T> T loadCapaFileByJavaSpi(Class<T> configClazz) {
+    static <T> List<T> loadCapaFileByJavaSpi(Class<T> configClazz) {
         try {
             ServiceLoader<T> loader = ServiceLoader.load(configClazz);
             Iterator<T> iterator = loader.iterator();
             if (!iterator.hasNext()) {
-                return null;
+                return Collections.emptyList();
             }
-            return iterator.next();
+            List<T> objs = new ArrayList<>(1);
+            while (iterator.hasNext()) {
+                T obj = iterator.next();
+                objs.add(obj);
+            }
+            return objs;
         } catch (Exception e) {
             throw new IllegalArgumentException(configClazz.getName() + " spi file not found.", e);
         }

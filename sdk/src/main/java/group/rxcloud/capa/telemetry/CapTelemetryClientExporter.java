@@ -27,13 +27,11 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelemetry {
+public class CapTelemetryClientExporter implements CapaTelemetryClient, OpenTelemetry {
 
     // noop as default.
     private TracerProvider tracerProvider = TracerProvider.noop();
-
     private MeterProvider meterProvider = MeterProvider.noop();
-
     private ContextPropagators contextPropagators = ContextPropagators.noop();
 
     protected List<String> registryNames;
@@ -43,7 +41,7 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
         return registryNames;
     }
 
-    CapaTelemetryClientGlobal() {
+    CapTelemetryClientExporter() {
         this.registryNames = new ArrayList<>(1);
         this.registryNames.add("opentelemetry");
     }
@@ -129,5 +127,8 @@ public class CapaTelemetryClientGlobal implements CapaTelemetryClient, OpenTelem
 
     @Override
     public void close() {
+        tracerProvider = null;
+        meterProvider = null;
+        contextPropagators = null;
     }
 }

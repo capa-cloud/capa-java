@@ -25,11 +25,9 @@ import io.opentelemetry.api.trace.TracerBuilder;
 public class CapaTracerBuilder implements TracerBuilder {
 
     protected final TracerBuilder tracerBuilder;
-
     protected final String tracerName;
 
     protected String version;
-
     protected String schemaUrl;
 
     public CapaTracerBuilder(String tracerName, TracerBuilder tracerBuilder) {
@@ -53,6 +51,8 @@ public class CapaTracerBuilder implements TracerBuilder {
 
     @Override
     public Tracer build() {
-        return CapaTracerWrapper.wrap(tracerName, version, schemaUrl, tracerBuilder.build());
+        Tracer tracer = tracerBuilder.build();
+        // plugin: wrap
+        return CapaTracerWrapperPlugin.loadPlugin().wrap(tracerName, version, schemaUrl, tracer);
     }
 }

@@ -33,30 +33,18 @@ import java.util.concurrent.TimeUnit;
 public class CapaSpanBuilder implements SpanBuilder {
 
     protected final String tracerName;
-
-    protected String version;
-
-    protected String schemaUrl;
-
     protected final String spanName;
-
     protected final SpanBuilder spanBuilder;
 
-    public CapaSpanBuilder(String tracerName, String version, String schemaUrl, String spanName,
-                           SpanBuilder spanBuilder) {
+    protected String version;
+    protected String schemaUrl;
+
+    public CapaSpanBuilder(String tracerName, String version, String schemaUrl, String spanName, SpanBuilder spanBuilder) {
         this.tracerName = tracerName;
         this.version = version;
         this.schemaUrl = schemaUrl;
         this.spanName = spanName;
         this.spanBuilder = spanBuilder;
-    }
-
-    public String getSchemaUrl() {
-        return schemaUrl;
-    }
-
-    public String getVersion() {
-        return version;
     }
 
     @Override
@@ -129,7 +117,8 @@ public class CapaSpanBuilder implements SpanBuilder {
     public Span startSpan() {
         Span span = spanBuilder.startSpan();
         if (span instanceof ReadWriteSpan) {
-            return CapaTracerWrapper.wrap(tracerName, version, schemaUrl, (ReadWriteSpan) span);
+            // plugin: wrap
+            return CapaTracerWrapperPlugin.loadPlugin().wrap(tracerName, version, schemaUrl, (ReadWriteSpan) span);
         }
         return span;
     }

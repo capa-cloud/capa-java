@@ -34,7 +34,9 @@ public class CapaConfigurationClientBuilderTest {
     public void testBuild_WithCapaConfigStoreBuilderListAsParametersConstructor() {
         CapaConfigStoreBuilder storeBuilder = Mockito.mock(CapaConfigStoreBuilder.class);
         CapaConfigStore configStore = Mockito.mock(CapaConfigStore.class);
-        Mockito.when(storeBuilder.build()).thenReturn(configStore);
+        Mockito.when(storeBuilder.build())
+                .thenReturn(configStore);
+
         CapaConfigurationClientBuilder builder = new CapaConfigurationClientBuilder(Lists.newArrayList(storeBuilder));
         Assertions.assertNotNull(builder.build());
     }
@@ -43,7 +45,9 @@ public class CapaConfigurationClientBuilderTest {
     public void testBuild_WithCapaConfigStoreBuilderSupplierAsParametersConstructor() {
         CapaConfigStoreBuilder storeBuilder = Mockito.mock(CapaConfigStoreBuilder.class);
         CapaConfigStore configStore = Mockito.mock(CapaConfigStore.class);
-        Mockito.when(storeBuilder.build()).thenReturn(configStore);
+        Mockito.when(storeBuilder.build())
+                .thenReturn(configStore);
+
         CapaConfigurationClientBuilder builder = new CapaConfigurationClientBuilder(() -> storeBuilder);
         Assertions.assertNotNull(builder.build());
     }

@@ -18,6 +18,7 @@ package group.rxcloud.capa.infrastructure;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -82,20 +83,31 @@ public final class CapaClassLoader {
     }
 
     /**
-     * Load plugin class obj.
+     * Load plugin class objs.
      *
      * @param <T>        the target class type
      * @param superClazz the interface class type
-     * @return the target plugin class obj
+     * @return the target plugin class objs
      */
-    public static <T> T loadPluginClassObj(Class<T> superClazz) {
-        Object pluginImpl = CapaProperties.PLUGIN_PROPERTIES_SUPPLIER.apply(superClazz);
-        return (T) pluginImpl;
+    public static <T> List<T> loadPluginClassObjs(Class<T> superClazz) {
+        List pluginImpls = CapaProperties.PLUGINS_PROPERTIES_SUPPLIER.apply(superClazz);
+        return (List<T>) pluginImpls;
     }
 
-    // -- Private
+    // -- Class loader
 
-    private static <T> T loadClassObj(String classPath, Class<?>[] parameterTypes, Object[] initargs) {
+    public static <T> T loadClassObj(String classPath) {
+        try {
+            Class<T> aClass = (Class<T>) Class.forName(classPath);
+            Constructor<T> constructor = aClass.getConstructor();
+            Object newInstance = constructor.newInstance();
+            return (T) newInstance;
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Capa load class error: [" + classPath + "] not found.");
+        }
+    }
+
+    public static <T> T loadClassObj(String classPath, Class<?>[] parameterTypes, Object[] initargs) {
         try {
             Class<T> aClass = (Class<T>) Class.forName(classPath);
             Constructor<T> constructor = aClass.getConstructor(parameterTypes);

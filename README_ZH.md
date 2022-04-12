@@ -46,9 +46,9 @@ Capa API设计follow社区标准，请参考 Dapr / Layotto 等开源项目的AP
 
 API定义放置于以下独立仓库中，与Capa项目解绑，希望发展成为社区的API标准定义：
 
-+ java: [cloud-runtimes-jvm](https://github.com/reactivegroup/cloud-runtimes-jvm)
-+ python(alpha): [cloud-runtimes-python](https://github.com/reactivegroup/cloud-runtimes-python)
-+ golang(alpha): [cloud-runtimes-golang](https://github.com/reactivegroup/cloud-runtimes-golang)
++ java: [cloud-runtimes-jvm](https://github.com/capa-cloud/cloud-runtimes-jvm)
++ python(alpha): [cloud-runtimes-python](https://github.com/capa-cloud/cloud-runtimes-python)
++ golang(alpha): [cloud-runtimes-golang](https://github.com/capa-cloud/cloud-runtimes-golang)
 
 #### 为什么不直接使用Dapr API？
 
@@ -118,7 +118,7 @@ For a Maven project, add the following to your pom.xml file:
         <dependency>
             <groupId>group.rxcloud</groupId>
             <artifactId>capa-sdk</artifactId>
-            <version>1.0.7.RELEASE</version>
+            <version>2.11.1.RELEASE</version>
         </dependency>
         ...
     </dependencies>
@@ -138,7 +138,7 @@ Sample implementation library:
         <dependency>
             <groupId>group.rxcloud</groupId>
             <artifactId>capa-sdk-spi-demo</artifactId>
-            <version>1.0.7.RELEASE</version>
+            <version>2.11.1.RELEASE</version>
         </dependency>
         ...
     </dependencies>
@@ -150,9 +150,9 @@ Sample implementation library:
 
 Try the following examples to learn more about Capa's Java SDK:
 
-* [capa-demo](https://github.com/reactivegroup/capa/tree/master/sdk-spi-demo)
-* [capa-aws](https://github.com/reactivegroup/capa-aws)
-* [capa-alibaba](https://github.com/reactivegroup/capa-alibaba)
+* [capa-demo](https://github.com/capa-cloud/capa-java/tree/master/sdk-spi-demo)
+* [capa-aws](https://github.com/capa-cloud/capa-java-aws)
+* [capa-alibaba](https://github.com/capa-cloud/capa-java-alibaba)
 
 ### 低改造成本迁移
 

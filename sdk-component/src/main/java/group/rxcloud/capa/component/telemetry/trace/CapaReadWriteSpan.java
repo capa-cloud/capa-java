@@ -35,11 +35,8 @@ import java.util.concurrent.TimeUnit;
 public class CapaReadWriteSpan implements ReadWriteSpan {
 
     protected final ReadWriteSpan span;
-
     protected final String tracerName;
-
     protected final String version;
-
     protected final String schemaUrl;
 
     public CapaReadWriteSpan(String tracerName, String version, String schemaUrl, ReadWriteSpan span) {

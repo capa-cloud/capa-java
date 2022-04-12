@@ -22,7 +22,6 @@ import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.ExtensionObjectSerializer;
-import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -183,14 +182,6 @@ public class CapaSerializeHttpSpiTest {
         future.cancel(true);
     }
 
-
-    @Test
-    public void testGetRpcServiceOptions_Success() {
-        RpcServiceOptions rpcServiceOptions = capaSerializeHttpSpi.getRpcServiceOptions("appId");
-        String className = rpcServiceOptions.getClass().getName();
-        Assertions.assertEquals("group.rxcloud.capa.spi.http.config.TestRpcServiceOptions", className);
-    }
-
     @Test
     public void testDoInvokeApi_Success() throws ExecutionException, InterruptedException {
         String[] pathSegments = new String[]{
@@ -298,8 +289,7 @@ public class CapaSerializeHttpSpiTest {
                                                                       String httpMethod,
                                                                       Map<String, String> headers,
                                                                       Map<String, List<String>> urlParameters,
-                                                                      TypeRef<T> type,
-                                                                      RpcServiceOptions rpcServiceOptions) {
+                                                                      TypeRef<T> type) {
             return CompletableFuture.supplyAsync(
                     () -> {
                         return new HttpResponse<>(null, null, 200);

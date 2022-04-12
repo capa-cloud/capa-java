@@ -26,9 +26,6 @@ import java.util.List;
  */
 public interface ContextPropagatorLoader {
 
-    ContextPropagatorLoader DEFAULT = new ContextPropagatorLoader() {
-    };
-
     /**
      * Load default context propagator.
      *

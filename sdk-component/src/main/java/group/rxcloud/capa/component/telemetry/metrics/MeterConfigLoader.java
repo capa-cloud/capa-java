@@ -18,36 +18,19 @@ package group.rxcloud.capa.component.telemetry.metrics;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
 
-import java.util.function.Supplier;
+import java.util.List;
 
 /**
- * Settings for capa meter provider.
+ * Config for meters.
  */
-public interface CapaMeterProviderSettings {
-
-    String FILE_PATH ="/capa-component-telemetry-meter.json";
+public interface MeterConfigLoader {
 
     /**
-     * Replace the whole config for the meter.
-     *
-     * @param config meter config.
-     * @return current settings.
+     * Configs for metrics readers.
+     * Each reader related with a scheduled thread.
      */
-    CapaMeterProviderSettings setMeterConfig(MeterConfig config);
 
-    /**
-     * Add one more reader to current meter config.
-     *
-     * @param config metrics reader config.
-     * @return current settings.
-     */
-    CapaMeterProviderSettings addMetricReaderConfig(MetricsReaderConfig config);
+    List<CapaMetricsExporter> getReaders();
 
-    /**
-     * Set sample config.
-     *
-     * @param samplerConfig sample config.
-     * @return current settings.
-     */
-    CapaMeterProviderSettings setSamplerConfig(Supplier<SamplerConfig> samplerConfig);
+    SamplerConfig getSamplerConfig();
 }

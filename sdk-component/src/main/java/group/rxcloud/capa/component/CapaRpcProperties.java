@@ -30,12 +30,12 @@ public interface CapaRpcProperties {
         /**
          * Determines if Capa client will use HTTP or Other client.
          */
-        public static String API_PROTOCOL;
+        private static final String API_PROTOCOL;
 
         /**
          * Capa's timeout in seconds for HTTP client reads.
          */
-        public static Integer HTTP_CLIENT_READ_TIMEOUT_SECONDS;
+        private static final Integer HTTP_CLIENT_READ_TIMEOUT_SECONDS;
 
         /**
          * Capa's default use of HTTP.

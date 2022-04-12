@@ -16,39 +16,78 @@
  */
 package group.rxcloud.capa.component.telemetry.context;
 
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.context.Context;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
+ * Method for async context.
  */
-public interface CapaContextAsyncWrapper {
+public final class CapaContextAsyncWrapper {
 
-    default Runnable wrap(Runnable runnable) {
-        return Context.current().wrap(runnable);
+    private static final CapaContextAsyncWrapperPlugin WRAPPER_PLUGIN = CapaContextAsyncWrapperPlugin.loadPlugin();
+
+    private CapaContextAsyncWrapper() {
     }
 
-    default <T> Callable<T> wrap(Callable<T> callable) {
-        return Context.current().wrap(callable);
+    /**
+     * Task wrapping runnable.
+     *
+     * @param runnable the runnable
+     * @return the runnable
+     */
+    public static Runnable taskWrapping(Runnable runnable) {
+        return WRAPPER_PLUGIN.wrap(runnable);
     }
 
-    default Executor wrap(Executor executor) {
-        return Context.current().wrap(executor);
+    /**
+     * Task wrapping callable.
+     *
+     * @param <T>      the type parameter
+     * @param callable the callable
+     * @return the callable
+     */
+    public static <T> Callable<T> taskWrapping(Callable<T> callable) {
+        return WRAPPER_PLUGIN.wrap(callable);
     }
 
-    default ExecutorService wrap(ExecutorService executor) {
-        return Context.current().wrap(executor);
+    /**
+     * Task wrapping executor.
+     *
+     * @param executor the executor
+     * @return the executor
+     */
+    public static Executor taskWrapping(Executor executor) {
+        return WRAPPER_PLUGIN.wrap(executor);
     }
 
-    default ScheduledExecutorService wrap(ScheduledExecutorService executor) {
-        return Context.current().wrap(executor);
+    /**
+     * Task wrapping executor service.
+     *
+     * @param executor the executor
+     * @return the executor service
+     */
+    public static ExecutorService taskWrapping(ExecutorService executor) {
+        return WRAPPER_PLUGIN.wrap(executor);
     }
 
-    default String getTraceId() {
-        return Span.fromContext(Context.current()).getSpanContext().getTraceId();
+    /**
+     * Task wrapping scheduled executor service.
+     *
+     * @param executor the executor
+     * @return the scheduled executor service
+     */
+    public static ScheduledExecutorService taskWrapping(ScheduledExecutorService executor) {
+        return WRAPPER_PLUGIN.wrap(executor);
+    }
+
+    /**
+     * Gets trace id.
+     *
+     * @return the trace id
+     */
+    public static String getTraceId() {
+        return WRAPPER_PLUGIN.getTraceId();
     }
 }

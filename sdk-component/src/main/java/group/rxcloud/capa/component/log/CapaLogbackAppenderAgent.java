@@ -82,8 +82,7 @@ public class CapaLogbackAppenderAgent extends UnsynchronizedAppenderBase<ILoggin
         void append(ILoggingEvent event);
 
         /**
-         *
-         Do some initialization operations when the appender starts.
+         * Do some initialization operations when the appender starts.
          */
         void doStart();
     }

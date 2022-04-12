@@ -14,12 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.spi.telemetry;
+package group.rxcloud.capa.component.telemetry.trace;
 
-import group.rxcloud.capa.component.telemetry.context.CapaContextAsyncWrapper;
+import group.rxcloud.capa.component.telemetry.SamplerConfig;
+import io.opentelemetry.sdk.trace.IdGenerator;
+import io.opentelemetry.sdk.trace.SpanProcessor;
+
+import java.util.List;
 
 /**
- * SPI Capa context async wrapper.
+ * Trace config.
  */
-public abstract class CapaContextAsyncWrapperSpi implements CapaContextAsyncWrapper {
+public interface TracerConfigLoader {
+
+    IdGenerator getIdGenerator();
+
+    boolean isEnableIdValidate();
+
+    SpanLimitsConfig getSpanLimits();
+
+    List<SpanProcessor> getProcessors();
+
+    SamplerConfig getSamplerConfig();
 }

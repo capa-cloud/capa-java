@@ -18,8 +18,6 @@ package group.rxcloud.capa.component.telemetry.metrics;
 
 import io.opentelemetry.api.metrics.DoubleHistogram;
 
-/**
- */
 public abstract class CapaDoubleHistogram implements DoubleHistogram {
 
     protected final String meterName;

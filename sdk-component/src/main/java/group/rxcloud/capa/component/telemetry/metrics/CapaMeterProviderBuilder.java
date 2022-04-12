@@ -17,6 +17,7 @@
 package group.rxcloud.capa.component.telemetry.metrics;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
+import group.rxcloud.capa.infrastructure.CapaClassLoader;
 import group.rxcloud.capa.infrastructure.utils.SpiUtils;
 import io.opentelemetry.api.metrics.MeterProvider;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
@@ -38,81 +39,7 @@ import java.util.function.Supplier;
  * Builder for capa metric provider.
  */
 @NotThreadSafe
-public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
-
-    /**
-     * Config for capa metric provider.
-     */
-    private MeterConfig meterConfigs;
-
-    /**
-     * Sampler config.
-     */
-    private Supplier<SamplerConfig> samplerConfig = SamplerConfig.DEFAULT_SUPPLIER;
-
-    /**
-     * Readers manually set.
-     */
-    private List<MetricsReaderConfig> metricsReaderConfigs;
-
-    /**
-     * Build the reader factories with reader configs.
-     * Each factory defined the export interval and exporter of the reader it will generate.
-     *
-     * @param readerConfigs metrics reader configs.
-     * @return metrics reader factories.
-     */
-    private static List<MetricReaderFactory> bulidReaderFactories(List<MetricsReaderConfig> readerConfigs,
-                                                                  Supplier<SamplerConfig> samplerConfig) {
-        List<MetricReaderFactory> factories = new ArrayList<>();
-        for (MetricsReaderConfig config : readerConfigs) {
-            MetricExporter exporter = SpiUtils
-                    .newInstance(config.getExporterType(), CapaMetricsExporter.class, new Class[]{Supplier.class},
-                            new Object[]{samplerConfig}, false);
-            if (exporter == null) {
-                throw new IllegalArgumentException(
-                        "Metric Exporter is not configured. readerName = " + config.getName() + '.');
-            }
-
-            ScheduledThreadPoolExecutor worker = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
-                @Override
-                public Thread newThread(@NotNull Runnable r) {
-                    Thread thread = new Thread(r);
-                    thread.setDaemon(true);
-                    thread.setName("capa-metric-reader-" + config.getName() + '-' + System
-                            .currentTimeMillis());
-                    return thread;
-                }
-            });
-
-            factories.add(PeriodicMetricReader.builder(exporter)
-                                              .setInterval(config.getExportIntervalMillis(), TimeUnit.MILLISECONDS)
-                                              .setExecutor(worker)
-                                              .newMetricReaderFactory());
-        }
-        return factories;
-    }
-
-    @Override
-    public CapaMeterProviderBuilder setSamplerConfig(Supplier<SamplerConfig> samplerConfig) {
-        this.samplerConfig = samplerConfig;
-        return this;
-    }
-
-    @Override
-    public CapaMeterProviderBuilder setMeterConfig(MeterConfig config) {
-        meterConfigs = config;
-        return this;
-    }
-
-    @Override
-    public CapaMeterProviderBuilder addMetricReaderConfig(MetricsReaderConfig config) {
-        if (metricsReaderConfigs == null) {
-            metricsReaderConfigs = new ArrayList<>();
-        }
-        metricsReaderConfigs.add(config);
-        return this;
-    }
+public class CapaMeterProviderBuilder {
 
     /**
      * Build the meter provider with the config.
@@ -122,33 +49,52 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
      * @return the meter provider.
      */
     public MeterProvider buildMeterProvider() {
-        List<MetricsReaderConfig> metricsReaderConfigs = this.metricsReaderConfigs;
-        if (metricsReaderConfigs == null || metricsReaderConfigs.isEmpty()) {
-            // if config was not explicitly set, try loading the config from the config loader.
-            initMeterConfig();
+        MeterConfigLoader meterConfigsLoader = CapaClassLoader.loadComponentClassObj("telemetry-common", MeterConfigLoader.class);
 
-            if (meterConfigs != null) {
-                metricsReaderConfigs = meterConfigs.getReaders();
-            }
-        }
-
+        List<CapaMetricsExporter> metricsReaderConfigs = meterConfigsLoader.getReaders();
         if (metricsReaderConfigs == null || metricsReaderConfigs.isEmpty()) {
             return MeterProvider.noop();
         }
 
+        SamplerConfig samplerConfig = meterConfigsLoader.getSamplerConfig();
         List<MetricReaderFactory> factories = bulidReaderFactories(metricsReaderConfigs, samplerConfig);
 
 
         SdkMeterProviderBuilder builder = SdkMeterProvider.builder()
-                                                          .setExemplarFilter(new CapaMetricsSampler(samplerConfig));
+                .setExemplarFilter(new CapaMetricsSampler(samplerConfig));
         factories.forEach(f -> builder.registerMetricReader(f));
         SdkMeterProvider provider = builder.build();
         return new CapaMeterProvider(provider);
     }
 
-    private void initMeterConfig() {
-        if (meterConfigs == null) {
-            meterConfigs = SpiUtils.loadConfigNullable(FILE_PATH, MeterConfig.class);
+    /**
+     * Build the reader factories with reader configs.
+     * Each factory defined the export interval and exporter of the reader it will generate.
+     *
+     * @param readerConfigs metrics reader configs.
+     * @return metrics reader factories.
+     */
+    private   List<MetricReaderFactory> bulidReaderFactories(List<CapaMetricsExporter> readerConfigs,
+                                                                  SamplerConfig samplerConfig) {
+        List<MetricReaderFactory> factories = new ArrayList<>();
+        for (CapaMetricsExporter exporter : readerConfigs) {
+
+            ScheduledThreadPoolExecutor worker = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+                @Override
+                public Thread newThread(@NotNull Runnable r) {
+                    Thread thread = new Thread(r);
+                    thread.setDaemon(true);
+                    thread.setName("capa-metric-reader-" + exporter.getName() + '-' + System
+                            .currentTimeMillis());
+                    return thread;
+                }
+            });
+
+            factories.add(PeriodicMetricReader.builder(exporter)
+                    .setInterval(exporter.getExportIntervalMillis(), TimeUnit.MILLISECONDS)
+                    .setExecutor(worker)
+                    .newMetricReaderFactory());
         }
+        return factories;
     }
 }
