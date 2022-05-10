@@ -14,28 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure;
+package group.rxcloud.capa.infrastructure.loader;
+
+import group.rxcloud.vrml.core.serialization.Serialization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Properties;
 
 /**
- * The Capa SPI Class loader.
+ * The Capa SPI Class obj loader.
  */
 public final class CapaClassLoader {
+
+    private static final Logger logger = LoggerFactory.getLogger(CapaClassLoader.class);
 
     /**
      * Load component class obj.
      *
      * @param <T>             the target class type
      * @param componentDomain the component domain
-     * @param superClazz      the interface class type
+     * @param clazz           the interface class type
      * @return the target spi class obj
      */
-    public static <T> T loadComponentClassObj(String componentDomain, Class<T> superClazz) {
-        return loadComponentClassObj(componentDomain, superClazz, null, null);
+    public static <T> T loadComponentClassObj(String componentDomain, Class<T> clazz) {
+        return loadComponentClassObj(componentDomain, clazz, null, null);
     }
 
     /**
@@ -43,14 +48,14 @@ public final class CapaClassLoader {
      *
      * @param <T>             the target class type
      * @param componentDomain the component domain
-     * @param superClazz      the interface class type
+     * @param clazz           the interface class type
      * @param parameterTypes  the constructor parameters
      * @param initargs        the constructor initargs
      * @return the target spi class obj
      */
-    public static <T> T loadComponentClassObj(String componentDomain, Class<T> superClazz, Class<?>[] parameterTypes, Object[] initargs) {
-        Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply(componentDomain);
-        String implClassPath = properties.getProperty(superClazz.getName());
+    public static <T> T loadComponentClassObj(String componentDomain, Class<T> clazz, Class<?>[] parameterTypes, Object[] initargs) {
+        Properties properties = CapaProperties.loadComponentProperties(componentDomain);
+        String implClassPath = properties.getProperty(clazz.getName());
         return loadClassObj(implClassPath, parameterTypes, initargs);
     }
 
@@ -59,11 +64,11 @@ public final class CapaClassLoader {
      *
      * @param <T>                  the target class type
      * @param infrastructureDomain the infrastructure domain
-     * @param superClazz           the interface class type
+     * @param clazz                the interface class type
      * @return the target spi class obj
      */
-    public static <T> T loadInfrastructureClassObj(String infrastructureDomain, Class<T> superClazz) {
-        return loadInfrastructureClassObj(infrastructureDomain, superClazz, null, null);
+    public static <T> T loadInfrastructureClassObj(String infrastructureDomain, Class<T> clazz) {
+        return loadInfrastructureClassObj(infrastructureDomain, clazz, null, null);
     }
 
     /**
@@ -71,50 +76,36 @@ public final class CapaClassLoader {
      *
      * @param <T>                  the target class type
      * @param infrastructureDomain the infrastructure domain
-     * @param superClazz           the interface class type
+     * @param clazz                the interface class type
      * @param parameterTypes       the constructor parameters
      * @param initargs             the constructor initargs
      * @return the target spi class obj
      */
-    public static <T> T loadInfrastructureClassObj(String infrastructureDomain, Class<T> superClazz, Class<?>[] parameterTypes, Object[] initargs) {
-        Properties properties = CapaProperties.INFRASTRUCTURE_PROPERTIES_SUPPLIER.apply(infrastructureDomain);
-        String implClassPath = properties.getProperty(superClazz.getName());
+    public static <T> T loadInfrastructureClassObj(String infrastructureDomain, Class<T> clazz, Class<?>[] parameterTypes, Object[] initargs) {
+        Properties properties = CapaProperties.loadInfrastructureProperties(infrastructureDomain);
+        String implClassPath = properties.getProperty(clazz.getName());
         return loadClassObj(implClassPath, parameterTypes, initargs);
-    }
-
-    /**
-     * Load plugin class objs.
-     *
-     * @param <T>        the target class type
-     * @param superClazz the interface class type
-     * @return the target plugin class objs
-     */
-    public static <T> List<T> loadPluginClassObjs(Class<T> superClazz) {
-        List pluginImpls = CapaProperties.PLUGINS_PROPERTIES_SUPPLIER.apply(superClazz);
-        return (List<T>) pluginImpls;
     }
 
     // -- Class loader
 
-    public static <T> T loadClassObj(String classPath) {
-        try {
-            Class<T> aClass = (Class<T>) Class.forName(classPath);
-            Constructor<T> constructor = aClass.getConstructor();
-            Object newInstance = constructor.newInstance();
-            return (T) newInstance;
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Capa load class error: [" + classPath + "] not found.");
-        }
-    }
-
-    public static <T> T loadClassObj(String classPath, Class<?>[] parameterTypes, Object[] initargs) {
+    private static <T> T loadClassObj(String classPath, Class<?>[] parameterTypes, Object[] initargs) {
+        Throwable throwable = null;
         try {
             Class<T> aClass = (Class<T>) Class.forName(classPath);
             Constructor<T> constructor = aClass.getConstructor(parameterTypes);
             Object newInstance = constructor.newInstance(initargs);
             return (T) newInstance;
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Capa load class error: [" + classPath + "] not found.");
+            throwable = e;
+            throw new IllegalArgumentException("Capa load class[" + classPath + "] not found error: " + e.getMessage());
+        } finally {
+            if (throwable != null) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("[Capa][CapaClassLoader.loadClassObj] classPath[{}] parameterTypes[{}] initargs[{}] load error!",
+                            classPath, Serialization.GSON.toJson(parameterTypes), Serialization.GSON.toJson(initargs), throwable);
+                }
+            }
         }
     }
 }

@@ -14,22 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.component;
 
-package group.rxcloud.capa.infrastructure.utils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class MyImplWithArgs implements MyInterfaceWithArgs{
+public class CapaRpcConstantsTest {
 
-    private MyImplWithArgs(Integer a) {
-
-    }
-    public MyImplWithArgs(String a) {
-
-    }
-    public MyImplWithArgs(Integer a, String b) {
-
+    @Test
+    public void testGetApiProtocol_Success() {
+        String apiProtocol = CapaRpcProperties.Settings.getApiProtocol();
+        Assertions.assertEquals("HTTP", apiProtocol);
     }
 
-    public MyImplWithArgs(boolean a, short b, int c, long d, float e, double f, byte g, char h, String i) {
-
+    @Test
+    public void testGetHttpClientReadTimeoutSeconds_Success() {
+        Integer httpClientReadTimeoutSeconds = CapaRpcProperties.Settings.getHttpClientReadTimeoutSeconds();
+        Assertions.assertEquals(60, httpClientReadTimeoutSeconds.intValue());
     }
 }

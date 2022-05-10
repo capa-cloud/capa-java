@@ -20,13 +20,4 @@ package group.rxcloud.capa.component;
  * Capa log component common properties.
  */
 public interface CapaLogProperties {
-
-    abstract class Settings {
-
-        static {
-        }
-
-        private Settings() {
-        }
-    }
 }

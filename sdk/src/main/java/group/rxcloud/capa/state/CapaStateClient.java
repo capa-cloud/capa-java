@@ -30,7 +30,13 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * The Capa state client.
+ */
 public interface CapaStateClient extends DefaultCloudRuntimesClient {
+
+    @Override
+    List<String> registryNames();
 
     @Override
     <T> Mono<State<T>> getState(String storeName, State<T> state, TypeRef<T> type);

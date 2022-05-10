@@ -78,12 +78,15 @@ public class CapaRpcClientBuilder {
      */
     private CapaRpcClient buildCapaClient(CapaApiProtocol protocol) {
         if (protocol == null) {
-            throw new IllegalStateException("Protocol is required.");
+            throw new IllegalStateException("[Capa] ApiProtocol is required.");
         }
         if (protocol == CapaApiProtocol.HTTP) {
             return buildCapaClientHttp();
         }
-        throw new IllegalStateException("Unsupported protocol: " + protocol.name());
+        if (protocol == CapaApiProtocol.GRPC) {
+            return buildCapaClientGrpc();
+        }
+        throw new IllegalStateException("[Capa] Unsupported ApiProtocol: " + protocol.name());
     }
 
     /**
@@ -93,5 +96,14 @@ public class CapaRpcClientBuilder {
      */
     private CapaRpcClient buildCapaClientHttp() {
         return new CapaRpcClientHttp(this.httpBuilder.build());
+    }
+
+    /**
+     * Creates and instance of CapaClient over GRPC.
+     *
+     * @return CapaClient over GRPC.
+     */
+    private CapaRpcClient buildCapaClientGrpc() {
+        return new CapaRpcClientGrpc();
     }
 }

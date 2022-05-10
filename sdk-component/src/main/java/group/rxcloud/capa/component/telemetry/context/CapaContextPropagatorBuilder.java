@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component.telemetry.context;
 
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.context.propagation.TextMapPropagator;
 

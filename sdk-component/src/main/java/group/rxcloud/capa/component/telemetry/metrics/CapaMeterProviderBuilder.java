@@ -17,12 +17,11 @@
 package group.rxcloud.capa.component.telemetry.metrics;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 import group.rxcloud.capa.infrastructure.utils.SpiUtils;
 import io.opentelemetry.api.metrics.MeterProvider;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.SdkMeterProviderBuilder;
-import io.opentelemetry.sdk.metrics.export.MetricExporter;
 import io.opentelemetry.sdk.metrics.export.MetricReaderFactory;
 import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 /**
  * Builder for capa metric provider.

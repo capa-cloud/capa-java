@@ -30,11 +30,6 @@ import java.util.List;
 public abstract class CapaConfigStore implements AutoCloseable {
 
     /**
-     * Capa API used in this client.
-     */
-    public static final String API_VERSION = "v1.0";
-
-    /**
      * A utility class for serialize and deserialize the transient objects.
      */
     protected final CapaObjectSerializer objectSerializer;

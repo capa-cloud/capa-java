@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component;
 
-import group.rxcloud.capa.infrastructure.CapaProperties;
+import group.rxcloud.capa.infrastructure.loader.CapaProperties;
 
 import java.util.Properties;
 
@@ -48,7 +48,7 @@ public interface CapaRpcProperties {
         private static final Integer DEFAULT_HTTP_CLIENT_READTIMEOUTSECONDS = 60;
 
         static {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("rpc");
+            Properties properties = CapaProperties.loadComponentProperties("rpc-common");
 
             API_PROTOCOL = properties.getProperty("API_PROTOCOL", DEFAULT_API_PROTOCOL);
 

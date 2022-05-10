@@ -16,29 +16,16 @@
  */
 package group.rxcloud.capa.infrastructure.plugin;
 
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.vrml.spi.SPI;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
  * The Plugin SPI loader.
  */
 public final class PluginLoader {
-
-    private static final Map<Class, List> pluginImplCache;
-
-    static {
-        pluginImplCache = new ConcurrentHashMap<>();
-    }
-
-    public static Map<Class, List> getPluginImplCache() {
-        return pluginImplCache;
-    }
 
     /**
      * Load plugin impl by java spi.
@@ -48,12 +35,7 @@ public final class PluginLoader {
      * @return the optional of plugin impl
      */
     public static <T> Optional<T> loadPluginImpl(Class<T> pluginSuperClazz) {
-        List<T> list = pluginImplCache.computeIfAbsent(pluginSuperClazz,
-                aClass -> CapaClassLoader.loadPluginClassObjs(pluginSuperClazz));
-        if (list == null || list.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(list.get(0));
+        return SPI.loadSpiImpl(pluginSuperClazz);
     }
 
     /**
@@ -64,9 +46,7 @@ public final class PluginLoader {
      * @return the optional of plugin impls
      */
     public static <T> Optional<List<T>> loadPluginImpls(Class<T> pluginSuperClazz) {
-        List<T> list = pluginImplCache.computeIfAbsent(pluginSuperClazz,
-                aClass -> CapaClassLoader.loadPluginClassObjs(pluginSuperClazz));
-        return Optional.ofNullable(list);
+        return SPI.loadSpiImpls(pluginSuperClazz);
     }
 
     /**
@@ -78,14 +58,6 @@ public final class PluginLoader {
      * @return the plugin impl
      */
     public static <T> T loadPluginImpl(Class<T> pluginSuperClazz, Supplier<T> defaultPluginObj) {
-        List list = pluginImplCache.computeIfAbsent(pluginSuperClazz,
-                aClass -> {
-                    Optional<T> t = loadPluginImpl(pluginSuperClazz);
-                    if (t.isPresent()) {
-                        return Collections.singletonList(t.get());
-                    }
-                    return Collections.singletonList(defaultPluginObj.get());
-                });
-        return (T) list.get(0);
+        return SPI.loadSpiImpl(pluginSuperClazz, defaultPluginObj);
     }
 }

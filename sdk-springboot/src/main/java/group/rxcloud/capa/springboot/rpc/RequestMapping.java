@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.rpc;
+package group.rxcloud.capa.springboot.rpc;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -23,10 +23,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Rpc Server controller.
+ * Rpc Server controller method.
  */
 @Documented
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Controller {
+public @interface RequestMapping {
 }

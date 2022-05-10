@@ -22,6 +22,7 @@ import group.rxcloud.capa.component.configstore.SubscribeReq;
 import group.rxcloud.capa.component.configstore.SubscribeResp;
 import group.rxcloud.capa.infrastructure.exceptions.CapaExceptions;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
+import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationRequestItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationResp;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Flux;
@@ -64,9 +65,10 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
     private CapaConfigStore getStore(String storeName) {
         // check storeName
         if (storeName == null || storeName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Store Name cannot be null or empty.");
+            throw new IllegalArgumentException("[Capa] store Name cannot be null or empty.");
         }
-        return Objects.requireNonNull(configStores.get(storeName), "Store Component cannot be null.");
+        final CapaConfigStore configStore = configStores.get(storeName);
+        return Objects.requireNonNull(configStore, "[Capa] store Component cannot be null.");
     }
 
     @Override
@@ -77,6 +79,18 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
     @Override
     public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, TypeRef<T> type) {
         return getConfiguration(storeName, appId, keys, metadata, group, null, type);
+    }
+
+    @Override
+    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
+        Objects.requireNonNull(configurationRequestItem, "[Capa] configurationRequestItem cannot be null.");
+        return getConfiguration(configurationRequestItem.getStoreName(),
+                configurationRequestItem.getAppId(),
+                configurationRequestItem.getKeys(),
+                configurationRequestItem.getMetadata(),
+                configurationRequestItem.getGroup(),
+                configurationRequestItem.getLabel(),
+                type);
     }
 
     @Override
@@ -134,6 +148,18 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
     @Override
     public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, TypeRef<T> type) {
         return subscribeConfiguration(storeName, appId, keys, metadata, group, null, type);
+    }
+
+    @Override
+    public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
+        Objects.requireNonNull(configurationRequestItem, "[Capa] configurationRequestItem cannot be null.");
+        return subscribeConfiguration(configurationRequestItem.getStoreName(),
+                configurationRequestItem.getAppId(),
+                configurationRequestItem.getKeys(),
+                configurationRequestItem.getMetadata(),
+                configurationRequestItem.getGroup(),
+                configurationRequestItem.getLabel(),
+                type);
     }
 
     @Override

@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.springboot.pubsub;
 
-import com.kevinten.vrml.core.beans.SpringContextConfigurator;
+import group.rxcloud.vrml.core.beans.SpringContextConfigurator;
 import group.rxcloud.capa.component.pubsub.CapaPubSub;
 import group.rxcloud.capa.component.pubsub.NewMessage;
 import group.rxcloud.capa.component.pubsub.SubscribeRequest;

@@ -23,7 +23,7 @@
     <parent>
         <groupId>group.rxcloud</groupId>
         <artifactId>capa-parent</artifactId>
-        <version>2.11.1.RELEASE</version>
+        <version>2.12.1.RELEASE</version>
     </parent>
 
     <artifactId>capa-sdk-component</artifactId>
@@ -31,11 +31,7 @@
     <description>SDK Component for Capa</description>
 
     <properties>
-        <okhttp.version>4.9.1</okhttp.version>
-        <kotlin-stdlib.version>1.4.10</kotlin-stdlib.version>
-        <log4j.version>2.17.1</log4j.version>
-        <logback.version>1.2.10</logback.version>
-     </properties>
+    </properties>
 
     <dependencies>
         <!-- sdk module -->
@@ -44,66 +40,114 @@
             <artifactId>capa-sdk-infrastructure</artifactId>
         </dependency>
 
-        <!-- open-telemetry-api -->
+        <!-- cloud-runtimes-api -->
+        <dependency>
+            <groupId>group.rxcloud</groupId>
+            <artifactId>cloud-runtimes-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- reactor -->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- opentelemetry -->
         <dependency>
             <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-sdk</artifactId>
-            <version>${open.telemetry.version}</version>
+            <artifactId>opentelemetry-api</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-sdk-metrics</artifactId>
-            <version>${open.telemetry.version.alpha}</version>
+            <artifactId>opentelemetry-api-metrics</artifactId>
+            <optional>true</optional>
         </dependency>
-
+        <!-- vrml -->
+        <dependency>
+            <groupId>group.rxcloud</groupId>
+            <artifactId>vrml-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>group.rxcloud</groupId>
+            <artifactId>vrml-error</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>group.rxcloud</groupId>
+            <artifactId>vrml-resource</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>group.rxcloud</groupId>
+            <artifactId>vrml-spi</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- vavr -->
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- grpc -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- serialize -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- okhttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>kotlin-stdlib</artifactId>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>kotlin-stdlib-common</artifactId>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                </exclusion>
-            </exclusions>
+            <optional>true</optional>
         </dependency>
-
         <!-- kotlin -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin-stdlib.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-common</artifactId>
-            <version>${kotlin-stdlib.version}</version>
+            <optional>true</optional>
         </dependency>
-
         <!-- log4j -->
+        <!-- log4j-slf4j-impl and logback-classic cannot exist at the same time. -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
             <optional>true</optional>
         </dependency>
         <!-- logback -->
+        <!-- log4j-slf4j-impl and logback-classic cannot exist at the same time. -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-            <!-- log4j-slf4j-impl and logback-classic cannot exist at the same time. -->
             <optional>true</optional>
         </dependency>
 

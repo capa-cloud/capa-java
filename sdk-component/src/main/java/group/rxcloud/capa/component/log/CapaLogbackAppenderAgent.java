@@ -18,7 +18,7 @@ package group.rxcloud.capa.component.log;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 
 /**
  * The agent of the logback impl.

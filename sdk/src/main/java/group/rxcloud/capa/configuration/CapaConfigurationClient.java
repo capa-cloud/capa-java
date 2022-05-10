@@ -34,6 +34,9 @@ import java.util.Map;
 public interface CapaConfigurationClient extends DefaultCloudRuntimesClient {
 
     @Override
+    List<String> registryNames();
+
+    @Override
     <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type);
 
     @Override

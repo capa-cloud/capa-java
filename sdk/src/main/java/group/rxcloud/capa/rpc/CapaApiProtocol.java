@@ -34,7 +34,13 @@ public enum CapaApiProtocol {
      * @return the capa api protocol
      */
     public static CapaApiProtocol parseProtocol(String protocol) {
-        // FIXME: Fix to HTTP
+        if ("HTTP".equalsIgnoreCase(protocol)) {
+            return HTTP;
+        }
+        if ("GRPC".equalsIgnoreCase(protocol)) {
+            return GRPC;
+        }
+        // default HTTP
         return HTTP;
     }
 }

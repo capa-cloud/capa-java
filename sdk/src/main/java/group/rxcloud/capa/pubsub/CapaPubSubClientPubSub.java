@@ -17,9 +17,14 @@
 package group.rxcloud.capa.pubsub;
 
 import group.rxcloud.capa.component.pubsub.CapaPubSub;
+import group.rxcloud.capa.component.pubsub.NewMessage;
 import group.rxcloud.capa.component.pubsub.PublishRequest;
+import group.rxcloud.capa.component.pubsub.SubscribeRequest;
 import group.rxcloud.capa.infrastructure.exceptions.CapaExceptions;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
+import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicEventRequest;
+import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicSubscription;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -65,13 +70,13 @@ public class CapaPubSubClientPubSub extends AbstractCapaPubSubClient {
             final String topic = request.getTopic();
             // check topic
             if (topic == null || topic.trim().isEmpty()) {
-                throw new IllegalArgumentException("Topic cannot be null or empty.");
+                throw new IllegalArgumentException("[Capa] topic cannot be null or empty.");
             }
 
             final Object data = request.getData();
             // check data
             if (data == null) {
-                throw new IllegalArgumentException("Data cannot be null or empty.");
+                throw new IllegalArgumentException("[Capa] data cannot be null or empty.");
             }
 
             Map<String, String> metadata = request.getMetadata();
@@ -103,12 +108,35 @@ public class CapaPubSubClientPubSub extends AbstractCapaPubSubClient {
         }
     }
 
+    @Override
+    public Flux<TopicEventRequest> subscribeEvents(TopicSubscription topicSubscription) {
+        try {
+            final String pubSubName = topicSubscription.getPubSubName();
+            final CapaPubSub pubSub = this.getPubSub(pubSubName);
+
+            return Flux.deferWithContext(Mono::just)
+                    .flatMap(context -> {
+                        SubscribeRequest subscribeRequest = this.getSubscribeRequest(topicSubscription);
+                        return pubSub.subscribe(subscribeRequest);
+                    })
+                    .flatMap(newMessage -> {
+                        if (newMessage == null) {
+                            return Flux.empty();
+                        }
+                        TopicEventRequest topicEventRequest = this.getTopicEventRequest(pubSubName, newMessage);
+                        return Flux.just(topicEventRequest);
+                    });
+        } catch (Exception ex) {
+            return CapaExceptions.wrapFlux(ex);
+        }
+    }
+
     private CapaPubSub getPubSub(String pubsubName) {
         // check pubsubName
         if (pubsubName == null || pubsubName.trim().isEmpty()) {
-            throw new IllegalArgumentException("PubSub Name cannot be null or empty.");
+            throw new IllegalArgumentException("[Capa] PubSub Name cannot be null or empty.");
         }
-        return Objects.requireNonNull(pubSubs.get(pubsubName), "PubSub Component cannot be null.");
+        return Objects.requireNonNull(pubSubs.get(pubsubName), "[Capa] PubSub Component cannot be null.");
     }
 
     private PublishRequest getPublishRequest(String pubsubName, String topic, Object data, String contentType, Map<String, String> metadata) {
@@ -116,6 +144,24 @@ public class CapaPubSubClientPubSub extends AbstractCapaPubSubClient {
         publishRequest.setContentType(contentType);
         publishRequest.setMetadata(metadata);
         return publishRequest;
+    }
+
+    private SubscribeRequest getSubscribeRequest(TopicSubscription topicSubscription) {
+        final String topicName = topicSubscription.getTopicName();
+        final Map<String, String> metadata = topicSubscription.getMetadata();
+        SubscribeRequest subscribeRequest = new SubscribeRequest(topicName);
+        subscribeRequest.setMetadata(metadata);
+        return subscribeRequest;
+    }
+
+    private TopicEventRequest getTopicEventRequest(String pubSubName, NewMessage newMessage) {
+        TopicEventRequest topicEventRequest = new TopicEventRequest();
+        topicEventRequest.setPubsubName(pubSubName);
+        topicEventRequest.setTopic(newMessage.getTopic());
+        topicEventRequest.setData(newMessage.getData());
+        topicEventRequest.setMetadata(newMessage.getMetadata());
+        topicEventRequest.setSpecVersion(CapaPubSub.API_VERSION);
+        return topicEventRequest;
     }
 
     @Override

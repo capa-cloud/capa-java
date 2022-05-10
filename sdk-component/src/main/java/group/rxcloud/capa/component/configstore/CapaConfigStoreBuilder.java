@@ -17,7 +17,7 @@
 package group.rxcloud.capa.component.configstore;
 
 
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
 

@@ -14,9 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package group.rxcloud.capa.infrastructure.metainfo;
 
-package group.rxcloud.capa.infrastructure.utils;
+/**
+ * Capa System Environment Properties.
+ */
+public interface CapaEnvironment {
 
-public class MyImpl implements MyInterface{
+    /**
+     * Gets deploy cloud, like:
+     * <pre>
+     * + AWS
+     * + ALIBABA
+     * </pre>
+     *
+     * @return the deploy cloud name
+     */
+    String getDeployCloud();
 
+    /**
+     * Gets deploy region, like:
+     * <pre>
+     * + SINGAPORE
+     * + TOKYO
+     * + SHANGHAI
+     * </pre>
+     *
+     * @return the deploy region name
+     */
+    String getDeployRegion();
+
+    /**
+     * Gets deploy env, like:
+     * <pre>
+     * + FAT
+     * + UAT
+     * + PRO
+     * </pre>
+     *
+     * @return the deploy env name
+     */
+    String getDeployEnv();
 }

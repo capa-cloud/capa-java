@@ -20,13 +20,4 @@ package group.rxcloud.capa.component;
  * Capa telemetry component common properties.
  */
 public interface CapaTelemetryProperties {
-
-    abstract class Settings {
-
-        static {
-        }
-
-        private Settings() {
-        }
-    }
 }

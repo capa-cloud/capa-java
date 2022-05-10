@@ -22,7 +22,15 @@ import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
+/**
+ * The Capa telemetry client.
+ */
 public interface CapaTelemetryClient extends DefaultCloudRuntimesClient {
+
+    @Override
+    List<String> registryNames();
 
     @Override
     Mono<Tracer> buildTracer(String tracerName);

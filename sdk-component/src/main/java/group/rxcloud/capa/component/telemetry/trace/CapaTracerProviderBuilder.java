@@ -17,7 +17,7 @@
 package group.rxcloud.capa.component.telemetry.trace;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 import group.rxcloud.capa.infrastructure.exceptions.CapaErrorContext;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import io.opentelemetry.api.trace.TracerProvider;

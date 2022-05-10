@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.spi.demo;
 
-import group.rxcloud.capa.infrastructure.CapaEnvironment;
+import group.rxcloud.capa.infrastructure.metainfo.CapaEnvironment;
 
 public class DemoCapaEnvironment implements CapaEnvironment {
 

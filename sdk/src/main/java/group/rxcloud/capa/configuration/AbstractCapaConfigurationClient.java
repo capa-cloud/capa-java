@@ -17,12 +17,8 @@
 package group.rxcloud.capa.configuration;
 
 
-import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationRequestItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SaveConfigurationRequest;
-import group.rxcloud.cloudruntimes.domain.core.configuration.SubConfigurationResp;
-import group.rxcloud.cloudruntimes.utils.TypeRef;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -43,21 +39,11 @@ public abstract class AbstractCapaConfigurationClient implements CapaConfigurati
 
     @Override
     public Mono<Void> saveConfiguration(SaveConfigurationRequest saveConfigurationRequest) {
-        return Mono.error(new UnsupportedOperationException("unsupported save configuration"));
+        return Mono.error(new UnsupportedOperationException("[Capa] Unsupported save configuration"));
     }
 
     @Override
     public Mono<Void> deleteConfiguration(ConfigurationRequestItem configurationRequestItem) {
-        return Mono.error(new UnsupportedOperationException("unsupported delete configuration"));
-    }
-
-    @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
-        return Mono.error(new UnsupportedOperationException("unsupported get configuration with ConfigurationRequestItem as parameter"));
-    }
-
-    @Override
-    public <T> Flux<SubConfigurationResp<T>> subscribeConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
-        return Flux.error(new UnsupportedOperationException("unsupported subscribe configuration with ConfigurationRequestItem as parameter"));
+        return Mono.error(new UnsupportedOperationException("[Capa] Unsupported delete configuration"));
     }
 }

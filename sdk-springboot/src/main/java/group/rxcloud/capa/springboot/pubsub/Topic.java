@@ -14,34 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.infrastructure;
+package group.rxcloud.capa.springboot.pubsub;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * The Capa infrastructure constants.
+ * @author dapr.io
  */
-interface CapaConstants {
+@Documented
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Topic {
 
     /**
-     * The Properties constants.
+     * Name of topic to be subscribed to.
+     *
+     * @return Topic's name.
      */
-    interface Properties {
+    String name();
 
-        /**
-         * The {@code component} properties prefix.
-         */
-        String CAPA_COMPONENT_PROPERTIES_PREFIX = "/capa-component-";
-        /**
-         * The {@code infrastructure} properties prefix.
-         */
-        String CAPA_INFRASTRUCTURE_PROPERTIES_PREFIX = "/capa-infrastructure-";
+    /**
+     * Name of the pubsub bus to be subscribed to.
+     *
+     * @return pubsub bus's name.
+     */
+    String pubsubName();
 
-        /**
-         * The properties suffix.
-         */
-        String CAPA_PROPERTIES_SUFFIX = ".properties";
-        /**
-         * The json suffix.
-         */
-        String CAPA_JSON_SUFFIX = ".json";
-    }
+    /**
+     * Metadata in the form of a json object.
+     * {
+     * "mykey": "myvalue"
+     * }
+     *
+     * @return metadata object
+     */
+    String metadata() default "{}";
 }
