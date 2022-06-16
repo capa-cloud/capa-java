@@ -16,6 +16,7 @@
  */
 package group.rxcloud.capa.configuration;
 
+import group.rxcloud.capa.CapaClient;
 import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationRequestItem;
@@ -31,10 +32,7 @@ import java.util.Map;
 /**
  * Generic Client Adapter to be used regardless of the specific Configuration Client implementation required.
  */
-public interface CapaConfigurationClient extends DefaultCloudRuntimesClient {
-
-    @Override
-    List<String> registryNames();
+public interface CapaConfigurationClient extends CapaClient {
 
     @Override
     <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type);
@@ -65,12 +63,4 @@ public interface CapaConfigurationClient extends DefaultCloudRuntimesClient {
 
     @Override
     Mono<Void> deleteConfiguration(ConfigurationRequestItem configurationRequestItem);
-
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
-    }
-
-    @Override
-    void close();
 }

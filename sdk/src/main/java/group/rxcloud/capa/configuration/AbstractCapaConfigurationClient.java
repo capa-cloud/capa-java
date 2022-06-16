@@ -17,6 +17,7 @@
 package group.rxcloud.capa.configuration;
 
 
+import group.rxcloud.capa.AbstractCapaClient;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationRequestItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SaveConfigurationRequest;
 import reactor.core.publisher.Mono;
@@ -28,14 +29,9 @@ import java.util.List;
  *
  * @see CapaConfigurationClientStore
  */
-public abstract class AbstractCapaConfigurationClient implements CapaConfigurationClient {
-
-    protected List<String> registryNames;
-
-    @Override
-    public List<String> registryNames() {
-        return registryNames;
-    }
+public abstract class AbstractCapaConfigurationClient
+        extends AbstractCapaClient
+        implements CapaConfigurationClient {
 
     @Override
     public Mono<Void> saveConfiguration(SaveConfigurationRequest saveConfigurationRequest) {

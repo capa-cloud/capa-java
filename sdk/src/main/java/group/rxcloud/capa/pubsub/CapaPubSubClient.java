@@ -16,6 +16,7 @@
  */
 package group.rxcloud.capa.pubsub;
 
+import group.rxcloud.capa.CapaClient;
 import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicEventRequest;
@@ -29,10 +30,7 @@ import java.util.Map;
 /**
  * The Capa pub sub client.
  */
-public interface CapaPubSubClient extends DefaultCloudRuntimesClient {
-
-    @Override
-    List<String> registryNames();
+public interface CapaPubSubClient extends CapaClient {
 
     @Override
     Mono<String> publishEvent(String pubsubName, String topicName, Object data);
@@ -48,12 +46,4 @@ public interface CapaPubSubClient extends DefaultCloudRuntimesClient {
 
     @Override
     Flux<TopicEventRequest> subscribeEvents(TopicSubscription topicSubscription);
-
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
-    }
-
-    @Override
-    void close();
 }

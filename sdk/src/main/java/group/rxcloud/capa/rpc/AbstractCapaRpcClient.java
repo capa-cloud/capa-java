@@ -16,6 +16,7 @@
  */
 package group.rxcloud.capa.rpc;
 
+import group.rxcloud.capa.AbstractCapaClient;
 import group.rxcloud.capa.rpc.domain.InvokeMethodRequestBuilder;
 import group.rxcloud.cloudruntimes.domain.core.invocation.HttpExtension;
 import group.rxcloud.cloudruntimes.domain.core.invocation.InvokeMethodRequest;
@@ -30,14 +31,9 @@ import java.util.Map;
  *
  * @see CapaRpcClientHttp
  */
-public abstract class AbstractCapaRpcClient implements CapaRpcClient {
-
-    protected List<String> registryNames;
-
-    @Override
-    public List<String> registryNames() {
-        return registryNames;
-    }
+public abstract class AbstractCapaRpcClient
+        extends AbstractCapaClient
+        implements CapaRpcClient {
 
     @Override
     public <T> Mono<T> invokeMethod(String appId, String methodName, Object request, HttpExtension httpExtension, Map<String, String> metadata, TypeRef<T> type) {

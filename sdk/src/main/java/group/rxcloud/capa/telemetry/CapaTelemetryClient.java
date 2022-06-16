@@ -16,21 +16,16 @@
  */
 package group.rxcloud.capa.telemetry;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
+import group.rxcloud.capa.CapaClient;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 /**
  * The Capa telemetry client.
  */
-public interface CapaTelemetryClient extends DefaultCloudRuntimesClient {
-
-    @Override
-    List<String> registryNames();
+public interface CapaTelemetryClient extends CapaClient {
 
     @Override
     Mono<Tracer> buildTracer(String tracerName);
@@ -52,7 +47,4 @@ public interface CapaTelemetryClient extends DefaultCloudRuntimesClient {
 
     @Override
     Mono<Meter> buildMeter(String meterName, String version, String schemaUrl);
-
-    @Override
-    void close();
 }

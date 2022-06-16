@@ -16,6 +16,7 @@
  */
 package group.rxcloud.capa.pubsub;
 
+import group.rxcloud.capa.AbstractCapaClient;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.PublishEventRequest;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicEventRequest;
 import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicSubscription;
@@ -30,14 +31,9 @@ import java.util.Map;
  *
  * @see CapaPubSubClientPubSub
  */
-public abstract class AbstractCapaPubSubClient implements CapaPubSubClient {
-
-    protected List<String> registryNames;
-
-    @Override
-    public List<String> registryNames() {
-        return registryNames;
-    }
+public abstract class AbstractCapaPubSubClient
+        extends AbstractCapaClient
+        implements CapaPubSubClient {
 
     @Override
     public Mono<String> publishEvent(String pubsubName, String topicName, Object data) {
