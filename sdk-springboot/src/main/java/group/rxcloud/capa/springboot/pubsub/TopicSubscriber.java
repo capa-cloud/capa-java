@@ -16,12 +16,12 @@
  */
 package group.rxcloud.capa.springboot.pubsub;
 
-import group.rxcloud.vrml.core.beans.SpringContextConfigurator;
 import group.rxcloud.capa.component.pubsub.CapaPubSub;
 import group.rxcloud.capa.component.pubsub.NewMessage;
 import group.rxcloud.capa.component.pubsub.SubscribeRequest;
-import group.rxcloud.capa.pubsub.domain.TopicEventRequest;
-import group.rxcloud.capa.pubsub.domain.TopicSubscription;
+import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicEventRequest;
+import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicSubscription;
+import group.rxcloud.vrml.core.beans.SpringContextConfigurator;
 import reactor.core.publisher.Flux;
 
 import java.util.List;

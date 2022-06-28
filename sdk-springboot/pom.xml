@@ -31,7 +31,6 @@
 
     <properties>
         <springboot.version>2.3.12.RELEASE</springboot.version>
-        <vrml.version>1.0.4</vrml.version>
     </properties>
 
     <dependencyManagement>
@@ -55,14 +54,28 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <optional>true</optional>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/group.rxcloud/vrml-core -->
+        <dependency>
+            <groupId>group.rxcloud</groupId>
+            <artifactId>cloud-runtimes-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- vrml -->
         <dependency>
             <groupId>group.rxcloud</groupId>
             <artifactId>vrml-core</artifactId>
-            <version>${vrml.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- reactor -->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
