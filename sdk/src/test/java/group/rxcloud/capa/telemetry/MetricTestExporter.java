@@ -26,8 +26,7 @@ import java.util.function.Supplier;
 
 public class MetricTestExporter extends CapaMetricsExporter {
 
-    public MetricTestExporter(
-            Supplier<SamplerConfig> samplerConfig) {
+    public MetricTestExporter(Supplier<SamplerConfig> samplerConfig) {
         super(samplerConfig);
     }
 

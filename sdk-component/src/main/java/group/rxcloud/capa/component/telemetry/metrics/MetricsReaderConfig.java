@@ -43,10 +43,6 @@ public class MetricsReaderConfig implements Serializable {
      */
     private String exporterType;
 
-    public String getExporterType() {
-        return exporterType;
-    }
-
     public void setExporterType(String exporterType) {
         this.exporterType = exporterType;
     }

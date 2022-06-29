@@ -25,7 +25,6 @@ public class TraceProcessor implements SpanProcessor {
 
     @Override
     public void onStart(Context context, ReadWriteSpan span) {
-
     }
 
     @Override

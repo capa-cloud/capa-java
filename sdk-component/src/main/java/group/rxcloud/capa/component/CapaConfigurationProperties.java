@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component;
 
-import group.rxcloud.capa.infrastructure.CapaProperties;
+import group.rxcloud.capa.infrastructure.loader.CapaProperties;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +35,7 @@ public interface CapaConfigurationProperties {
         private static final String CONFIGURATION_COMPONENT_STORE_NAMES = "CONFIGURATION_COMPONENT_STORE_NAMES";
 
         static {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("configuration-common");
+            Properties properties = CapaProperties.loadComponentProperties("configuration-common");
 
             String storeNames = properties.getProperty(CONFIGURATION_COMPONENT_STORE_NAMES, "");
             if (storeNames != null) {

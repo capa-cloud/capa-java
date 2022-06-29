@@ -48,25 +48,29 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testSaveConfiguration_FailWhenThrowUnsupportedOperationException() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.saveConfiguration(new SaveConfigurationRequest()).block());
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> clientStore.saveConfiguration(new SaveConfigurationRequest()).block());
     }
 
     @Test
     public void testDeleteConfiguration_FailWhenThrowUnsupportedOperationException() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.deleteConfiguration(new ConfigurationRequestItem()).block());
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> clientStore.deleteConfiguration(new ConfigurationRequestItem()).block());
     }
 
     @Test
     public void testGetConfiguration_FailWhenThrowUnsupportedOperationException() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.getConfiguration(new ConfigurationRequestItem(),TypeRef.STRING).block());
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> clientStore.getConfiguration(new ConfigurationRequestItem(), TypeRef.STRING).block());
     }
 
     @Test
     public void testSubscribeConfiguration_FailWhenThrowUnsupportedOperationException() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> clientStore.subscribeConfiguration(new ConfigurationRequestItem(),TypeRef.STRING).blockFirst());
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> clientStore.subscribeConfiguration(new ConfigurationRequestItem(), TypeRef.STRING).blockFirst());
     }
 
     @Test
@@ -78,19 +82,21 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testGetConfiguration_FailWhenStoreNameIsNull() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assertions.assertThrows(CapaException.class, () -> clientStore.getConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), TypeRef.STRING).block());
+        Assertions.assertThrows(CapaException.class,
+                () -> clientStore.getConfiguration("apollo", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), TypeRef.STRING).block());
     }
 
     @Test
     public void testGetConfigurationLevel1_FailWhenStoreNameIsNull() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Collections.emptyList());
-        Assertions.assertThrows(CapaException.class, () -> clientStore.getConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), null, TypeRef.STRING).block());
+        Assertions.assertThrows(CapaException.class,
+                () -> clientStore.getConfiguration("apollo", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), null, TypeRef.STRING).block());
     }
 
     @Test
     public void testGetConfiguration_SuccessWithConfigurationHasValue() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(constructConfigStoreListWithConfirgurationItemHasValue());
-        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration("qconfig", "123", Lists.newArrayList(), Collections.emptyMap(), null, null, TypeRef.STRING);
+        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration("apollo", "123", Lists.newArrayList(), Collections.emptyMap(), null, null, TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = configuration.block();
         Assertions.assertNotNull(configurationItems);
         Assertions.assertEquals(1, configurationItems.size());
@@ -105,7 +111,7 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testGetConfiguration_SuccessWithConfigurationItemIsEmpty() {
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(constructConfigStoreListWithConfigurationItemIsEmpty());
-        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), "testGroup", "testLabel", TypeRef.STRING);
+        Mono<List<ConfigurationItem<String>>> configuration = clientStore.getConfiguration("apollo", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), "testGroup", "testLabel", TypeRef.STRING);
         List<ConfigurationItem<String>> configurationItems = configuration.block();
         Assertions.assertNull(configurationItems);
     }
@@ -113,7 +119,8 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testSubscribeConfiguration_SuccessWithSubscribeRespHasValue() {
         CapaConfigStore mockConfigStore = Mockito.mock(CapaConfigStore.class);
-        Mockito.when(mockConfigStore.getStoreName()).thenReturn("qconfig");
+        Mockito.when(mockConfigStore.getStoreName())
+                .thenReturn("apollo");
 
         SubscribeResp<String> subscribeResp = new SubscribeResp<>();
         List<group.rxcloud.capa.component.configstore.ConfigurationItem<String>> result = new ArrayList<>();
@@ -124,16 +131,17 @@ public class CapaConfigurationClientStoreTest {
         configurationItem.setLabel("testLabel");
         result.add(configurationItem);
         subscribeResp.setItems(result);
-        Mockito.when(mockConfigStore.subscribe(any(SubscribeReq.class), any(TypeRef.class))).thenReturn(Flux.just(subscribeResp));
+        Mockito.when(mockConfigStore.subscribe(any(SubscribeReq.class), any(TypeRef.class)))
+                .thenReturn(Flux.just(subscribeResp));
 
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Lists.newArrayList(mockConfigStore));
-
         ConfigurationRequestItem configurationRequestItem = new ConfigurationRequestItem();
-        configurationRequestItem.setStoreName("qconfig");
-        Flux<SubConfigurationResp<String>> subConfigurationRespFlux = clientStore.subscribeConfiguration("qconfig", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), TypeRef.STRING);
+        configurationRequestItem.setStoreName("apollo");
+        Flux<SubConfigurationResp<String>> subConfigurationRespFlux = clientStore.subscribeConfiguration("apollo", "123", Lists.newArrayList("testKey1"), Collections.emptyMap(), TypeRef.STRING);
         SubConfigurationResp<String> stringSubConfigurationResp = subConfigurationRespFlux.blockFirst();
         Assertions.assertNotNull(stringSubConfigurationResp);
         Assertions.assertEquals(1, stringSubConfigurationResp.getItems().size());
+
         ConfigurationItem<String> firstItem = stringSubConfigurationResp.getItems().get(0);
         Assertions.assertEquals("testKey1", firstItem.getKey());
         Assertions.assertEquals("testContent", firstItem.getContent());
@@ -144,7 +152,10 @@ public class CapaConfigurationClientStoreTest {
     @Test
     public void testClose_Success() throws Exception {
         CapaConfigStore mockConfigStore = Mockito.mock(CapaConfigStore.class);
-        Mockito.doNothing().when(mockConfigStore).close();
+        Mockito.doNothing()
+                .when(mockConfigStore)
+                .close();
+
         CapaConfigurationClientStore clientStore = new CapaConfigurationClientStore(Lists.newArrayList(mockConfigStore));
         clientStore.close();
         Mockito.verify(mockConfigStore).close();
@@ -152,7 +163,8 @@ public class CapaConfigurationClientStoreTest {
 
     private List<CapaConfigStore> constructConfigStoreListWithConfirgurationItemHasValue() {
         CapaConfigStore mockConfigStore = Mockito.mock(CapaConfigStore.class);
-        Mockito.when(mockConfigStore.getStoreName()).thenReturn("qconfig");
+        Mockito.when(mockConfigStore.getStoreName())
+                .thenReturn("apollo");
 
         List<group.rxcloud.capa.component.configstore.ConfigurationItem<String>> result = new ArrayList<>();
         group.rxcloud.capa.component.configstore.ConfigurationItem<String> configurationItem = new group.rxcloud.capa.component.configstore.ConfigurationItem();
@@ -162,17 +174,20 @@ public class CapaConfigurationClientStoreTest {
         configurationItem.setLabel("testLabel");
         result.add(configurationItem);
         Mono<List<group.rxcloud.capa.component.configstore.ConfigurationItem<String>>> just = Mono.just(result);
-        Mockito.when(mockConfigStore.get(any(GetRequest.class), any(TypeRef.class))).thenReturn(just);
+        Mockito.when(mockConfigStore.get(any(GetRequest.class), any(TypeRef.class)))
+                .thenReturn(just);
         return Lists.newArrayList(mockConfigStore);
     }
 
     private List<CapaConfigStore> constructConfigStoreListWithConfigurationItemIsEmpty() {
         CapaConfigStore mockConfigStore = Mockito.mock(CapaConfigStore.class);
-        Mockito.when(mockConfigStore.getStoreName()).thenReturn("qconfig");
+        Mockito.when(mockConfigStore.getStoreName())
+                .thenReturn("apollo");
 
         List<group.rxcloud.capa.component.configstore.ConfigurationItem> result = new ArrayList<>();
         Mono<List<group.rxcloud.capa.component.configstore.ConfigurationItem>> just = Mono.just(result);
-        Mockito.when(mockConfigStore.get(any(GetRequest.class), any(TypeRef.class))).thenReturn(just);
+        Mockito.when(mockConfigStore.get(any(GetRequest.class), any(TypeRef.class)))
+                .thenReturn(just);
         return Lists.newArrayList(mockConfigStore);
     }
 }

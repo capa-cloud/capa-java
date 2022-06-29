@@ -20,6 +20,7 @@ import group.rxcloud.capa.component.http.CapaHttp;
 import group.rxcloud.capa.infrastructure.exceptions.CapaExceptions;
 import group.rxcloud.cloudruntimes.domain.core.invocation.HttpExtension;
 import group.rxcloud.cloudruntimes.domain.core.invocation.InvokeMethodRequest;
+import group.rxcloud.cloudruntimes.domain.core.invocation.RegisterServerRequest;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Mono;
 
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * An adapter for the HTTP RPC Client.
@@ -57,15 +59,15 @@ public class CapaRpcClientHttp extends AbstractCapaRpcClient {
             final Map<String, String> metadata = invokeMethodRequest.getMetadata();
             // check appId
             if (appId == null || appId.trim().isEmpty()) {
-                throw new IllegalArgumentException("App Id cannot be null or empty.");
+                throw new IllegalArgumentException("[Capa] App Id cannot be null or empty.");
             }
             // check method
             if (method == null || method.trim().isEmpty()) {
-                throw new IllegalArgumentException("Method name cannot be null or empty.");
+                throw new IllegalArgumentException("[Capa] Method name cannot be null or empty.");
             }
             // check httpExtension
             if (httpExtension == null) {
-                throw new IllegalArgumentException("HttpExtension cannot be null. Use HttpExtension.NONE instead.");
+                throw new IllegalArgumentException("[Capa] HttpExtension cannot be null. Use HttpExtension.NONE instead.");
             }
             // If the httpExtension is not null, then the method will not be null based on checks in constructor
             final String httpMethod = httpExtension.getMethod().toString();
@@ -102,6 +104,16 @@ public class CapaRpcClientHttp extends AbstractCapaRpcClient {
         } catch (Exception ex) {
             return CapaExceptions.wrapMono(ex);
         }
+    }
+
+    @Override
+    public <T, R> Mono<Boolean> registerMethod(String methodName, List<HttpExtension> httpExtensions, Function<T, R> onInvoke, Map<String, String> metadata) {
+        return null;
+    }
+
+    @Override
+    public Mono<Boolean> registerServer(RegisterServerRequest registerServerRequest) {
+        return null;
     }
 
     /**

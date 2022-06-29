@@ -17,7 +17,7 @@
 package group.rxcloud.capa.infrastructure.exceptions;
 
 
-import com.kevinten.vrml.error.code.ErrorCodeContext;
+import group.rxcloud.vrml.error.code.ErrorCodeContext;
 
 /**
  * Application error info context:

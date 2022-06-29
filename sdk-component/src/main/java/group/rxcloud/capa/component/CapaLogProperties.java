@@ -16,32 +16,8 @@
  */
 package group.rxcloud.capa.component;
 
-import group.rxcloud.capa.infrastructure.CapaProperties;
-
-import java.util.Properties;
-
 /**
  * Capa log component common properties.
  */
 public interface CapaLogProperties {
-
-    abstract class Settings {
-
-        private static String centerConfigAppId = "";
-
-        private static final String LOG_COMPONENT_CENTER_CONFIG_APPID = "LOG_COMPONENT_CENTER_CONFIG_APPID";
-
-        static {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("log-common");
-
-            centerConfigAppId = properties.getProperty(LOG_COMPONENT_CENTER_CONFIG_APPID, centerConfigAppId);
-        }
-
-        public static String getCenterConfigAppId() {
-            return centerConfigAppId;
-        }
-
-        private Settings() {
-        }
-    }
 }

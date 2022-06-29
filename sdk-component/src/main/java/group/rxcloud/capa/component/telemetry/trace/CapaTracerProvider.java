@@ -33,17 +33,21 @@ public class CapaTracerProvider implements TracerProvider {
 
     @Override
     public Tracer get(String instrumentationName) {
-        return tracerBuilder(instrumentationName).build();
+        return tracerBuilder(instrumentationName)
+                .build();
     }
 
     @Override
     public Tracer get(String instrumentationName, String instrumentationVersion) {
-        return tracerBuilder(instrumentationName).setInstrumentationVersion(instrumentationVersion).build();
+        return tracerBuilder(instrumentationName)
+                .setInstrumentationVersion(instrumentationVersion)
+                .build();
     }
 
     @Override
     public TracerBuilder tracerBuilder(String instrumentationName) {
         TracerBuilder tracerBuilder = provider.tracerBuilder(instrumentationName);
-        return CapaTracerWrapper.wrap(instrumentationName, tracerBuilder);
+        // plugin: wrap
+        return CapaTracerWrapperPlugin.loadPlugin().wrap(instrumentationName, tracerBuilder);
     }
 }

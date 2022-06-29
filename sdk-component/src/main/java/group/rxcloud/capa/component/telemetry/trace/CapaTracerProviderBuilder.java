@@ -17,9 +17,9 @@
 package group.rxcloud.capa.component.telemetry.trace;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 import group.rxcloud.capa.infrastructure.exceptions.CapaErrorContext;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
-import group.rxcloud.capa.infrastructure.utils.SpiUtils;
 import io.opentelemetry.api.trace.TracerProvider;
 import io.opentelemetry.sdk.trace.IdGenerator;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
@@ -31,42 +31,83 @@ import io.opentelemetry.sdk.trace.samplers.Sampler;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Builder for capa tracer provider.
  */
 @NotThreadSafe
-public class CapaTracerProviderBuilder implements CapaTracerProviderSettings {
+public class CapaTracerProviderBuilder {
 
     /**
-     * Config for capa tracer provider.
+     * Build the tracer provider with the config.
+     * In the following cases, a noop implementation will be returned.
+     * 1. No processor config was defined.
+     *
+     * @return the meter provider.
      */
-    private TracerConfig tracerConfig;
+    public CapaTracerProvider buildTracerProvider() {
+        TracerConfigLoader tracerConfigLoader = CapaClassLoader.loadComponentClassObj("telemetry-common", TracerConfigLoader.class);
 
-    /**
-     * Id generator instance.
-     */
-    private IdGenerator idGenerator;
+        if (tracerConfigLoader.getProcessors() == null || tracerConfigLoader.getProcessors().isEmpty()) {
+            return new CapaTracerProvider(TracerProvider.noop());
+        }
 
-    /**
-     * Span processor instances.
-     */
-    private List<SpanProcessor> processors;
+        SdkTracerProviderBuilder builder = SdkTracerProvider.builder();
+        this.addSpanLimits(builder, tracerConfigLoader);
+        this.addIdGenerator(builder, tracerConfigLoader);
+        this.addSampler(builder, tracerConfigLoader);
+        this.addProcessors(builder, tracerConfigLoader);
 
-    /**
-     * Span limits.
-     */
-    private SpanLimitsConfig spanLimitsConfig;
+        SdkTracerProvider provider = builder.build();
 
-    /**
-     * Sampler config.
-     */
-    private Supplier<SamplerConfig> samplerConfig = SamplerConfig.DEFAULT_SUPPLIER;
+        if (tracerConfigLoader != null && !tracerConfigLoader.isEnableIdValidate()) {
+            InnerModule.skipIdValidate(provider);
+        }
 
-    private static boolean addSpanLimits(SpanLimitsConfig spanLimits, SpanLimitsBuilder limits) {
+        return new CapaTracerProvider(provider);
+    }
+
+    private void addSpanLimits(SdkTracerProviderBuilder builder, TracerConfigLoader tracerConfigLoader) {
+        SpanLimitsBuilder limits = SpanLimits.builder();
+
+        SpanLimitsConfig spanLimits = tracerConfigLoader.getSpanLimits();
+        if (spanLimits != null) {
+            boolean added = addSpanLimits(spanLimits, limits);
+            if (added) {
+                builder.setSpanLimits(limits.build());
+            }
+        }
+    }
+
+    private void addIdGenerator(SdkTracerProviderBuilder builder, TracerConfigLoader tracerConfigLoader) {
+        IdGenerator idGenerator = tracerConfigLoader.getIdGenerator();
+        if (idGenerator != null) {
+            builder.setIdGenerator(idGenerator);
+        }
+    }
+
+    private void addSampler(SdkTracerProviderBuilder builder, TracerConfigLoader tracerConfigLoader) {
+        SamplerConfig samplerConfig = tracerConfigLoader.getSamplerConfig();
+        CapaTraceSampler root = new CapaTraceSampler(samplerConfig);
+        Sampler sampler = Sampler.parentBased(root);
+        builder.setSampler(sampler);
+    }
+
+    private void addProcessors(SdkTracerProviderBuilder builder, TracerConfigLoader tracerConfigLoader) {
+        if (tracerConfigLoader != null) {
+            List<SpanProcessor> processors = tracerConfigLoader.getProcessors();
+            if (processors != null) {
+                processors.forEach(processor -> {
+                    if (processor != null) {
+                        builder.addSpanProcessor(processor);
+                    }
+                });
+            }
+        }
+    }
+
+    private boolean addSpanLimits(SpanLimitsConfig spanLimits, SpanLimitsBuilder limits) {
         if (spanLimits == null) {
             return false;
         }
@@ -97,13 +138,18 @@ public class CapaTracerProviderBuilder implements CapaTracerProviderSettings {
         }
         return added;
     }
+}
 
-    private static void skipIdValidate(SdkTracerProvider provider) {
+interface InnerModule {
+
+    static void skipIdValidate(SdkTracerProvider provider) {
         try {
             Field fieldTracerSharedState = SdkTracerProvider.class.getDeclaredField("sharedState");
             fieldTracerSharedState.setAccessible(true);
+
             Object sharedStatus = fieldTracerSharedState.get(provider);
             Class sharedStatusType = sharedStatus.getClass();
+
             Field fieldFlag = sharedStatusType.getDeclaredField("idGeneratorSafeToSkipIdValidation");
             fieldFlag.setAccessible(true);
             fieldFlag.set(sharedStatus, true);
@@ -111,121 +157,4 @@ public class CapaTracerProviderBuilder implements CapaTracerProviderSettings {
             throw new CapaException(CapaErrorContext.SYSTEM_ERROR, "Fail to skip id validation.", e);
         }
     }
-
-    @Override
-    public CapaTracerProviderBuilder setSamplerConfig(Supplier<SamplerConfig> samplerConfig) {
-        this.samplerConfig = samplerConfig;
-        return this;
-    }
-
-    @Override
-    public CapaTracerProviderBuilder setTracerConfig(TracerConfig tracerConfig) {
-        this.tracerConfig = tracerConfig;
-        return this;
-    }
-
-    @Override
-    public CapaTracerProviderBuilder setSpanLimits(SpanLimitsConfig spanLimits) {
-        spanLimitsConfig = spanLimits;
-        return this;
-    }
-
-    @Override
-    public CapaTracerProviderBuilder setIdGenerator(IdGenerator idGenerator) {
-        this.idGenerator = idGenerator;
-        return this;
-    }
-
-    @Override
-    public CapaTracerProviderBuilder addProcessor(SpanProcessor processor) {
-        if (processors == null) {
-            processors = new ArrayList<>();
-        }
-        processors.add(processor);
-        return this;
-    }
-
-    private void initTracerConfig() {
-        if (tracerConfig == null) {
-            tracerConfig = SpiUtils.loadConfigNullable(CapaTracerProviderSettings.FILE_PATH, TracerConfig.class);
-        }
-    }
-
-    /**
-     * Build the tracer provider with the config.
-     * In the following cases, a noop implementation will be returned.
-     * 1. No processor config was defined.
-     *
-     * @return the meter provider.
-     */
-    public CapaTracerProvider buildTracerProvider() {
-        // if config was not explicitly set, try loading the config from the config loader.
-        initTracerConfig();
-
-        if ((processors == null || processors.isEmpty()) && (tracerConfig == null
-                || tracerConfig.getProcessors() == null
-                || tracerConfig.getProcessors().isEmpty())) {
-            return new CapaTracerProvider(TracerProvider.noop());
-        }
-
-        SdkTracerProviderBuilder builder = SdkTracerProvider.builder();
-        addSpanLimits(builder);
-        addIdGenerator(builder);
-        addSampler(builder);
-        addProcessors(builder);
-
-        SdkTracerProvider provider = builder.build();
-
-        if (tracerConfig != null && !tracerConfig.isEnableIdValidate()) {
-            skipIdValidate(provider);
-        }
-
-        return new CapaTracerProvider(provider);
-    }
-
-    private void addIdGenerator(SdkTracerProviderBuilder builder) {
-        if (idGenerator != null) {
-            builder.setIdGenerator(idGenerator);
-        } else if (tracerConfig != null) {
-            IdGenerator generator = SpiUtils
-                    .newInstanceWithConstructorCache(tracerConfig.getIdGenerator(), IdGenerator.class);
-            if (generator != null) {
-                builder.setIdGenerator(generator);
-            }
-        }
-    }
-
-    private void addSpanLimits(SdkTracerProviderBuilder builder) {
-        SpanLimitsBuilder limits = SpanLimits.builder();
-        boolean added = false;
-        if (tracerConfig != null && tracerConfig.getSpanLimits() != null) {
-            added |= addSpanLimits(tracerConfig.getSpanLimits(), limits);
-        }
-        if (spanLimitsConfig != null) {
-            added |= addSpanLimits(spanLimitsConfig, limits);
-        }
-
-        if (added) {
-            builder.setSpanLimits(limits.build());
-        }
-    }
-
-    private void addSampler(SdkTracerProviderBuilder builder) {
-        builder.setSampler(Sampler.parentBased(new CapaTraceSampler(samplerConfig)));
-    }
-
-    private void addProcessors(SdkTracerProviderBuilder builder) {
-        List<SpanProcessor> processors = this.processors;
-        if (processors != null && !processors.isEmpty()) {
-            processors.forEach(p -> builder.addSpanProcessor(p));
-        } else if (tracerConfig != null && tracerConfig.getProcessors() != null) {
-            tracerConfig.getProcessors().forEach(p -> {
-                SpanProcessor processor = SpiUtils.newInstanceWithConstructorCache(p, SpanProcessor.class);
-                if (processor != null) {
-                    builder.addSpanProcessor(processor);
-                }
-            });
-        }
-    }
 }
-

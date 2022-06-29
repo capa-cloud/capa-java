@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component.pubsub;
 
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 
 /**
  * A builder for the {@link CapaPubSub} implementor.

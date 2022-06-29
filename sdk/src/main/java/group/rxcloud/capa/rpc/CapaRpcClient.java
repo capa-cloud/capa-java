@@ -16,18 +16,22 @@
  */
 package group.rxcloud.capa.rpc;
 
+import group.rxcloud.capa.CapaClient;
 import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
 import group.rxcloud.cloudruntimes.domain.core.invocation.HttpExtension;
 import group.rxcloud.cloudruntimes.domain.core.invocation.InvokeMethodRequest;
+import group.rxcloud.cloudruntimes.domain.core.invocation.RegisterServerRequest;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Generic Client Adapter to be used regardless of the specific RPC Client implementation required.
  */
-public interface CapaRpcClient extends DefaultCloudRuntimesClient {
+public interface CapaRpcClient extends CapaClient {
 
     @Override
     <T> Mono<T> invokeMethod(String appId, String methodName, Object data, HttpExtension httpExtension, Map<String, String> metadata, TypeRef<T> type);
@@ -63,10 +67,8 @@ public interface CapaRpcClient extends DefaultCloudRuntimesClient {
     <T> Mono<T> invokeMethod(InvokeMethodRequest invokeMethodRequest, TypeRef<T> type);
 
     @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
-    }
+    <T, R> Mono<Boolean> registerMethod(String methodName, List<HttpExtension> httpExtensions, Function<T, R> onInvoke, Map<String, String> metadata);
 
     @Override
-    void close();
+    Mono<Boolean> registerServer(RegisterServerRequest registerServerRequest);
 }

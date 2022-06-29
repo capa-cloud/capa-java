@@ -52,7 +52,8 @@ public class CapaRpcClientBuilderTest {
     public void setUp() {
         okHttpClient = new OkHttpClient.Builder().build();
         defaultObjectSerializer = new DefaultObjectSerializer();
-        capaRpcClientHttp = new CapaRpcClientHttp(new TestCapaHttp(okHttpClient, defaultObjectSerializer));
+        TestCapaHttp client = new TestCapaHttp(okHttpClient, defaultObjectSerializer);
+        capaRpcClientHttp = new CapaRpcClientHttp(client);
     }
 
     @Test

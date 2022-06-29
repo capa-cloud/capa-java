@@ -16,32 +16,8 @@
  */
 package group.rxcloud.capa.component;
 
-import group.rxcloud.capa.infrastructure.CapaProperties;
-
-import java.util.Properties;
-
 /**
  * Capa telemetry component common properties.
  */
 public interface CapaTelemetryProperties {
-
-    abstract class Settings {
-
-        private static String centerConfigAppId = "";
-
-        private static final String TELEMETRY_COMPONENT_CENTER_CONFIG_APPID = "TELEMETRY_COMPONENT_CENTER_CONFIG_APPID";
-
-        static {
-            Properties properties = CapaProperties.COMPONENT_PROPERTIES_SUPPLIER.apply("telemetry-common");
-
-            centerConfigAppId = properties.getProperty(TELEMETRY_COMPONENT_CENTER_CONFIG_APPID, centerConfigAppId);
-        }
-
-        public static String getCenterConfigAppId() {
-            return centerConfigAppId;
-        }
-
-        private Settings() {
-        }
-    }
 }

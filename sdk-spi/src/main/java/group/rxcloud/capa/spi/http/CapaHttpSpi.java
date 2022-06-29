@@ -21,9 +21,6 @@ import group.rxcloud.capa.component.http.HttpResponse;
 import group.rxcloud.capa.infrastructure.exceptions.CapaErrorContext;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
-import group.rxcloud.capa.spi.http.config.CapaSpiOptionsLoader;
-import group.rxcloud.capa.spi.http.config.CapaSpiProperties;
-import group.rxcloud.capa.spi.http.config.RpcServiceOptions;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
@@ -90,18 +87,10 @@ public abstract class CapaHttpSpi extends CapaHttp {
                     version, _invoke, appId, _method, method);
         }
 
-        // load spi service options
-        RpcServiceOptions rpcServiceOptions = getRpcServiceOptions(appId);
-        Objects.requireNonNull(rpcServiceOptions, "rpcServiceOptions");
-        if (logger.isDebugEnabled()) {
-            logger.debug("[Capa.Rpc.Client.http] [CapaHttpSpi] invoke rpc options[{}]",
-                    rpcServiceOptions);
-        }
-
         try {
             // spi invoke
             CompletableFuture<HttpResponse<T>> invokeSpiApi = invokeSpiApi(
-                    appId, method, requestData, httpMethod, headers, urlParameters, type, rpcServiceOptions);
+                    appId, method, requestData, httpMethod, headers, urlParameters, type);
             invokeSpiApi.whenComplete(this::callbackLog);
             return invokeSpiApi;
         } catch (CapaException e) {
@@ -112,17 +101,6 @@ public abstract class CapaHttpSpi extends CapaHttp {
             }
             throw new CapaException(CapaErrorContext.SYSTEM_ERROR, e);
         }
-    }
-
-    /**
-     * Override to get the configuration of the corresponding appId.
-     *
-     * @param appId the app id
-     * @return the rpc service options
-     */
-    protected RpcServiceOptions getRpcServiceOptions(String appId) {
-        CapaSpiOptionsLoader capaSpiOptionsLoader = CapaSpiProperties.getSpiOptionsLoader();
-        return capaSpiOptionsLoader.loadRpcServiceOptions(appId);
     }
 
     private <T> void callbackLog(HttpResponse<T> tHttpResponse, Throwable throwable) {
@@ -157,15 +135,14 @@ public abstract class CapaHttpSpi extends CapaHttp {
     /**
      * Invoke spi api and then return async completable future.
      *
-     * @param <T>               the response type parameter
-     * @param appId             the app id
-     * @param method            the invoke method
-     * @param requestData       the request data
-     * @param httpMethod        the http method
-     * @param headers           the headers
-     * @param urlParameters     the url parameters
-     * @param type              the response type
-     * @param rpcServiceOptions the rpc service options
+     * @param <T>           the response type parameter
+     * @param appId         the app id
+     * @param method        the invoke method
+     * @param requestData   the request data
+     * @param httpMethod    the http method
+     * @param headers       the headers
+     * @param urlParameters the url parameters
+     * @param type          the response type
      * @return the async completable future
      */
     protected abstract <T> CompletableFuture<HttpResponse<T>> invokeSpiApi(String appId,
@@ -174,6 +151,5 @@ public abstract class CapaHttpSpi extends CapaHttp {
                                                                            String httpMethod,
                                                                            Map<String, String> headers,
                                                                            Map<String, List<String>> urlParameters,
-                                                                           TypeRef<T> type,
-                                                                           RpcServiceOptions rpcServiceOptions);
+                                                                           TypeRef<T> type);
 }

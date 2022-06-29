@@ -16,15 +16,14 @@
  */
 package group.rxcloud.capa.springboot.pubsub;
 
-import com.kevinten.vrml.core.beans.SpringContextConfigurator;
-import com.kevinten.vrml.core.serialization.Serialization;
 import group.rxcloud.capa.infrastructure.exceptions.CapaException;
 import group.rxcloud.capa.infrastructure.serializer.CapaObjectSerializer;
 import group.rxcloud.capa.infrastructure.serializer.DefaultObjectSerializer;
-import group.rxcloud.capa.pubsub.Topic;
-import group.rxcloud.capa.pubsub.domain.TopicEventRequest;
-import group.rxcloud.capa.pubsub.domain.TopicSubscription;
+import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicEventRequest;
+import group.rxcloud.cloudruntimes.domain.core.pubsub.TopicSubscription;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
+import group.rxcloud.vrml.core.beans.SpringContextConfigurator;
+import group.rxcloud.vrml.core.serialization.Serialization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

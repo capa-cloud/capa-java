@@ -21,9 +21,6 @@ import io.opentelemetry.api.metrics.DoubleHistogramBuilder;
 import io.opentelemetry.api.metrics.LongHistogramBuilder;
 import io.opentelemetry.api.metrics.internal.NoopMeter;
 
-/**
- *
- */
 public class CapaDoubleHistogramBuilder implements DoubleHistogramBuilder {
 
     protected final String meterName;

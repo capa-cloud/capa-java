@@ -25,7 +25,6 @@ import io.opentelemetry.sdk.trace.samplers.Sampler;
 import io.opentelemetry.sdk.trace.samplers.SamplingResult;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Sampler for trace data.
@@ -33,21 +32,17 @@ import java.util.function.Supplier;
  */
 public class CapaTraceSampler implements Sampler {
 
-    private final Supplier<SamplerConfig> samplerConfigSupplier;
+    private final SamplerConfig samplerConfig;
 
-    public CapaTraceSampler(Supplier<SamplerConfig> samplerConfigSupplier) {
-        if (samplerConfigSupplier == null) {
-            samplerConfigSupplier = () -> SamplerConfig.DEFAULT_CONFIG;
-        }
-        this.samplerConfigSupplier = samplerConfigSupplier;
+    public CapaTraceSampler(SamplerConfig samplerConfig) {
+        this.samplerConfig = samplerConfig;
     }
 
     @Override
     public SamplingResult shouldSample(Context context, String traceId, String name, SpanKind kind,
                                        Attributes attributes, List<LinkData> list) {
         Sampler sampler = Sampler.alwaysOn();
-        SamplerConfig config = samplerConfigSupplier.get();
-        if (config != null && !config.isTraceEnable()) {
+        if (samplerConfig != null && !samplerConfig.isTraceEnable()) {
             sampler = Sampler.alwaysOff();
         }
         return sampler.shouldSample(context, traceId, name, kind, attributes, list);

@@ -16,27 +16,16 @@
  */
 package group.rxcloud.capa.infrastructure.plugin;
 
-import group.rxcloud.capa.infrastructure.CapaClassLoader;
+import group.rxcloud.vrml.spi.SPI;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
  * The Plugin SPI loader.
  */
 public final class PluginLoader {
-
-    private static final Map<Class, Object> pluginImplCache;
-
-    static {
-        pluginImplCache = new ConcurrentHashMap<>();
-    }
-
-    public static Map<Class, Object> getPluginImplCache() {
-        return pluginImplCache;
-    }
 
     /**
      * Load plugin impl by java spi.
@@ -46,9 +35,18 @@ public final class PluginLoader {
      * @return the optional of plugin impl
      */
     public static <T> Optional<T> loadPluginImpl(Class<T> pluginSuperClazz) {
-        Object o = pluginImplCache.computeIfAbsent(pluginSuperClazz,
-                aClass -> CapaClassLoader.loadPluginClassObj(pluginSuperClazz));
-        return Optional.ofNullable((T) o);
+        return SPI.loadSpiImpl(pluginSuperClazz);
+    }
+
+    /**
+     * Load plugin impls by java spi.
+     *
+     * @param <T>              the plugin interface type
+     * @param pluginSuperClazz the plugin interface class
+     * @return the optional of plugin impls
+     */
+    public static <T> Optional<List<T>> loadPluginImpls(Class<T> pluginSuperClazz) {
+        return SPI.loadSpiImpls(pluginSuperClazz);
     }
 
     /**
@@ -60,14 +58,6 @@ public final class PluginLoader {
      * @return the plugin impl
      */
     public static <T> T loadPluginImpl(Class<T> pluginSuperClazz, Supplier<T> defaultPluginObj) {
-        Object o = pluginImplCache.computeIfAbsent(pluginSuperClazz,
-                aClass -> {
-                    T pluginClassObj = CapaClassLoader.loadPluginClassObj(pluginSuperClazz);
-                    if (pluginClassObj != null) {
-                        return pluginClassObj;
-                    }
-                    return defaultPluginObj.get();
-                });
-        return (T) o;
+        return SPI.loadSpiImpl(pluginSuperClazz, defaultPluginObj);
     }
 }

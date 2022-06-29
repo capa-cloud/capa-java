@@ -32,9 +32,8 @@ public class DemoLog {
     public static void main(String[] args) {
         try {
             log.info("test");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println();
         }
-
     }
 }

@@ -21,9 +21,6 @@ import io.opentelemetry.api.metrics.LongHistogram;
 import io.opentelemetry.api.metrics.LongHistogramBuilder;
 import io.opentelemetry.api.metrics.internal.NoopMeter;
 
-/**
- *
- */
 public class CapaLongHistogramBuilder implements LongHistogramBuilder {
 
     private final String meterName;
@@ -60,7 +57,7 @@ public class CapaLongHistogramBuilder implements LongHistogramBuilder {
     @Override
     public DoubleHistogramBuilder ofDoubles() {
         return new CapaDoubleHistogramBuilder(meterName, schemaUrl, version, name).setDescription(description)
-                                                                                  .setUnit(unit);
+                .setUnit(unit);
     }
 
     @Override

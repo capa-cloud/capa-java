@@ -46,7 +46,7 @@ public class CapaTracerProviderBuilderTest {
 
     @Test
     public void buildFromTraceConfg() {
-        TracerConfig config = new TracerConfig();
+        TracerConfigLoader config = new TracerConfigLoader();
         config.setEnableIdValidate(false);
         config.setSpanLimits(new SpanLimitsConfig());
         config.getSpanLimits().setMaxAttributeValueLength(1);

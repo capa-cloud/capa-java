@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.component.telemetry.context;
 
-import group.rxcloud.capa.infrastructure.utils.SpiUtils;
+import group.rxcloud.capa.infrastructure.loader.CapaClassLoader;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.context.propagation.TextMapPropagator;
 
@@ -28,32 +28,7 @@ import java.util.List;
  * Builder for capa context propagator.
  */
 @NotThreadSafe
-public class CapaContextPropagatorBuilder implements CapaContextPropagatorSettings {
-
-    /**
-     * Context config.
-     */
-    private ContextConfig contextConfig;
-
-    /**
-     * Context propagator instances.
-     */
-    private List<TextMapPropagator> contextPropagatorsInstance;
-
-    @Override
-    public CapaContextPropagatorBuilder setContextConfig(ContextConfig config) {
-        contextConfig = config;
-        return this;
-    }
-
-    @Override
-    public CapaContextPropagatorBuilder addContextPropagators(TextMapPropagator processor) {
-        if (contextPropagatorsInstance == null) {
-            contextPropagatorsInstance = new ArrayList<>();
-        }
-        contextPropagatorsInstance.add(processor);
-        return this;
-    }
+public class CapaContextPropagatorBuilder {
 
     /**
      * Build context propagators.
@@ -61,38 +36,20 @@ public class CapaContextPropagatorBuilder implements CapaContextPropagatorSettin
      * @return context propagators.
      */
     public ContextPropagators buildContextPropagators() {
-        List<TextMapPropagator> propagators = new ArrayList<>();
-        initContextConfig();
-        if (contextConfig != null) {
-            List<String> types = contextConfig.getContextPropagators();
-            if (types != null && !types.isEmpty()) {
-                types.stream()
-                     .map(path -> SpiUtils.newInstanceWithConstructorCache(path, TextMapPropagator.class))
-                     .forEach(propagator -> propagators.add(propagator));
-            }
+        List<TextMapPropagator> contextPropagatorsInstance = new ArrayList<>();
+
+        ContextPropagatorLoader loader = CapaClassLoader.loadComponentClassObj("telemetry-common", ContextPropagatorLoader.class);
+        List<TextMapPropagator> loaded = loader.load();
+        if (loaded != null) {
+            contextPropagatorsInstance.addAll(loaded);
         }
 
-        if (contextPropagatorsInstance != null && !contextPropagatorsInstance.isEmpty()) {
-            propagators.addAll(contextPropagatorsInstance);
-        }
-
-        ContextPropagatorLoader loader = SpiUtils.loadFromSpiComponentFileNullable(ContextPropagatorLoader.class, "telemetry");
-        if (loader != null) {
-            List<TextMapPropagator> loaded = loader.load();
-            if (loaded != null) {
-                propagators.addAll(loaded);
-            }
-        }
-
-        if (propagators.isEmpty()) {
+        if (contextPropagatorsInstance.isEmpty()) {
             return ContextPropagators.noop();
         }
-        return ContextPropagators.create(TextMapPropagator.composite(propagators.toArray(new TextMapPropagator[0])));
-    }
 
-    private void initContextConfig() {
-        if (contextConfig == null) {
-            contextConfig = SpiUtils.loadConfigNullable(FILE_PATH, ContextConfig.class);;
-        }
+        TextMapPropagator[] textMapPropagators = contextPropagatorsInstance.toArray(new TextMapPropagator[0]);
+        TextMapPropagator textPropagator = TextMapPropagator.composite(textMapPropagators);
+        return ContextPropagators.create(textPropagator);
     }
 }

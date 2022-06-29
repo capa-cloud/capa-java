@@ -17,11 +17,10 @@
 package group.rxcloud.capa.telemetry;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
-import group.rxcloud.capa.component.telemetry.context.ContextConfig;
-import group.rxcloud.capa.component.telemetry.metrics.MeterConfig;
+import group.rxcloud.capa.component.telemetry.metrics.MeterConfigLoader;
 import group.rxcloud.capa.component.telemetry.metrics.MetricsReaderConfig;
 import group.rxcloud.capa.component.telemetry.trace.SpanLimitsConfig;
-import group.rxcloud.capa.component.telemetry.trace.TracerConfig;
+import group.rxcloud.capa.component.telemetry.trace.TracerConfigLoader;
 import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.Tracer;
@@ -62,8 +61,8 @@ public class CapaTelemetryClientBuilderTest {
                 .setSamplerConfig(() -> SamplerConfig.DEFAULT_CONFIG)
                 .setSpanLimits(new SpanLimitsConfig())
                 .setIdGenerator(IdGenerator.random())
-                .setTracerConfig(new TracerConfig())
-                .setMeterConfig(new MeterConfig())
+                .setTracerConfig(new TracerConfigLoader())
+                .setMeterConfig(new MeterConfigLoader())
                 .addMetricReaderConfig(readerConfig)
                 .setContextConfig(new ContextConfig())
                 .addContextPropagators(W3CTraceContextPropagator.getInstance())
@@ -71,17 +70,17 @@ public class CapaTelemetryClientBuilderTest {
 
         // tracer
         Tracer tracer = capaTelemetryClient.buildTracer("tracer-test")
-                                           .block();
+                .block();
 
         LongCounter counter = capaTelemetryClient.buildMeter("meter-test")
-                                                 .block()
-                                                 .counterBuilder("counter-test")
-                                                 .build();
+                .block()
+                .counterBuilder("counter-test")
+                .build();
 
         Span span = tracer.spanBuilder("span-test")
-                          .setAttribute("key1", 1)
-                          .setAttribute("key2", 2)
-                          .startSpan();
+                .setAttribute("key1", 1)
+                .setAttribute("key2", 2)
+                .startSpan();
         // working
         for (int i = 0; i < 10; i++) {
             Thread.sleep(200);

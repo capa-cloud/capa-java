@@ -39,17 +39,18 @@ public class DemoTelemetryClient {
 
         // tracer
         Tracer tracer = capaTelemetryClient.buildTracer("tracer-test")
-                                           .block();
+                .block();
 
         LongCounter counter = capaTelemetryClient.buildMeter("meter-test")
-                                                 .block()
-                                                 .counterBuilder("counter-test")
-                                                 .build();
+                .block()
+                .counterBuilder("counter-test")
+                .build();
 
         Span span = tracer.spanBuilder("span-test")
-                          .setAttribute("key1", 1)
-                          .setAttribute("key2", 2)
-                          .startSpan();
+                .setAttribute("key1", 1)
+                .setAttribute("key2", 2)
+                .startSpan();
+
         // working
         for (int i = 0; i < 50; i++) {
             Thread.sleep(200);

@@ -18,8 +18,6 @@ package group.rxcloud.capa.component.telemetry.metrics;
 
 import io.opentelemetry.api.metrics.LongHistogram;
 
-/**
- */
 public abstract class CapaLongHistogram implements LongHistogram {
 
     protected final String meterName;

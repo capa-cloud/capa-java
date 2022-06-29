@@ -16,7 +16,7 @@
  */
 package group.rxcloud.capa.state;
 
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
+import group.rxcloud.capa.CapaClient;
 import group.rxcloud.cloudruntimes.domain.core.state.DeleteStateRequest;
 import group.rxcloud.cloudruntimes.domain.core.state.ExecuteStateTransactionRequest;
 import group.rxcloud.cloudruntimes.domain.core.state.GetBulkStateRequest;
@@ -30,7 +30,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-public interface CapaStateClient extends DefaultCloudRuntimesClient {
+/**
+ * The Capa state client.
+ */
+public interface CapaStateClient extends CapaClient {
 
     @Override
     <T> Mono<State<T>> getState(String storeName, State<T> state, TypeRef<T> type);
@@ -88,12 +91,4 @@ public interface CapaStateClient extends DefaultCloudRuntimesClient {
 
     @Override
     Mono<Void> deleteState(DeleteStateRequest request);
-
-    @Override
-    default Mono<Void> shutdown() {
-        return Mono.empty();
-    }
-
-    @Override
-    void close();
 }
