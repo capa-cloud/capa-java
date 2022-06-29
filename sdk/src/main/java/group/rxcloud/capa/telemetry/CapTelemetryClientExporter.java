@@ -16,6 +16,7 @@
  */
 package group.rxcloud.capa.telemetry;
 
+import group.rxcloud.capa.AbstractCapaClient;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.metrics.MeterProvider;
@@ -27,7 +28,9 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CapTelemetryClientExporter implements CapaTelemetryClient, OpenTelemetry {
+public class CapTelemetryClientExporter
+        extends AbstractCapaClient
+        implements CapaTelemetryClient, OpenTelemetry {
 
     // noop as default.
     private TracerProvider tracerProvider = TracerProvider.noop();

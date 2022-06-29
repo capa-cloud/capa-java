@@ -1,12 +1,10 @@
 package group.rxcloud.capa.binding;
 
 import group.rxcloud.capa.CapaClient;
-import group.rxcloud.cloudruntimes.client.DefaultCloudRuntimesClient;
 import group.rxcloud.cloudruntimes.domain.core.binding.InvokeBindingRequest;
 import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.Map;
 
 /**

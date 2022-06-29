@@ -14,50 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package group.rxcloud.capa.configuration;
+package group.rxcloud.capa.ratelimit;
 
 
 import group.rxcloud.capa.AbstractCapaClient;
-import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationItem;
+import group.rxcloud.capa.configuration.CapaConfigurationClient;
+import group.rxcloud.capa.configuration.CapaConfigurationClientStore;
 import group.rxcloud.cloudruntimes.domain.core.configuration.ConfigurationRequestItem;
 import group.rxcloud.cloudruntimes.domain.core.configuration.SaveConfigurationRequest;
-import group.rxcloud.cloudruntimes.utils.TypeRef;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Abstract class with convenient methods common between client implementations.
  *
  * @see CapaConfigurationClientStore
  */
-public abstract class AbstractCapaConfigurationClient
+public abstract class AbstractCapaRatelimitClient
         extends AbstractCapaClient
         implements CapaConfigurationClient {
-
-    @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
-        return getConfiguration(storeName, appId, keys, metadata, null, null, type);
-    }
-
-    @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, TypeRef<T> type) {
-        return getConfiguration(storeName, appId, keys, metadata, group, null, type);
-    }
-
-    @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
-        Objects.requireNonNull(configurationRequestItem, "[Capa] configurationRequestItem cannot be null.");
-        return getConfiguration(configurationRequestItem.getStoreName(),
-                configurationRequestItem.getAppId(),
-                configurationRequestItem.getKeys(),
-                configurationRequestItem.getMetadata(),
-                configurationRequestItem.getGroup(),
-                configurationRequestItem.getLabel(),
-                type);
-    }
 
     @Override
     public Mono<Void> saveConfiguration(SaveConfigurationRequest saveConfigurationRequest) {

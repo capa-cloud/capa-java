@@ -72,28 +72,6 @@ public class CapaConfigurationClientStore extends AbstractCapaConfigurationClien
     }
 
     @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, TypeRef<T> type) {
-        return getConfiguration(storeName, appId, keys, metadata, null, null, type);
-    }
-
-    @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, TypeRef<T> type) {
-        return getConfiguration(storeName, appId, keys, metadata, group, null, type);
-    }
-
-    @Override
-    public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(ConfigurationRequestItem configurationRequestItem, TypeRef<T> type) {
-        Objects.requireNonNull(configurationRequestItem, "[Capa] configurationRequestItem cannot be null.");
-        return getConfiguration(configurationRequestItem.getStoreName(),
-                configurationRequestItem.getAppId(),
-                configurationRequestItem.getKeys(),
-                configurationRequestItem.getMetadata(),
-                configurationRequestItem.getGroup(),
-                configurationRequestItem.getLabel(),
-                type);
-    }
-
-    @Override
     public <T> Mono<List<ConfigurationItem<T>>> getConfiguration(String storeName, String appId, List<String> keys, Map<String, String> metadata, String group, String label, TypeRef<T> type) {
         try {
             final CapaConfigStore store = this.getStore(storeName);
