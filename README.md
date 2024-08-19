@@ -8,6 +8,8 @@ With the help of the Capa project, your Java applications have the ability to ru
 
 [中文文档](./README_ZH.md)
 
+[介绍文章](https://capa-cloud.github.io/capa.io/blog/2022/01/18/capa-mecha-sdk-of-cloud-application-api/)
+
 ## Motivation
 
 ### Mecha architecture
