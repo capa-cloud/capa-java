@@ -6,6 +6,8 @@
 
 借助Capa体系，使你的Java应用在改动量较小的情况下，拥有跨云、混合云运行的能力。
 
+[介绍文章](https://capa-cloud.github.io/capa.io/blog/2022/01/18/capa-mecha-sdk-of-cloud-application-api/)
+
 ## 动机
 
 ### Mecha架构
