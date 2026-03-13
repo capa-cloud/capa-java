@@ -89,6 +89,36 @@ When deployed to different target environments, Capa will load different impleme
 
 The middleware team needs to develop the implementation classes of the standard API in the target environment for different target environments; and the application code can have a "write once, run anywhere" development experience.
 
+### Architecture Overview
+
+![Capa Architecture](./docs/capa-architecture.png)
+
+Capa adopts a layered architecture design:
+- **Application Layer**: Uses unified Capa API for programming
+- **Capa SDK Layer**: Contains core SDK, components, SPI interface definitions
+- **SPI Implementation Layer**: Provides AWS, Alibaba Cloud, Dapr and other implementations
+- **Runtime Layer**: Connects to specific middleware services
+
+### Write Once, Run Anywhere
+
+![Write Once Run Anywhere](./docs/capa-write-once-run-anywhere.png)
+
+With Capa's unified standard programming API, applications can run on different platforms (AWS, Alibaba Cloud, Kubernetes, Dapr, etc.) without modifying business code.
+
+### Supported Features
+
+![Capa Features](./docs/capa-features.png)
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| RPC | Service Invocation | Stable |
+| Configuration | Dynamic Configuration | Stable |
+| Pub/Sub | Publish/Subscribe Messaging | Stable |
+| State | State Management | Stable |
+| Telemetry | Logs/Metrics/Traces | Stable |
+| Database | SQL Database | Alpha |
+| Schedule | Scheduled Tasks | Alpha |
+
 ### SDK design
 
 The Capa module is divided into the following parts:
