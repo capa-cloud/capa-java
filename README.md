@@ -50,9 +50,9 @@ Capa API design follow community standards, please refer to the API definitions 
 
 The API definition is placed in the following independent warehouse, unbound from the Capa project, and hopes to develop into the community's API standard definition:
 
-+ java: [cloud-runtimes-jvm](https://github.com/reactivegroup/cloud-runtimes-jvm)
-+ python(alpha): [cloud-runtimes-python](https://github.com/reactivegroup/cloud-runtimes-python)
-+ golang(alpha): [cloud-runtimes-golang](https://github.com/reactivegroup/cloud-runtimes-golang)
++ java: [cloud-runtimes-jvm](https://github.com/capa-cloud/cloud-runtimes-jvm)
++ python(alpha): [cloud-runtimes-python](https://github.com/capa-cloud/cloud-runtimes-python)
++ golang(alpha): [cloud-runtimes-golang](https://github.com/capa-cloud/cloud-runtimes-golang)
 
 #### Why not use Dapr API directly?
 
@@ -184,9 +184,9 @@ Sample implementation library:
 
 Try the following examples to learn more about Capa's Java SDK:
 
-* [capa-demo](https://github.com/reactivegroup/capa/tree/master/sdk-spi-demo)
-* [capa-aws](https://github.com/reactivegroup/capa-aws)
-* [capa-alibaba](https://github.com/reactivegroup/capa-alibaba)
+* [capa-demo](https://github.com/capa-cloud/capa-java/tree/master/sdk-spi-demo)
+* [capa-aws](https://github.com/capa-cloud/capa-java-aws)
+* [capa-alibaba](https://github.com/capa-cloud/capa-java-alibaba)
 
 ### Low retrofit cost migration
 

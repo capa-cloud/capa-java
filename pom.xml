@@ -26,7 +26,7 @@
     <version>1.11.13.2.RELEASE</version>
     <name>capa-sdk-parent</name>
     <description>SDK for Capa.</description>
-    <url>https://github.com/reactivegroup</url>
+    <url>https://github.com/capa-cloud/capa-java</url>
 
     <licenses>
         <license>
@@ -51,9 +51,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:reactivegroup/capa.git</connection>
-        <developerConnection>scm:git:git@github.com:reactivegroup/capa.git</developerConnection>
-        <url>git@github.com:reactivegroup/capa.git</url>
+        <connection>scm:git:https://github.com/capa-cloud/capa-java.git</connection>
+        <developerConnection>scm:git:git@github.com:capa-cloud/capa-java.git</developerConnection>
+        <url>https://github.com/capa-cloud/capa-java</url>
     </scm>
 
     <distributionManagement>
