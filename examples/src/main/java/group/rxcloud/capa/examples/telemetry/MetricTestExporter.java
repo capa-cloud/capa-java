@@ -17,6 +17,8 @@
 package group.rxcloud.capa.examples.telemetry;
 
 import io.opentelemetry.sdk.common.CompletableResultCode;
+import io.opentelemetry.sdk.metrics.InstrumentType;
+import io.opentelemetry.sdk.metrics.data.AggregationTemporality;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
@@ -33,6 +35,11 @@ public class MetricTestExporter implements MetricExporter {
     @Override
     public CompletableResultCode flush() {
         return CompletableResultCode.ofSuccess();
+    }
+
+    @Override
+    public AggregationTemporality getAggregationTemporality(InstrumentType instrumentType) {
+        return AggregationTemporality.CUMULATIVE;
     }
 
     @Override

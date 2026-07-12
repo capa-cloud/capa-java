@@ -17,7 +17,6 @@
 package group.rxcloud.capa.component.telemetry.metrics;
 
 import io.opentelemetry.api.common.Attributes;
-import io.opentelemetry.api.metrics.BoundLongHistogram;
 import io.opentelemetry.context.Context;
 
 /**
@@ -46,8 +45,4 @@ public class TestLongHistogram extends CapaLongHistogram{
 
     }
 
-    @Override
-    public BoundLongHistogram bind(Attributes attributes) {
-        return null;
-    }
 }

@@ -19,7 +19,7 @@ package group.rxcloud.capa.component.telemetry.metrics;
 import io.opentelemetry.api.metrics.DoubleHistogram;
 import io.opentelemetry.api.metrics.DoubleHistogramBuilder;
 import io.opentelemetry.api.metrics.LongHistogramBuilder;
-import io.opentelemetry.api.metrics.internal.NoopMeter;
+import io.opentelemetry.api.metrics.MeterProvider;
 
 /**
  *
@@ -69,7 +69,7 @@ public class CapaDoubleHistogramBuilder implements DoubleHistogramBuilder {
                 .loadHistogramNullable(meterName, schemaUrl, version, name, description, unit,
                         CapaDoubleHistogram.class);
         if (histogram == null) {
-            return NoopMeter.getInstance().histogramBuilder(name).build();
+            return MeterProvider.noop().get(meterName).histogramBuilder(name).build();
         }
         return histogram;
     }

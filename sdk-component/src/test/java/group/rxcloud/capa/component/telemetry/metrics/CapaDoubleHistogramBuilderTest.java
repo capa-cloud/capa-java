@@ -17,8 +17,7 @@
 package group.rxcloud.capa.component.telemetry.metrics;
 
 import io.opentelemetry.api.metrics.DoubleHistogramBuilder;
-import io.opentelemetry.api.metrics.LongHistogramBuilder;
-import io.opentelemetry.api.metrics.internal.NoopMeter;
+import io.opentelemetry.api.metrics.MeterProvider;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,9 +33,10 @@ public class CapaDoubleHistogramBuilderTest {
         CapaDoubleHistogramBuilder builder = new CapaDoubleHistogramBuilder("", "", "", "");
         assertEquals(builder, builder.setDescription("aaa"));
         assertEquals(builder, builder.setUnit("bbb"));
-        assertTrue(builder.build() instanceof NoopMeter.NoopDoubleHistogram);
+        assertEquals(MeterProvider.noop().get("test").histogramBuilder("test").build().getClass(),
+                builder.build().getClass());
 
-        LongHistogramBuilder longHistogramBuilder = builder.ofLongs();
+        CapaLongHistogramBuilder longHistogramBuilder = (CapaLongHistogramBuilder) builder.ofLongs();
         assertEquals(longHistogramBuilder, longHistogramBuilder.setDescription("ccc"));
         assertEquals(longHistogramBuilder, longHistogramBuilder.setUnit("ddd"));
         assertTrue(longHistogramBuilder.build() instanceof TestLongHistogram);

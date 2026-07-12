@@ -17,10 +17,10 @@
 package group.rxcloud.capa.component.telemetry.metrics;
 
 import io.opentelemetry.api.metrics.Meter;
-import io.opentelemetry.api.metrics.internal.NoopMeter;
+import io.opentelemetry.api.metrics.MeterProvider;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -51,7 +51,8 @@ public class CapaMeterTest {
     public void histogramBuilder() {
         Meter meter = mock(Meter.class);
         CapaMeter capaMeter = new CapaMeter("", "", "", meter);
-        assertTrue(capaMeter.histogramBuilder("aaa").setUnit("a").setDescription("desc").build() instanceof NoopMeter.NoopDoubleHistogram);
+        assertEquals(MeterProvider.noop().get("test").histogramBuilder("test").build().getClass(),
+                capaMeter.histogramBuilder("aaa").setUnit("a").setDescription("desc").build().getClass());
         verify(meter, never()).histogramBuilder("aaa");
     }
 

@@ -31,8 +31,8 @@
     <name>capa-sdk-spi-demo</name>
 
     <properties>
-        <log4j.version>2.17.1</log4j.version>
-        <logback.version>1.2.10</logback.version>
+        <log4j.version>2.25.4</log4j.version>
+        <logback.version>1.2.13</logback.version>
     </properties>
 
     <dependencies>

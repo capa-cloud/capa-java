@@ -18,6 +18,8 @@ package group.rxcloud.capa.component.telemetry.metrics;
 
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.sdk.common.CompletableResultCode;
+import io.opentelemetry.sdk.metrics.InstrumentType;
+import io.opentelemetry.sdk.metrics.data.AggregationTemporality;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
@@ -53,6 +55,11 @@ public abstract class CapaMetricsExporter implements MetricExporter {
         }
 
         return doFlush();
+    }
+
+    @Override
+    public AggregationTemporality getAggregationTemporality(InstrumentType instrumentType) {
+        return AggregationTemporality.CUMULATIVE;
     }
 
     protected abstract CompletableResultCode doExport(Collection<MetricData> metrics);

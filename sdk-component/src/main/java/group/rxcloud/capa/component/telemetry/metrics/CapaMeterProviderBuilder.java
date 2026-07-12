@@ -22,7 +22,7 @@ import io.opentelemetry.api.metrics.MeterProvider;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.SdkMeterProviderBuilder;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
-import io.opentelemetry.sdk.metrics.export.MetricReaderFactory;
+import io.opentelemetry.sdk.metrics.export.MetricReader;
 import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,9 +62,9 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
      * @param readerConfigs metrics reader configs.
      * @return metrics reader factories.
      */
-    private static List<MetricReaderFactory> bulidReaderFactories(List<MetricsReaderConfig> readerConfigs,
-                                                                  Supplier<SamplerConfig> samplerConfig) {
-        List<MetricReaderFactory> factories = new ArrayList<>();
+    private static List<MetricReader> buildReaders(List<MetricsReaderConfig> readerConfigs,
+                                                   Supplier<SamplerConfig> samplerConfig) {
+        List<MetricReader> readers = new ArrayList<>();
         for (MetricsReaderConfig config : readerConfigs) {
             MetricExporter exporter = SpiUtils
                     .newInstance(config.getExporterType(), CapaMetricsExporter.class, new Class[]{Supplier.class},
@@ -85,12 +85,12 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
                 }
             });
 
-            factories.add(PeriodicMetricReader.builder(exporter)
-                                              .setInterval(config.getExportIntervalMillis(), TimeUnit.MILLISECONDS)
-                                              .setExecutor(worker)
-                                              .newMetricReaderFactory());
+            readers.add(PeriodicMetricReader.builder(exporter)
+                                            .setInterval(config.getExportIntervalMillis(), TimeUnit.MILLISECONDS)
+                                            .setExecutor(worker)
+                                            .build());
         }
-        return factories;
+        return readers;
     }
 
     @Override
@@ -136,12 +136,13 @@ public class CapaMeterProviderBuilder implements CapaMeterProviderSettings {
             return MeterProvider.noop();
         }
 
-        List<MetricReaderFactory> factories = bulidReaderFactories(metricsReaderConfigs, samplerConfig);
-
+        List<MetricReader> readers = buildReaders(metricsReaderConfigs, samplerConfig);
 
         SdkMeterProviderBuilder builder = SdkMeterProvider.builder()
-                                                          .setExemplarFilter(new CapaMetricsSampler(samplerConfig));
-        factories.forEach(f -> builder.registerMetricReader(f));
+                                                          .setExemplarFilter(
+                                                                  new CapaMetricsSampler(samplerConfig)
+                                                                          .getExemplarFilter());
+        readers.forEach(builder::registerMetricReader);
         SdkMeterProvider provider = builder.build();
         return new CapaMeterProvider(provider);
     }

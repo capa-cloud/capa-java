@@ -19,12 +19,12 @@ package group.rxcloud.capa.component.telemetry.metrics;
 import com.google.common.collect.Lists;
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.api.metrics.MeterProvider;
-import io.opentelemetry.api.metrics.internal.NoopMeterProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -57,7 +57,7 @@ public class CapaMeterProviderBuilderTest {
                 .setMeterConfig(new MeterConfig())
                 .buildMeterProvider();
 
-        assertTrue(meterProvider instanceof NoopMeterProvider);
+        assertSame(MeterProvider.noop(), meterProvider);
     }
 
     @Test

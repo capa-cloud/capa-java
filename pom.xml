@@ -85,9 +85,8 @@
         <reactor-core.version>3.3.22.RELEASE</reactor-core.version>
         <slf4j.version>1.7.21</slf4j.version>
         <grpc.version>1.39.0</grpc.version>
-        <jackson.version>2.12.7.1</jackson.version>
-        <open.telemetry.version>1.9.0</open.telemetry.version>
-        <open.telemetry.version.alpha>1.9.0-alpha</open.telemetry.version.alpha>
+        <jackson.version>2.18.8</jackson.version>
+        <open.telemetry.version>1.62.0</open.telemetry.version>
         <junit.version>5.3.1</junit.version>
         <mockito-core.version>3.6.0</mockito-core.version>
         <powermock.version>2.0.2</powermock.version>
@@ -137,6 +136,12 @@
                 <groupId>group.rxcloud</groupId>
                 <artifactId>cloud-runtimes-api</artifactId>
                 <version>${cloud-runtimes.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.opentelemetry</groupId>
+                        <artifactId>opentelemetry-api-metrics</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- reactor -->
@@ -172,11 +177,6 @@
                 <groupId>io.opentelemetry</groupId>
                 <artifactId>opentelemetry-api</artifactId>
                 <version>${open.telemetry.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.opentelemetry</groupId>
-                <artifactId>opentelemetry-api-metrics</artifactId>
-                <version>${open.telemetry.version.alpha}</version>
             </dependency>
 
             <!-- unit test -->

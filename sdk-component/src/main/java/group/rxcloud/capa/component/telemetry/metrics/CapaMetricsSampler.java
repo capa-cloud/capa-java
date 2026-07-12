@@ -19,7 +19,7 @@ package group.rxcloud.capa.component.telemetry.metrics;
 import group.rxcloud.capa.component.telemetry.SamplerConfig;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.context.Context;
-import io.opentelemetry.sdk.metrics.exemplar.ExemplarFilter;
+import io.opentelemetry.sdk.metrics.ExemplarFilter;
 
 import java.util.function.Supplier;
 
@@ -38,22 +38,20 @@ public class CapaMetricsSampler implements ExemplarFilter {
         this.samplerConfigSupplier = samplerConfigSupplier;
     }
 
-    @Override
     public boolean shouldSampleMeasurement(long value, Attributes attributes, Context context) {
-        return get().shouldSampleMeasurement(value, attributes, context);
+        return isMetricsEnabled();
     }
 
-    @Override
     public boolean shouldSampleMeasurement(double value, Attributes attributes, Context context) {
-        return get().shouldSampleMeasurement(value, attributes, context);
+        return isMetricsEnabled();
     }
 
-    private ExemplarFilter get() {
-        SamplerConfig config = samplerConfigSupplier.get();
-        if (config != null && !config.isMetricsEnable()) {
-            return ExemplarFilter.neverSample();
-        }
+    public ExemplarFilter getExemplarFilter() {
+        return isMetricsEnabled() ? ExemplarFilter.alwaysOn() : ExemplarFilter.alwaysOff();
+    }
 
-        return ExemplarFilter.alwaysSample();
+    private boolean isMetricsEnabled() {
+        SamplerConfig config = samplerConfigSupplier.get();
+        return config == null || config.isMetricsEnable();
     }
 }

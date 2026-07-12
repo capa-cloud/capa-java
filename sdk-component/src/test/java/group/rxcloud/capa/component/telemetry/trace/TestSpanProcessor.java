@@ -49,7 +49,7 @@ public class TestSpanProcessor implements SpanProcessor {
 
     @Override
     public boolean isEndRequired() {
-        return false;
+        return true;
     }
 
     public static boolean called(String name) {
