@@ -148,6 +148,12 @@ Sample implementation library:
 </project>
 ```
 
+### 日志兼容性
+
+Spring Boot 集成模块不会再传递引入具体日志实现。应用需要自行提供所使用的 SLF4J provider，例如 Logback 或
+Log4j 2。Capa 的 Java 8 Logback 适配模块使用 SLF4J 2.0.17 和 Logback 1.3.16 编译；日志依赖保持可选，
+因此 Spring Boot 应用可以继续使用自身管理的日志技术栈。
+
 ### Running the examples
 
 Try the following examples to learn more about Capa's Java SDK:

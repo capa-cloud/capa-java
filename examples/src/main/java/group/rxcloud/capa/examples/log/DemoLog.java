@@ -16,7 +16,8 @@
  */
 package group.rxcloud.capa.examples.log;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An application cannot use log4j and logback configuration to print logs at the same time.
@@ -26,13 +27,14 @@ import lombok.extern.slf4j.Slf4j;
  * 1. Resources cannot contain log4j2.xml and logback.xml files at the same time,
  * 2. log4j-slf4j-impl and logback-classic cannot exist at the same time.
  */
-@Slf4j
 public class DemoLog {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DemoLog.class);
 
     public static void main(String[] args) {
         try {
-            log.info("test");
-        }catch (Exception e){
+            LOG.info("test");
+        } catch (Exception e) {
             System.out.println();
         }
 

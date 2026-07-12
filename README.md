@@ -180,6 +180,13 @@ Sample implementation library:
 </project>
 ```
 
+### Logging compatibility
+
+The Spring Boot integration does not transitively select a logging implementation. Applications should provide the
+SLF4J provider they use, such as Logback or Log4j 2. Capa's Java 8 Logback adapters compile against SLF4J 2.0.17 and
+Logback 1.3.16; their logging dependencies remain optional so Spring Boot applications can keep their own managed
+logging stack.
+
 ### Running the examples
 
 Try the following examples to learn more about Capa's Java SDK:
