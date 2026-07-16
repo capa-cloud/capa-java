@@ -1,251 +1,138 @@
-![logo](./docs/logo.png)
+<p align="center">
+  <img src="./docs/logo.png" alt="Capa" width="160">
+</p>
 
-# Capa(cloud application api): To be the high-level api layer for all application runtime.
+# Capa Java SDK
 
-Let the code achieve "write once, run anywhere".
+Capa is a rich-SDK implementation of Cloud Application APIs for Java. Applications program against vendor-neutral runtime interfaces while pluggable SPI modules connect those interfaces to concrete middleware or cloud services.
 
-With the help of the Capa project, your Java applications have the ability to run across clouds and hybrid clouds with small changes.
+[简体中文](README_ZH.md) · [Documentation](https://capa.rxcloud.group/) · [Issues](https://github.com/capa-cloud/capa-java/issues)
 
-[中文文档](./README_ZH.md)
+> **Project boundary:** this repository contains the Java SDK. The experimental Go sidecar runtime is maintained separately in [capa](https://github.com/capa-cloud/capa), and API contracts are defined in [cloud-runtimes-jvm](https://github.com/capa-cloud/cloud-runtimes-jvm).
 
-[介绍文章](https://capa.rxcloud.group/blog/2022/01/18/capa-mecha-sdk-of-cloud-application-api/)
+## Requirements
 
-## Motivation
+- Java 8 or 11
+- Maven 3.8.1 or later
+- A Capa SPI implementation for every capability used by the application
 
-### Mecha architecture
+## Add the SDK
 
-The Capa project is based on the design concept of the Mecha architecture and uses **rich SDK mode** to provide Multi-Runtime standard API.
-
-You can simply understand the Capa project as the SDK implementation of [Dapr](https://github.com/dapr/dapr) / [Layotto](https://github.com/mosn/layotto) Sidecar mode projects.
-
-To understand the design ideas of Mecha architecture, please read the following articles:
-
-[死生之地不可不察：论API标准化对Dapr的重要性](https://www.infoq.cn/article/wjkNGoGaaHyKs7xIyTSB)
-
-[MOSN子项目Layotto：开启服务网格+应用运行时新篇章](http://mosn.io/layotto/#/zh/blog/mosn-subproject-layotto-opening-a-new-chapter-in-service-grid-application-runtime/index)
-
-### Sidecar or SDK
-
-Based on the Mecha architecture concept, Multi-Runtime provides standard API functions in a Sidecar manner, which seems to be the most reasonable choice.
-
-So why not use Dapr/Layotto and other projects directly, but choose to develop the Capa project of **Rich SDK Mode** instead.
-
-Summary: _The Sidecar architecture represented by Dapr is the future, but it is difficult for many existing enterprises and systems to upgrade to the Sidecar architecture in one step. The rich SDK architecture will exist for a long time._
-
-Extension: _Faced with the huge Java systems, the Capa project will use the rich SDK model to support the transition from the Java system to the Mecha architecture. After Dapr and other projects mature, they can also be seamlessly connected to the Sidecar architecture._
-
-For specific discussions on this issue, please refer to:
-
-[SDK模型的Dapr API](https://github.com/dapr/dapr/issues/3261)
-
-[Dapr API的未来计划](https://github.com/dapr/dapr/issues/2817)
-
-[Java SDK的设计讨论](https://github.com/mosn/layotto/issues/188)
-
-## Feature
-
-### API definition
-
-Capa API design follow community standards, please refer to the API definitions of open source projects such as Dapr / Layotto.
-
-The API definition is placed in the following independent warehouse, unbound from the Capa project, and hopes to develop into the community's API standard definition:
-
-+ java: [cloud-runtimes-jvm](https://github.com/capa-cloud/cloud-runtimes-jvm)
-+ python(alpha): [cloud-runtimes-python](https://github.com/capa-cloud/cloud-runtimes-python)
-+ golang(alpha): [cloud-runtimes-golang](https://github.com/capa-cloud/cloud-runtimes-golang)
-
-#### Why not use Dapr API directly?
-
-Due to the current strong binding between Dapr API and Dapr project, we hope that this set of API can become the standard of the entire community, so Capa puts the API definition in an independent warehouse and keeps it synchronized with upstream community standards at all times.
-
-We hope that Dapr can deploy its API independently, decouple it from the Dapr project, and become a standard for the entire community.
-
-For the discussion of this item, please see:
-
-[Future plans for dapr api](https://github.com/dapr/dapr/issues/2817)
-
-### Capa features
-
-Capa (Java SDK) is an SDK solution that implements Mecha architecture for Java applications. It currently supports features in the following areas:
-
-+ Service Invocation (RPC)
-+ Configuration Centor (Configuration)
-+ Publish/Subscribe (Pub/Sub)
-+ State Management (State)
-+ Application Log/Metrics/Traces (Telemetry)
-+ Database (SQL) -alpha
-+ Schedule (Schedule) -alpha
-+ ...
-
-## Design
-
-### Capa design
-
-Design idea: **Standard API + pluggable and replaceable SDK components** mode
-
-In different distributed middleware fields, Capa provides a unified standard programming API without relying on specific middleware APIs. Therefore, the application does not need to rely on any specific middleware API when programming with Capa, but only needs to rely on Capa's standard programming API.
-
-When deployed to different target environments, Capa will load different implementation classes of the standard API into the application. When calling a unified programming API, the underlying runtime will be adapted to different specific middleware SDK implementations.
-
-The middleware team needs to develop the implementation classes of the standard API in the target environment for different target environments; and the application code can have a "write once, run anywhere" development experience.
-
-### Architecture Overview
-
-![Capa Architecture](./docs/capa-architecture.png)
-
-Capa adopts a layered architecture design:
-- **Application Layer**: Uses unified Capa API for programming
-- **Capa SDK Layer**: Contains core SDK, components, SPI interface definitions
-- **SPI Implementation Layer**: Provides AWS, Alibaba Cloud, Dapr and other implementations
-- **Runtime Layer**: Connects to specific middleware services
-
-### Write Once, Run Anywhere
-
-![Write Once Run Anywhere](./docs/capa-write-once-run-anywhere.png)
-
-With Capa's unified standard programming API, applications can run on different platforms (AWS, Alibaba Cloud, Kubernetes, Dapr, etc.) without modifying business code.
-
-### Supported Features
-
-![Capa Features](./docs/capa-features.png)
-
-| Feature | Description | Status |
-|---------|-------------|--------|
-| RPC | Service Invocation | Stable |
-| Configuration | Dynamic Configuration | Stable |
-| Pub/Sub | Publish/Subscribe Messaging | Stable |
-| State | State Management | Stable |
-| Telemetry | Logs/Metrics/Traces | Stable |
-| Database | SQL Database | Alpha |
-| Schedule | Scheduled Tasks | Alpha |
-
-### SDK design
-
-The Capa module is divided into the following parts:
-
-* sdk
-* sdk-component
-* sdk-spi
-* sdk-spi-demo/...
-
-![capa-design](./docs/capa-design/capa-layer.PNG)
-
-Application programming only needs to rely on the SDK, and use the unified programming API defined in the SDK module.
-
-Before running, the specific SPI implementation package will be introduced as a specific implementation of the unified programming API.
-
-## Usage
-
-### Getting Started
-
-#### Importing Capa's Java SDK
-
-For a Maven project, add the following to your pom.xml file:
+Current repository version: `1.11.13.2.RELEASE`.
 
 ```xml
-
-<project>
-    ...
-    <dependencies>
-        ...
-        <!-- Capa's core SDK with all features. -->
-        <dependency>
-            <groupId>group.rxcloud</groupId>
-            <artifactId>capa-sdk</artifactId>
-            <version>1.0.7.RELEASE</version>
-        </dependency>
-        ...
-    </dependencies>
-    ...
-</project>
+<dependency>
+    <groupId>group.rxcloud</groupId>
+    <artifactId>capa-sdk</artifactId>
+    <version>1.11.13.2.RELEASE</version>
+</dependency>
 ```
 
-Sample implementation library:
+`capa-sdk` exposes the programming surface but does not select production infrastructure on its own. Add a compatible SPI implementation, such as an organization-specific adapter or one of the cloud integration repositories.
+
+For local exploration only, the repository publishes a demo SPI:
 
 ```xml
-
-<project>
-    ...
-    <dependencies>
-        ...
-        <!-- Capa's core SDK with all features. -->
-        <dependency>
-            <groupId>group.rxcloud</groupId>
-            <artifactId>capa-sdk-spi-demo</artifactId>
-            <version>1.0.7.RELEASE</version>
-        </dependency>
-        ...
-    </dependencies>
-    ...
-</project>
+<dependency>
+    <groupId>group.rxcloud</groupId>
+    <artifactId>capa-sdk-spi-demo</artifactId>
+    <version>1.11.13.2.RELEASE</version>
+    <scope>runtime</scope>
+</dependency>
 ```
 
-### Logging compatibility
+The demo SPI is an example implementation, not a production runtime.
 
-The Spring Boot integration does not transitively select a logging implementation. Applications should provide the
-SLF4J provider they use, such as Logback or Log4j 2. Capa's Java 8 Logback adapters compile against SLF4J 2.0.17 and
-Logback 1.3.16; their logging dependencies remain optional so Spring Boot applications can keep their own managed
-logging stack.
+## Capabilities
 
-### Running the examples
+The SDK and API modules cover these runtime domains:
 
-Try the following examples to learn more about Capa's Java SDK:
+| Domain | Purpose | Maturity note |
+| --- | --- | --- |
+| RPC | Service invocation | API and component/SPI layers are present |
+| Configuration | Dynamic configuration stores | API and component/SPI layers are present |
+| Pub/Sub | Message publication and subscription | API and component/SPI layers are present |
+| State | Key-value state operations | API contracts are present; adapter support varies |
+| Telemetry | Logs, metrics, and trace context | Component/SPI support is present |
+| Database and schedule | Extended runtime APIs | Treat as alpha and verify the selected adapter |
 
-* [capa-demo](https://github.com/capa-cloud/capa-java/tree/master/sdk-spi-demo)
-* [capa-aws](https://github.com/capa-cloud/capa-java-aws)
-* [capa-alibaba](https://github.com/capa-cloud/capa-java-alibaba)
+An API contract being present does not guarantee that every SPI adapter implements every operation. Check the adapter repository and run integration tests against the target infrastructure before production use.
 
-### Low retrofit cost migration
+## Repository layout
 
-If you want to use the native Capa API, your legacy system needs to face a large refactoring workload.
+```text
+.
+├── sdk/                    # Public Capa SDK
+├── sdk-component/          # Component discovery and shared implementations
+├── sdk-spi/                # SPI extension points
+├── sdk-spi-demo/           # Demo SPI implementation
+├── sdk-infrastructure/     # Runtime infrastructure and hooks
+├── sdk-springboot/         # Spring Boot integration
+├── examples/               # Example applications
+└── spec/                   # Protocol definitions
+```
 
-In order to make the migration low-cost, we can reuse the middleware API currently used.
+The design follows **standard APIs plus replaceable SDK components**:
 
-By developing an adaptation layer project (providing the same annotation/interface call method), the implementation of the original middleware API is changed to Capa API.
+<p align="center">
+  <img src="./docs/capa-design/capa-layer.PNG" alt="Capa SDK layers" width="720">
+</p>
 
-In this way, the application only needs to change a few code (such as changing the path name of the annotation/interface) to migrate to the Capa architecture.
+## Build and verify
 
-For discussion of this issue, please see:
+```bash
+git clone https://github.com/capa-cloud/capa-java.git
+cd capa-java
+mvn --batch-mode --no-transfer-progress --fail-fast clean verify \
+  -Pjacoco,rat,checkstyle \
+  -DskipTests=false \
+  -Dcheckstyle.skip=false \
+  -Drat.skip=false \
+  -Dmaven.javadoc.skip=true \
+  -Dgpg.skip=true
+```
 
-[Java sdk design 调研：能否复用业界已有的事实标准](https://github.com/mosn/layotto/issues/206)
+This is the same verification profile used by CI on Java 8 and Java 11.
 
-[Capa API adapted to spring annotation.](https://github.com/reactivegroup/sigs/issues/16)
+Runnable and configuration examples are available in [`examples/`](examples/) and [`sdk-spi-demo/`](sdk-spi-demo/). Sample component mappings live under each module's `src/main/resources/sample/` directory.
 
-[遗留中间件SDK无感迁移到Capa.](https://github.com/reactivegroup/sigs/issues/18)
+## Reactive API model
 
-## Develop
-
-#### Reactor API
-
-Taking into account the asynchronous call mode and the use of non-blocking IO, we provide the Reactor programming model natively. You can also use the synchronous call function through its `block()` method.
-
-The Java SDK for Capa is built using [Project Reactor](https://projectreactor.io/). It provides an asynchronous API for
-Java. When consuming a result is consumed synchronously, as in the examples referenced above, the `block()` method is
-used.
-
-The code below does not make any API call, it simply returns
-the [Mono](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html) publisher object. Nothing
-happens until the application subscribes or blocks on the result:
+Capa uses [Project Reactor](https://github.com/reactor/reactor-core) for asynchronous operations. A returned [`Mono`](https://github.com/reactor/reactor-core/blob/main/docs/modules/ROOT/pages/coreFeatures/mono.adoc) remains lazy until it is subscribed to or blocked:
 
 ```java
-Mono<String> result=capaRpcClient.invokeMethod(SERVICE_APP_ID,"say","hello",HttpExtension.POST,null,TypeRef.STRING);
+Mono<String> result = capaRpcClient.invokeMethod(
+    SERVICE_APP_ID,
+    "say",
+    "hello",
+    HttpExtension.POST,
+    null,
+    TypeRef.STRING
+);
+
+String response = result.block();
 ```
 
-To start execution and receive the result object synchronously, use `block()`. The code below shows how to execute the
-call and consume an empty response:
+Use non-blocking composition in reactive applications. Call `block()` only at an intentional synchronous boundary.
 
-```java
-Mono<String> result=capaRpcClient.invokeMethod(SERVICE_APP_ID,"say","hello",HttpExtension.POST,null,TypeRef.STRING);
-        String response=result.block();
-```
+## Design background
 
-#### Exception handling
+- [Dapr API future plans](https://github.com/dapr/dapr/issues/2817)
+- [Layotto Java SDK design discussion](https://github.com/mosn/layotto/issues/188)
+- [Adapting Capa APIs to Spring annotations](https://github.com/reactivegroup/sigs/issues/16)
+- [Migrating legacy middleware SDKs to Capa](https://github.com/reactivegroup/sigs/issues/18)
+- [Multi-Runtime 2022: open questions](https://zhuanlan.zhihu.com/p/435012312)
 
-Most exceptions thrown from the SDK are instances of `CapaException`. `CapaException` extends from `RuntimeException`,
-making it compatible with Project Reactor.
+## Contributing
 
-## Future
+1. Create a branch from `master`.
+2. Keep public API changes compatible or document the compatibility impact.
+3. Update examples whenever an SDK or SPI contract changes.
+4. Run the full verification command above.
+5. Open a pull request with the affected capability and adapter scope.
 
-### Multi-Runtime
+Do not commit cloud credentials, private endpoints, or customer configuration in examples or test resources.
 
-[Multi-Runtime 2022：待解决的问题](https://zhuanlan.zhihu.com/p/435012312?utm_source=wechat_session&utm_medium=social&utm_oi=618742049890111488&utm_content=group2_article&utm_campaign=shareopn)
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE).
