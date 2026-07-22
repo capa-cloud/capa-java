@@ -16,6 +16,21 @@ Capa 是面向 Java 应用的富 SDK 模式 Cloud Application API 实现。应�
 - Maven 3.8.1 或更高版本
 - 为应用实际使用的每项能力提供对应的 Capa SPI 实现
 
+### 日志依赖兼容性
+
+兼容 Java 8 的构建固定使用 Logback `1.3.16`。Logback 上游已经将整个
+1.3.x 系列标记为停止维护，仍受维护的 1.5.x 系列要求 Java 11 或更高版本。
+使用 Capa Logback 集成的应用应选择以下路径之一：
+
+- Java 11 或更高版本：通过依赖管理将 `logback-core` 和
+  `logback-classic` 更新到 `1.5.38` 或之后兼容的 1.5.x 版本。CI 使用
+  `-Dlogback.version=1.5.38` 验证该组合。
+- Java 8：尽可能使用仍在维护的 Log4j 2 集成；如果应用会接收不可信的日志
+  配置，应先迁移到 Java 11。
+
+当前运行时要求以 [Logback 下载与支持状态](https://logback.qos.ch/download.html)
+为准。不要从不可信来源加载日志配置。
+
 ## 引入 SDK
 
 当前仓库版本为 `1.11.13.2.RELEASE`。

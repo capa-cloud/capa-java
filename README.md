@@ -16,6 +16,24 @@ Capa is a rich-SDK implementation of Cloud Application APIs for Java. Applicatio
 - Maven 3.8.1 or later
 - A Capa SPI implementation for every capability used by the application
 
+### Logging compatibility
+
+The Java 8-compatible build pins Logback `1.3.16`. Upstream classifies the
+entire Logback 1.3.x line as end-of-life; maintained Logback 1.5.x releases
+require Java 11 or later. Applications that use the Capa Logback integration
+should choose one of these paths:
+
+- On Java 11 or later, manage `logback-core` and `logback-classic` to `1.5.38`
+  or a later compatible 1.5.x release. CI verifies the repository with
+  `-Dlogback.version=1.5.38`.
+- On Java 8, use the actively maintained Log4j 2 integration where possible,
+  or plan a Java 11 migration before accepting untrusted logging
+  configuration.
+
+See the [Logback download and support status](https://logback.qos.ch/download.html)
+for the current runtime requirements. Do not load logging configuration from
+untrusted sources.
+
 ## Add the SDK
 
 Current repository version: `1.11.13.2.RELEASE`.
